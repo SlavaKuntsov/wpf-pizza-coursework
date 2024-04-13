@@ -1,0 +1,57 @@
+[
+  {
+    "Id": "92f72377-705b-4aa0-b05e-e6326413c994",
+    "ShortName": "4 Сыра",
+    "FullName": "Пицца 4 Сыра",
+    "Description": "оч вкусная пицца",
+    "Price": 21.0,
+    "Image": "cheesse.png",
+    "ImageSource": "file:///C:/my/study/wpf/labs/4/Assets/pizza/cheesse.png",
+    "Size": 1,
+    "Rating": 4,
+    "Count": 5,
+    "InStock": true,
+    "Date": "02.04.2024"
+  },
+  {
+    "Id": "033c70e8-4fac-4b4c-8fc3-a881b6689640",
+    "ShortName": "Пепперони",
+    "FullName": "Пицца Пепперони",
+    "Description": "оч вкусная пицца",
+    "Price": 13.0,
+    "Image": "pep.png",
+    "ImageSource": "file:///C:/my/study/wpf/labs/4/Assets/pizza/pep.png",
+    "Size": 2,
+    "Rating": 5,
+    "Count": 12,
+    "InStock": true
+  },
+  {
+    "Id": "ce4ff58b-3189-48de-a9b2-60f58a65c6ec",
+    "ShortName": "Баварская",
+    "FullName": "Пицца Бавараская",
+    "Description": "ааааааа ",
+    "Price": 23.0,
+    "Image": "bav.png",
+    "ImageSource": "file:///C:/my/study/wpf/labs/4/Assets/pizza/bav.png",
+    "Size": 3,
+    "Rating": 5,
+    "Count": 14,
+    "InStock": true,
+    "Date": "02.04.2024"
+  },
+  {
+    "Id": "a06130a9-9091-4dac-b626-14b6403fc2e9",
+    "ShortName": "Карбонара",
+    "FullName": "Пицца Карбонара",
+    "Description": "ааааа пицааааааааа",
+    "Price": 29.0,
+    "Image": "karb.png",
+    "ImageSource": "file:///C:/my/study/wpf/labs/4/Assets/pizza/karb.png",
+    "Size": 3,
+    "Rating": 4,
+    "Count": 12,
+    "InStock": true,
+    "Date": "02.04.2024"
+  }
+]

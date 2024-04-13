@@ -1,0 +1,100 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:system="clr-namespace:System;assembly=mscorlib">
+	
+	
+	<system:String
+		x:Key="Main">Main</system:String>
+	<system:String
+		x:Key="Catalog">Catalog</system:String>
+	<system:String
+		x:Key="Search">Search</system:String>
+	<system:String
+		x:Key="Sort">Sort</system:String>
+
+	<system:String
+		x:Key="Language">Lang:</system:String>
+
+
+	<system:String
+		x:Key="AddingNewProduct">Adding a new product:</system:String>
+	<system:String
+		x:Key="Image">Image</system:String>
+	<system:String
+		x:Key="ShortName">Name (short):</system:String>
+	<system:String
+		x:Key="FullName">Name (full):</system:String>
+	<system:String
+		x:Key="Description">Description:</system:String>
+	<system:String
+		x:Key="Category">Category:</system:String>
+	<system:String
+		x:Key="Size">Size:</system:String>
+	<system:String
+		x:Key="Rating">Rating:</system:String>
+	<system:String
+		x:Key="Count">Count:</system:String>
+	<system:String
+		x:Key="Price">Price:</system:String>
+
+
+	<system:String
+		x:Key="Choose">Choose</system:String>
+	<system:String
+		x:Key="Create">Create</system:String>
+	<system:String
+		x:Key="Buy">Buy</system:String>
+	<system:String
+		x:Key="Change">Change</system:String>
+	<system:String
+		x:Key="Delete">Delete</system:String>
+	<system:String
+		x:Key="SortBy">Sort by:</system:String>
+	<system:String
+		x:Key="SearchBy">Search:</system:String>
+	<system:String
+		x:Key="FullSearch">Full search</system:String>
+
+
+	<system:String
+		x:Key="Save">Save</system:String>
+	<system:String
+		x:Key="From">from</system:String>
+	<system:String
+		x:Key="Rub">руб.</system:String>
+
+
+
+	<system:String
+		x:Key="Pizza">Pizza</system:String>
+	<system:String
+		x:Key="Dessert">Dessert</system:String>
+	<system:String
+		x:Key="Drink">Drink</system:String>
+
+	<system:String
+		x:Key="Small">Small</system:String>
+	<system:String
+		x:Key="Medium">Medium</system:String>
+	<system:String
+		x:Key="Big">Big</system:String>
+
+
+
+	<system:String
+		x:Key="DateAsc">Date ↑</system:String>
+	<system:String
+		x:Key="DateDesc">Date ↓</system:String>
+	<system:String
+		x:Key="NameAsc">Name ↑</system:String>
+	<system:String
+		x:Key="NameDesc">Name ↓</system:String>
+	<system:String
+		x:Key="PriceAsc">Price ↑</system:String>
+	<system:String
+		x:Key="PriceDesc">Price ↓</system:String>
+
+	
+
+</ResourceDictionary>

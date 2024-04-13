@@ -1,0 +1,99 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:system="clr-namespace:System;assembly=mscorlib">
+	
+	
+	<system:String
+		x:Key="Main">Главная</system:String>
+	<system:String
+		x:Key="Catalog">Каталог</system:String>
+	<system:String
+		x:Key="Search">Поиск</system:String>
+	<system:String
+		x:Key="Sort">Сортировка</system:String>
+
+	<system:String
+		x:Key="Language">Язык:</system:String>
+
+
+	<system:String
+		x:Key="AddingNewProduct">Добавление нового товара:</system:String>
+	<system:String
+		x:Key="Image">Изображение</system:String>
+	<system:String
+		x:Key="ShortName">Название (краткое):</system:String>
+	<system:String
+		x:Key="FullName">Название (полное):</system:String>
+	<system:String
+		x:Key="Description">Описание:</system:String>
+	<system:String
+		x:Key="Category">Категория:</system:String>
+	<system:String
+		x:Key="Size">Размер:</system:String>
+	<system:String
+		x:Key="Rating">Рейтинг:</system:String>
+	<system:String
+		x:Key="Count">Количество:</system:String>
+	<system:String
+		x:Key="Price">Цена:</system:String>
+
+
+	<system:String
+		x:Key="Choose">Выбрать</system:String>
+	<system:String
+		x:Key="Create">Создать</system:String>
+	<system:String
+		x:Key="Buy">Купить</system:String>
+	<system:String
+		x:Key="Change">Изменить</system:String>
+	<system:String
+		x:Key="Delete">Удалить</system:String>
+	<system:String
+		x:Key="SortBy">Сортировать по:</system:String>
+	<system:String
+		x:Key="SearchBy">Поиск:</system:String>
+	<system:String
+		x:Key="FullSearch">Полный поиск</system:String>
+
+
+	<system:String
+		x:Key="Save">Сохранить</system:String>
+	<system:String
+		x:Key="From">от</system:String>
+	<system:String
+		x:Key="Rub">руб.</system:String>
+
+	
+	<system:String
+		x:Key="Pizza">Пицца</system:String>
+	<system:String
+		x:Key="Dessert">Дессерт</system:String>
+	<system:String
+		x:Key="Drink">Напиток</system:String>
+
+	<system:String
+		x:Key="Small">Маленькая</system:String>
+	<system:String
+		x:Key="Medium">Средняя</system:String>
+	<system:String
+		x:Key="Big">Большая</system:String>
+	
+
+	
+	<system:String
+		x:Key="DateAsc">Дате ↑</system:String>
+	<system:String
+		x:Key="DateDesc">Дате ↓</system:String>
+	<system:String
+		x:Key="NameAsc">Названию ↑</system:String>
+	<system:String
+		x:Key="NameDesc">Названию ↓</system:String>
+	<system:String
+		x:Key="PriceAsc">Цене ↑</system:String>
+	<system:String
+		x:Key="PriceDesc">Цене ↓</system:String>
+
+
+
+</ResourceDictionary>

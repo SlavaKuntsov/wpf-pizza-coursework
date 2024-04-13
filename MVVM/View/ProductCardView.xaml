@@ -1,0 +1,226 @@
+﻿<UserControl
+	x:Class="Pizza.MVVM.View.ProductCardView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:vm="clr-namespace:Pizza.MVVM.ViewModel"
+	xmlns:u="clr-namespace:Pizza.Utilities"
+	xmlns:c="clr-namespace:Pizza.Utilities.Converter"
+	d:DataContext="{d:DesignInstance Type=vm:CatalogViewModel}"
+	mc:Ignorable="d"
+	d:Width="800"
+	d:Height="400">
+
+	<UserControl.Resources>
+		<c:WidthConverter
+			x:Key="WidthConverter" />
+	</UserControl.Resources>
+
+	<Grid
+		x:Name="CatalogGrid">
+		
+		<ListView
+			Padding="10 0"
+			Grid.Row="1"
+			Background="Transparent"
+			BorderBrush="Transparent"
+			ItemsSource="{Binding Products}"
+			ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+			HorizontalContentAlignment="Center"
+			d:ItemsSource="{d:SampleData ItemCount=5}">
+			<ListView.ItemsPanel>
+				<ItemsPanelTemplate>
+					<WrapPanel
+						ItemWidth="{Binding ActualWidth, Converter={StaticResource WidthConverter}, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"
+						Orientation="Horizontal"
+						HorizontalAlignment="Center" />
+				</ItemsPanelTemplate>
+			</ListView.ItemsPanel>
+
+			<ListView.Resources>
+				<Style
+					TargetType="ScrollBar">
+					<Setter
+						Property="Background"
+						Value="Gray" />
+					<Setter
+						Property="Width"
+						Value="10" />
+					<Setter
+						Property="Template">
+						<Setter.Value>
+							<ControlTemplate
+								TargetType="ScrollBar">
+								<Grid>
+									<Border
+										Background="#101010"
+										BorderBrush="Transparent"
+										BorderThickness="0"
+										CornerRadius="7" />
+									<Track
+										x:Name="PART_Track"
+										IsDirectionReversed="True">
+										<Track.DecreaseRepeatButton>
+											<RepeatButton
+												Command="{x:Static ScrollBar.PageUpCommand}"
+												Opacity="0" />
+										</Track.DecreaseRepeatButton>
+										<Track.Thumb>
+											<Thumb
+												Padding="0"
+												Margin="0"
+												Background="#202020"
+												BorderBrush="Transparent"
+												BorderThickness="0" />
+										</Track.Thumb>
+										<Track.IncreaseRepeatButton>
+											<RepeatButton
+												Command="{x:Static ScrollBar.PageDownCommand}"
+												Opacity="0" />
+										</Track.IncreaseRepeatButton>
+									</Track>
+								</Grid>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</ListView.Resources>
+			
+			<ListView.ItemContainerStyle>
+				<Style
+					TargetType="ListViewItem">
+
+					<Setter
+						Property="Background"
+						Value="#D0FF8224" />
+
+					<Setter
+						Property="BorderBrush"
+						Value="Transparent" />
+
+					<Setter
+						Property="BorderThickness"
+						Value="0" />
+
+					<Setter
+						Property="Template">
+						<Setter.Value>
+
+							<ControlTemplate
+								TargetType="ListBoxItem">
+								<Border
+									Background="{TemplateBinding Background}"
+									BorderThickness="0"
+									Height="auto"
+									CornerRadius="15"
+									Margin="18 15"
+									Padding="15 10">
+
+									<Grid
+										Margin="10 0 0 0">
+
+										<Grid.RowDefinitions>
+											<RowDefinition />
+											<RowDefinition />
+											<RowDefinition />
+											<RowDefinition />
+										</Grid.RowDefinitions>
+
+										<Image
+											Source="{Binding ImageSource}"
+											Width="auto"
+											Height="auto"
+											Margin="5" />
+
+										<TextBlock
+											Grid.Row="1"
+											Text="{Binding ShortName}"
+											FontSize="20"
+											FontWeight="SemiBold"
+											Style="{StaticResource Text}"
+											HorizontalAlignment="Left" />
+
+										<TextBlock
+											FontSize="16"
+											Grid.Row="2"
+											Text="{Binding Description}"
+											Style="{StaticResource Text}" />
+
+										<Grid
+											Grid.Row="3"
+											HorizontalAlignment="Stretch"
+											Margin="5 10">
+
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition
+													Width="*" />
+												<ColumnDefinition
+													Width="Auto" />
+											</Grid.ColumnDefinitions>
+
+
+											<StackPanel
+												Orientation="Horizontal"
+												VerticalAlignment="Center"
+												HorizontalAlignment="Left">
+												<TextBlock
+													FontSize="18"
+													Foreground="White"
+													FontWeight="SemiBold"
+													Style="{StaticResource Text}">
+													<Run
+														Text="{DynamicResource From}" />
+													<Run
+														Text="{Binding Price}" />
+													<Run
+														Text="{DynamicResource Rub}" />
+												</TextBlock>
+											</StackPanel>
+
+											<Button
+												Grid.Column="1"
+												Background="#D0FF6D00"
+												BorderThickness="0"
+												Padding="20 10"
+												HorizontalAlignment="Right">
+												<Button.Template>
+													<ControlTemplate
+														TargetType="Button">
+														<Border
+															Background="{TemplateBinding Background}"
+															BorderBrush="{TemplateBinding BorderBrush}"
+															BorderThickness="{TemplateBinding BorderThickness}"
+															CornerRadius="15">
+															<ContentPresenter
+																HorizontalAlignment="Center"
+																VerticalAlignment="Center" />
+														</Border>
+													</ControlTemplate>
+												</Button.Template>
+												<TextBlock
+													Text="{DynamicResource Buy}"
+													FontSize="14"
+													Padding="10 4"
+													Style="{StaticResource Text}" />
+											</Button>
+										</Grid>
+
+									</Grid>
+
+								</Border>
+							</ControlTemplate>
+
+						</Setter.Value>
+					</Setter>
+
+					<EventSetter
+						Event="PreviewMouseLeftButtonDown"
+						Handler="OnShowModalClick" />
+
+				</Style>
+			</ListView.ItemContainerStyle>
+		</ListView>
+
+	</Grid>
+</UserControl>
