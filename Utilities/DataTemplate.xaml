@@ -21,6 +21,11 @@
 		DataType="{x:Type vm:BasketViewModel}">
 		<view:BasketView />
 	</DataTemplate>
+
+	<DataTemplate
+		DataType="{x:Type vm:ProfileViewModel}">
+		<view:ProfileView />
+	</DataTemplate>
 	
 	
 	<!--Auth-->

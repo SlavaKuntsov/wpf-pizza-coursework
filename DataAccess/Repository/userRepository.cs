@@ -121,7 +121,6 @@ namespace Pizza.Repository
 			}
 		}
 
-
 		public AppRoles GetUserRole(Guid id)
 		{
 			string roleName = null;

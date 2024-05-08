@@ -32,28 +32,39 @@ namespace Pizza.MVVM.ViewModel
 		public ICommand HomeCommand { get; set; }
 		public ICommand CatalogCommand { get; set; }
 		public ICommand BasketCommand { get; set; }
+		public ICommand ProfileCommand { get; set; }
 		public ICommand LogOutCommand { get; set; }
 
-		private void LogOut(object obj)
-		{
-			SaveUserDataHelper file = new SaveUserDataHelper();
-			file.ClearUserData();
-			
-			_authManager.CheckRoleAndConnection();
-
-			Console.WriteLine("CLEAR");
-		}
 
 		public Dictionary<ProgramLanguages, string> ProgramLanguagesDictionary;
 		public NavigationViewModel()
 		{
+			_authManager = AuthManager.Instance;
+			_unitOfWork = new UnitOfWork(_authManager.ConnectionString);
+
+			Role = _authManager.Role;
+			Console.WriteLine("NAV ROLE: " + Role);
+
 			HomeCommand = new RelayCommand(Home);
 			CatalogCommand = new RelayCommand(Catalog);
 			BasketCommand = new RelayCommand(Basket);
+			ProfileCommand = new RelayCommand(Profile);
 			LogOutCommand = new RelayCommand(LogOut);
 
-			CurrentView = new CatalogViewModel();
-			//CurrentView = new HomeViewModel();
+			switch (Role)
+			{
+				case AppRoles.Customer:
+					CurrentView = new CatalogViewModel();
+					break;
+				case AppRoles.Manager:
+					CurrentView = new HomeViewModel();
+					break;
+				case AppRoles.Seller:
+
+					break;
+				case AppRoles.Courier:
+					break;
+			}
 
 			programAbstraction = new ProgramAbstraction();
 			ProgramLanguagesDictionary = programAbstraction.ProgramLanguagesDictionary;
@@ -65,11 +76,6 @@ namespace Pizza.MVVM.ViewModel
 			SortVisibility = _catalogStateManager.SortVisibility;
 			ButtonsVisibility = _catalogStateManager.ButtonsVisibility;
 
-			_authManager = AuthManager.Instance;
-			_unitOfWork = new UnitOfWork(_authManager.ConnectionString);
-
-			Role = _authManager.Role;
-			Console.WriteLine("NAV ROLE: " + Role);
 		}
 
 		private void Home(object obj)
@@ -88,6 +94,22 @@ namespace Pizza.MVVM.ViewModel
 		{
 			CurrentView = new BasketViewModel();
 			ButtonsVisibility = false;
+		}
+
+		private void Profile(object obj)
+		{
+			CurrentView = new ProfileViewModel();
+			ButtonsVisibility = false;
+		}
+
+		private void LogOut(object obj)
+		{
+			SaveUserDataHelper file = new SaveUserDataHelper();
+			file.ClearUserData();
+
+			_authManager.CheckRoleAndConnection();
+
+			Console.WriteLine("CLEAR");
 		}
 
 		public ProgramLanguages _language { get; set; }

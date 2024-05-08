@@ -298,6 +298,8 @@
     <Compile Include="MVVM\ViewModel\Auth\AuthViewModel.cs" />
     <Compile Include="MVVM\ViewModel\Auth\LogInViewModel.cs" />
     <Compile Include="MVVM\ViewModel\BasketViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\OrdersViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\ProfileViewModel.cs" />
     <Compile Include="MVVM\View\Auth\AuthView.xaml.cs">
       <DependentUpon>AuthView.xaml</DependentUpon>
     </Compile>
@@ -310,6 +312,12 @@
     </Compile>
     <Compile Include="MVVM\View\BasketView.xaml.cs">
       <DependentUpon>BasketView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\OrdersView.xaml.cs">
+      <DependentUpon>OrdersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\ProfileView.xaml.cs">
+      <DependentUpon>ProfileView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utilities\BaseViewModel.cs" />
     <Compile Include="Utilities\Converter\BoolToButtonSelectionConverter.cs" />
@@ -365,6 +373,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="MVVM\View\OrdersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MVVM\View\ProductCardView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -372,6 +384,10 @@
     <Page Include="MVVM\View\ProductModalView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MVVM\View\ProfileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Resources.en-us.xaml">
       <Generator>MSBuild:Compile</Generator>

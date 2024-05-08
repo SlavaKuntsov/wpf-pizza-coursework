@@ -199,8 +199,9 @@
 								</MultiBinding>
 							</RadioButton.Visibility>
 						</RadioButton>
-						
+
 						<RadioButton
+							IsChecked="True"
 							Command="{Binding CatalogCommand}"
 							Content="Каталог"
 							Style="{StaticResource MenuButton}">
@@ -216,10 +217,10 @@
 								</MultiBinding>
 							</RadioButton.Visibility>
 						</RadioButton>
-						
+
 						<StackPanel
-							Visibility="{Binding ButtonsVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
 							Orientation="Vertical"
+							Visibility="{Binding ButtonsVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
 							HorizontalAlignment="Right">
 
 							<ToggleButton
@@ -229,34 +230,43 @@
 								Style="{StaticResource ToggleButton}" />
 
 							<ToggleButton
+								Grid.Row="1"
 								Margin="5 0 5 10"
 								IsChecked="{Binding SortVisibility}"
 								Content="{DynamicResource Sort}"
 								Style="{StaticResource ToggleButton}" />
 
 						</StackPanel>
+
+						<RadioButton
+							Command="{Binding BasketCommand}"
+							Content="Корзина"
+							Style="{StaticResource MenuButton}">
+							<RadioButton.Visibility>
+								<MultiBinding
+									Converter="{StaticResource RoleToVisibilityConverter}">
+									<Binding
+										Path="Role" />
+									<!-- Привязка к свойству текущей роли -->
+									<Binding
+										Source="Basket" />
+									<!-- Привязка к странице -->
+								</MultiBinding>
+							</RadioButton.Visibility>
+						</RadioButton>
+
+						<RadioButton
+							Command="{Binding ProfileCommand}"
+							Content="Профиль"
+							Style="{StaticResource MenuButton}" />
+
 						<!--<RadioButton
 							Command="{Binding SearchCommand}"
 							Content="{DynamicResource Search}"
 							Style="{StaticResource MenuButton}" />-->
 					</StackPanel>
 
-					<RadioButton
-						Command="{Binding BasketCommand}"
-						Content="Корзина"
-						Style="{StaticResource MenuButton}">
-						<RadioButton.Visibility>
-							<MultiBinding
-								Converter="{StaticResource RoleToVisibilityConverter}">
-								<Binding
-									Path="Role" />
-								<!-- Привязка к свойству текущей роли -->
-								<Binding
-									Source="Basket" />
-								<!-- Привязка к странице -->
-							</MultiBinding>
-						</RadioButton.Visibility>
-					</RadioButton>
+
 					
 					<Button
 						Grid.Row="1"

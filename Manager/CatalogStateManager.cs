@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-
-using Pizza.MVVM.Model;
-using Pizza.Utilities;
+﻿using Pizza.Utilities;
 
 namespace Pizza.Manager
 {
@@ -23,7 +13,24 @@ namespace Pizza.Manager
 			SearchVisibility = false;
 			SortVisibility = false;
 
-			ButtonsVisibility = false;
+			AuthManager authManager = AuthManager.Instance;
+
+			switch (authManager.Role)
+			{
+				case Abstractions.ProgramAbstraction.AppRoles.Customer:
+					ButtonsVisibility = true;
+					break;
+				case Abstractions.ProgramAbstraction.AppRoles.Manager:
+					ButtonsVisibility = false;
+					break;
+				case Abstractions.ProgramAbstraction.AppRoles.Seller:
+					ButtonsVisibility = false;
+					break;
+				case Abstractions.ProgramAbstraction.AppRoles.Courier:
+					ButtonsVisibility = false;
+					break;
+			}
+
 		}
 
 		public static CatalogStateManager Instance
