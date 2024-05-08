@@ -1,15 +1,29 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
-namespace Pizza.MVVM.View
+namespace Pizza.MVVM.View.Auth
 {
-	public partial class MainWindow : Window
+	/// <summary>
+	/// Логика взаимодействия для AuthView.xaml
+	/// </summary>
+	public partial class AuthView : Window
 	{
-		public MainWindow()
+		public AuthView()
 		{
 			InitializeComponent();
+
+			Console.WriteLine("INIIIIIIIIIIIT");
 		}
 
 		private void DragWindow_MouseDown(object sender, MouseButtonEventArgs e)
@@ -22,13 +36,11 @@ namespace Pizza.MVVM.View
 
 		private void ButtonMinimize_Click(object sender, RoutedEventArgs e)
 		{
-			Console.WriteLine("MINI");
 			Application.Current.MainWindow.WindowState = WindowState.Minimized;
 		}
 
 		private void WindowStateButton_Click(object sender, RoutedEventArgs e)
 		{
-			Console.WriteLine("MAX");
 			if (Application.Current.MainWindow.WindowState != WindowState.Maximized)
 			{
 				Application.Current.MainWindow.WindowState = WindowState.Maximized;
@@ -43,7 +55,6 @@ namespace Pizza.MVVM.View
 
 		private void CloseButton_Click(object sender, RoutedEventArgs e)
 		{
-			Console.WriteLine("CLOSE");
 			Application.Current.Shutdown();
 		}
 	}

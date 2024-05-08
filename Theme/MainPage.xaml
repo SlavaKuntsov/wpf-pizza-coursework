@@ -10,9 +10,9 @@
 		<Setter
 			Property="Width"
 			Value="1180" />
-		<Setter
+		<!--<Setter
 			Property="Height"
-			Value="750" />
+			Value="750" />-->
 		<Setter
 			Property="ResizeMode"
 			Value="CanResizeWithGrip" />

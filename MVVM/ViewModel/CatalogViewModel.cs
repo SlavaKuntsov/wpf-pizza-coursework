@@ -215,7 +215,7 @@ namespace Pizza.MVVM.ViewModel
 			set { _sortVisibility = value; OnPropertyChanged(nameof(SortVisibility)); }
 		}
 
-		private void _catalogStateManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		private void _catalogStateManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "SearchVisibility")
 			{

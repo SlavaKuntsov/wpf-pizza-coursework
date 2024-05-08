@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace Pizza.Abstractions
 {
@@ -34,6 +33,20 @@ namespace Pizza.Abstractions
 			NameDesc,
 			PriceAsc,
 			PriceDesc
+		}
+
+		public enum AppRoles
+		{
+			[Description("Customer")]
+			Customer,
+			[Description("Manager")]
+			Manager,
+			[Description("Seller")]
+			Seller,
+			[Description("Courier")]
+			Courier,
+			[Description("Auth")]
+			Auth
 		}
 	}
 }

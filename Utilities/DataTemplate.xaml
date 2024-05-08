@@ -2,8 +2,11 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:vm="clr-namespace:Pizza.MVVM.ViewModel"
-	xmlns:view="clr-namespace:Pizza.MVVM.View">
+	xmlns:vma="clr-namespace:Pizza.MVVM.ViewModel.Auth"
+	xmlns:view="clr-namespace:Pizza.MVVM.View"
+	xmlns:viewa="clr-namespace:Pizza.MVVM.View.Auth">
 
+	<!--App-->
 	<DataTemplate
 		DataType="{x:Type vm:HomeViewModel}">
 		<view:HomeView />
@@ -13,10 +16,22 @@
 		DataType="{x:Type vm:CatalogViewModel}">
 		<view:CatalogView />
 	</DataTemplate>
+
+	<DataTemplate
+		DataType="{x:Type vm:BasketViewModel}">
+		<view:BasketView />
+	</DataTemplate>
 	
-	<!--<DataTemplate
-		DataType="{x:Type vm:SearchViewModel}">
-		<view:SearchView />
-	</DataTemplate>-->
+	
+	<!--Auth-->
+	<DataTemplate
+		DataType="{x:Type vma:LogInViewModel}">
+		<viewa:LogInView />
+	</DataTemplate>
+	
+	<DataTemplate
+		DataType="{x:Type vma:SignUpViewModel}">
+		<viewa:SignUpView />
+	</DataTemplate>
 
 </ResourceDictionary>

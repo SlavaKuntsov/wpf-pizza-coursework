@@ -22,8 +22,9 @@ namespace Pizza.MVVM.Model
 		public string Description { get; set; }
 		public double Price { get; set; }
 		public string Image { get; set; }
-		public ImageSource ImageSource { get; set; }
 		[JsonIgnore]
+		public ImageSource ImageSource { get; set; }
+		public byte[] ImageData { get; set; }
 		public PizzaCategories Category { get; set; }
 		//public string CategoryString { get; set; }
 		public PizzaSizes Size { get; set; }
@@ -39,7 +40,7 @@ namespace Pizza.MVVM.Model
 
 		public ProductModel() { }
 
-		public ProductModel(Guid id, string shortName, string fullName, string description, double price, string imageName, ImageSource imageSource, PizzaCategories category, PizzaSizes size, Rating rating, int count)
+		public ProductModel(Guid id, string shortName, string fullName, string description, double price, string imageName, ImageSource imageSource, byte[] imageData, PizzaCategories category, PizzaSizes size, Rating rating, int count)
 		{
 			Id = id;
 			ShortName = shortName;
@@ -48,6 +49,7 @@ namespace Pizza.MVVM.Model
 			Price = price;
 			Image = imageName;
 			ImageSource = imageSource;
+			ImageData = imageData;
 			Category = category;
 			Size = size;
 			Rating = rating;
@@ -77,7 +79,226 @@ namespace Pizza.MVVM.Model
 			}
 		}
 
+		public ProductModel(Guid id, string shortName, string fullName, string description, double price, string imageName, ImageSource imageSource, byte[] imageData, PizzaCategories category, PizzaSizes size, Rating rating, int count, string date)
+		{
+			Id = id;
+			ShortName = shortName;
+			FullName = fullName;
+			Description = description;
+			Price = price;
+			Image = imageName;
+			ImageSource = imageSource;
+			ImageData = imageData;
+			Category = category;
+			Size = size;
+			Rating = rating;
+			Count = count;
+			InStock = count > 0;
+			Date = string.Format("{0:dd/MM/yyyy}", DateTime.Now);
+
+			switch (rating)
+			{
+				case Rating.None:
+					break;
+				case Rating.One:
+					StringRating.Add(1);
+					break;
+				case Rating.Two:
+					StringRating.AddRange(new int[] { 1, 2 });
+					break;
+				case Rating.Three:
+					StringRating.AddRange(new int[] { 1, 2, 3 });
+					break;
+				case Rating.Four:
+					StringRating.AddRange(new int[] { 1, 2, 3, 4 });
+					break;
+				case Rating.Five:
+					StringRating.AddRange(new int[] { 1, 2, 3, 4, 5 });
+					break;
+			}
+		}
+
+		public ProductModel(Guid id, string shortName, string fullName, string description, double price, string imageName, ImageSource imageSource, PizzaCategories category, PizzaSizes size, Rating rating, int count, string date)
+		{
+			Id = id;
+			ShortName = shortName;
+			FullName = fullName;
+			Description = description;
+			Price = price;
+			Image = imageName;
+			ImageSource = imageSource;
+			Category = category;
+			Size = size;
+			Rating = rating;
+			Count = count;
+			InStock = count > 0;
+			Date = date;
+
+			switch (rating)
+			{
+				case Rating.None:
+					break;
+				case Rating.One:
+					StringRating.Add(1);
+					break;
+				case Rating.Two:
+					StringRating.AddRange(new int[] { 1, 2 });
+					break;
+				case Rating.Three:
+					StringRating.AddRange(new int[] { 1, 2, 3 });
+					break;
+				case Rating.Four:
+					StringRating.AddRange(new int[] { 1, 2, 3, 4 });
+					break;
+				case Rating.Five:
+					StringRating.AddRange(new int[] { 1, 2, 3, 4, 5 });
+					break;
+			}
+		}
+
 		public static Result<ProductModel> Create(Guid id, string shortName, string fullName, string description, double price, string imageName, PizzaCategories category, PizzaSizes size, Rating rating, int count)
+		{
+			Console.WriteLine("create rating: " + rating);
+			if (
+				string.IsNullOrWhiteSpace(shortName) ||
+				string.IsNullOrWhiteSpace(fullName) ||
+				string.IsNullOrEmpty(description))
+			{
+				return Result.Failure<ProductModel>("ShortName, FullName or Description can not be empty");
+			}
+
+			if (price <= 0 || count <= 0)
+			{
+				return Result.Failure<ProductModel>("Price or Count must be greater than 0");
+			}
+
+			if (string.IsNullOrWhiteSpace(imageName))
+			{
+				imageName = "default.png";
+			}
+
+			string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+			string assetsDirectory = Path.Combine(currentDirectory, "..", "..", "Assets", "pizza");
+			string imagePath = Path.Combine(assetsDirectory, imageName);
+
+
+			if (string.IsNullOrEmpty(imageName))
+			{
+				return Result.Failure<ProductModel>("ImageName is can not be empty");
+			}
+			if (!Directory.Exists(assetsDirectory))
+			{
+				return Result.Failure<ProductModel>("Directory not exist");
+			}
+
+			ImageSource imageSource = new BitmapImage(new Uri(imagePath));
+
+			string path = new Uri(imagePath).LocalPath;
+
+			byte[] imageBytes;
+
+			using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+			{
+				using (BinaryReader binaryReader = new BinaryReader(fileStream))
+				{
+					imageBytes = binaryReader.ReadBytes((int)fileStream.Length);
+				}
+			}
+
+			byte[] imageData = imageBytes;
+
+			ProductModel product =  new ProductModel(id, shortName, fullName, description, price, imageName, imageSource, imageData, category, size, rating, count);
+
+			return Result.Success(product);
+		}
+		public static Result<ProductModel> Create(Guid id, string shortName, string fullName, string description, double price, string imageName, byte[] imageData, PizzaCategories category, PizzaSizes size, Rating rating, int count)
+		{
+			Console.WriteLine("create rating: " + rating);
+			if (
+				string.IsNullOrWhiteSpace(shortName) ||
+				string.IsNullOrWhiteSpace(fullName) ||
+				string.IsNullOrEmpty(description))
+			{
+				return Result.Failure<ProductModel>("ShortName, FullName or Description can not be empty");
+			}
+
+			if (price <= 0 || count <= 0)
+			{
+				return Result.Failure<ProductModel>("Price or Count must be greater than 0");
+			}
+
+			if (string.IsNullOrWhiteSpace(imageName))
+			{
+				imageName = "default.png";
+			}
+
+			string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+			string assetsDirectory = Path.Combine(currentDirectory, "..", "..", "Assets", "pizza");
+			string imagePath = Path.Combine(assetsDirectory, imageName);
+
+
+			if (string.IsNullOrEmpty(imageName))
+			{
+				return Result.Failure<ProductModel>("ImageName is can not be empty");
+			}
+			if (!Directory.Exists(assetsDirectory))
+			{
+				return Result.Failure<ProductModel>("Directory not exist");
+			}
+
+			ImageSource imageSource = new BitmapImage(new Uri(imagePath));
+
+			ProductModel product =  new ProductModel(id, shortName, fullName, description, price, imageName, imageSource, imageData, category, size, rating, count);
+
+			return Result.Success(product);
+		}
+
+		public static Result<ProductModel> Create(Guid id, string shortName, string fullName, string description, double price, string imageName, byte[] imageData, PizzaCategories category, PizzaSizes size, Rating rating, int count, string date)
+		{
+			Console.WriteLine("create rating: " + rating);
+			if (
+				string.IsNullOrWhiteSpace(shortName) ||
+				string.IsNullOrWhiteSpace(fullName) ||
+				string.IsNullOrEmpty(description))
+			{
+				return Result.Failure<ProductModel>("ShortName, FullName or Description can not be empty");
+			}
+
+			if (price <= 0 || count <= 0)
+			{
+				return Result.Failure<ProductModel>("Price or Count must be greater than 0");
+			}
+
+			if (string.IsNullOrWhiteSpace(imageName))
+			{
+				imageName = "default.png";
+			}
+
+			string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+			string assetsDirectory = Path.Combine(currentDirectory, "..", "..", "Assets", "pizza");
+			string imagePath = Path.Combine(assetsDirectory, imageName);
+
+
+			if (string.IsNullOrEmpty(imageName))
+			{
+				return Result.Failure<ProductModel>("ImageName is can not be empty");
+			}
+			if (!Directory.Exists(assetsDirectory))
+			{
+				return Result.Failure<ProductModel>("Directory not exist");
+			}
+
+			ImageSource imageSource = new BitmapImage(new Uri(imagePath));
+
+			ProductModel product =  new ProductModel(id, shortName, fullName, description, price, imageName, imageSource, imageData, category, size, rating, count, date);
+
+			return Result.Success(product);
+		}
+
+		public static Result<ProductModel> Create(Guid id, string shortName, string fullName, string description, double price, string imageName, PizzaCategories category, PizzaSizes size, Rating rating, int count, string date)
 		{
 
 
@@ -117,7 +338,21 @@ namespace Pizza.MVVM.Model
 
 			ImageSource imageSource = new BitmapImage(new Uri(imagePath));
 
-			ProductModel product =  new ProductModel(id, shortName, fullName, description, price, imageName, imageSource, category, size, rating, count);
+			string path = new Uri(imagePath).LocalPath;
+
+			byte[] imageBytes;
+
+			using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+			{
+				using (BinaryReader binaryReader = new BinaryReader(fileStream))
+				{
+					imageBytes = binaryReader.ReadBytes((int)fileStream.Length);
+				}
+			}
+
+			byte[] imageData = imageBytes;
+
+			ProductModel product =  new ProductModel(id, shortName, fullName, description, price, imageName, imageSource, imageData, category, size, rating, count, date);
 
 			return Result.Success(product);
 		}
@@ -133,6 +368,7 @@ namespace Pizza.MVVM.Model
 				Price = this.Price,
 				Image = this.Image,
 				ImageSource = this.ImageSource,
+				ImageData = this.ImageData,
 				Category = this.Category,
 				//CategoryString = this.CategoryString,
 				Size = this.Size,
@@ -140,7 +376,8 @@ namespace Pizza.MVVM.Model
 				Rating = this.Rating,
 				StringRating = new List<int>(this.StringRating),
 				Count = this.Count,
-				InStock = this.InStock
+				InStock = this.InStock,
+				Date = this.Date
 			};
 
 			return copiedProduct;
@@ -223,6 +460,24 @@ namespace Pizza.MVVM.Model
 
 
 			return "";
+		}
+
+		public byte[] ConvertImageToByteArray(string imagePath)
+		{
+			string path = new Uri(imagePath).LocalPath;
+			Console.WriteLine("!!!!!!!!!!!!!!     " + path);
+
+			byte[] imageBytes;
+
+			using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+			{
+				using (BinaryReader binaryReader = new BinaryReader(fileStream))
+				{
+					imageBytes = binaryReader.ReadBytes((int)fileStream.Length);
+				}
+			}
+
+			return imageBytes;
 		}
 	}
 }

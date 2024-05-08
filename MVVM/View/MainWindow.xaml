@@ -4,13 +4,14 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:vm="clr-namespace:Pizza.MVVM.ViewModel"
-	x:Class="Pizza.MainWindow"
+	x:Class="Pizza.MVVM.View.MainWindow"
 	xmlns:c="clr-namespace:Pizza.Utilities.Converter"
 	mc:Ignorable="d"
 	Title="Pizza Shop"
 	WindowStyle="None"
 	WindowStartupLocation="CenterScreen"
 	Icon="../../Assets/pizza/karb.png"
+	Height="750"
 	Style="{StaticResource MainPage}">
 
 	<Window.DataContext>
@@ -24,6 +25,8 @@
 			x:Key="BoolToVisibilityConverter" />
 		<c:BoolToButtonSelectionConverter
 			x:Key="BoolToButtonSelectionConverter" />
+		<c:RoleToVisibilityConverter
+			x:Key="RoleToVisibilityConverter" />
 	</Window.Resources>
 
 	<Grid
@@ -51,6 +54,7 @@
 					FlowDirection="RightToLeft"
 					Background="Black">
 					<Button
+						x:Name="CloseButton"
 						Style="{StaticResource ButtonClose}"
 						Width="25"
 						Click="CloseButton_Click">
@@ -61,6 +65,7 @@
 							Source="/Assets/icons/cross.png" />
 					</Button>
 					<Button
+						x:Name="WindowStateButton"
 						Style="{StaticResource ButtonMiniResize}"
 						Panel.ZIndex="1"
 						Width="25"
@@ -71,6 +76,7 @@
 							Source="/Assets/icons/square.png" />
 					</Button>
 					<Button
+						x:Name="ButtonMinimize"
 						Style="{StaticResource ButtonMiniResize}"
 						Panel.ZIndex="1"
 						Width="25"
@@ -166,7 +172,7 @@
 					<StackPanel
 						Width="180"
 						Margin="5,10,0,0">
-						<RadioButton
+						<!--<RadioButton
 							IsChecked="True"
 							Command="{Binding HomeCommand}"
 							Content="{DynamicResource Main}"
@@ -174,13 +180,48 @@
 						<RadioButton
 							Command="{Binding CatalogCommand}"
 							Content="{DynamicResource Catalog}"
-							Style="{StaticResource MenuButton}" />
+							Style="{StaticResource MenuButton}" />-->
 
+						<RadioButton
+							IsChecked="True"
+							Command="{Binding HomeCommand}"
+							Content="Главная"
+							Style="{StaticResource MenuButton}">
+							<RadioButton.Visibility>
+								<MultiBinding
+									Converter="{StaticResource RoleToVisibilityConverter}">
+									<Binding
+										Path="Role" />
+									<!-- Привязка к свойству текущей роли -->
+									<Binding
+										Source="AddProduct" />
+									<!-- Привязка к странице -->
+								</MultiBinding>
+							</RadioButton.Visibility>
+						</RadioButton>
+						
+						<RadioButton
+							Command="{Binding CatalogCommand}"
+							Content="Каталог"
+							Style="{StaticResource MenuButton}">
+							<RadioButton.Visibility>
+								<MultiBinding
+									Converter="{StaticResource RoleToVisibilityConverter}">
+									<Binding
+										Path="Role" />
+									<!-- Привязка к свойству текущей роли -->
+									<Binding
+										Source="Catalog" />
+									<!-- Привязка к странице -->
+								</MultiBinding>
+							</RadioButton.Visibility>
+						</RadioButton>
+						
 						<StackPanel
 							Visibility="{Binding ButtonsVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
 							Orientation="Vertical"
 							HorizontalAlignment="Right">
-							
+
 							<ToggleButton
 								Margin="5 0 5 10"
 								IsChecked="{Binding SearchVisibility}"
@@ -200,36 +241,33 @@
 							Style="{StaticResource MenuButton}" />-->
 					</StackPanel>
 
-					<StackPanel
-						Orientation="Horizontal"
-						Grid.Row="1">
-
-						<TextBlock
-							Margin="10 5 10 5"
-							FontSize="18"
-							Text="{DynamicResource Language}"
-							Style="{StaticResource Text}"
-							VerticalAlignment="Center" />
-
-						<RadioButton
-							Padding="40 0"
-							Margin="0 8"
-							IsChecked="{Binding Language, Mode=TwoWay, Converter={StaticResource LanguageToBooleanConverter}, ConverterParameter=Ru}"
-							Content="Ru"
-							Style="{StaticResource ProductButton}" />
-
-						<RadioButton
-							Padding="40 0"
-							Margin="10 8"
-							IsChecked="{Binding Language, Mode=TwoWay, Converter={StaticResource LanguageToBooleanConverter}, ConverterParameter=En}"
-							Content="En"
-							Style="{StaticResource ProductButton}" />
-
-					</StackPanel>
+					<RadioButton
+						Command="{Binding BasketCommand}"
+						Content="Корзина"
+						Style="{StaticResource MenuButton}">
+						<RadioButton.Visibility>
+							<MultiBinding
+								Converter="{StaticResource RoleToVisibilityConverter}">
+								<Binding
+									Path="Role" />
+								<!-- Привязка к свойству текущей роли -->
+								<Binding
+									Source="Basket" />
+								<!-- Привязка к странице -->
+							</MultiBinding>
+						</RadioButton.Visibility>
+					</RadioButton>
+					
+					<Button
+						Grid.Row="1"
+						Command="{Binding LogOutCommand}"
+						Content="Выйти"
+						Margin="10 0 0 10"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Center"
+						Style="{StaticResource Button}" />
 
 				</Grid>
-
-
 
 				<Grid
 					Grid.Column="1">

@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Pizza.MVVM.View
 {
 	/// <summary>
-	/// Логика взаимодействия для UserControl1.xaml
+	/// Логика взаимодействия для BasketView.xaml
 	/// </summary>
-	public partial class UserControl1 : UserControl
+	public partial class BasketView : UserControl
 	{
-		public UserControl1()
+		public BasketView()
 		{
 			InitializeComponent();
 		}

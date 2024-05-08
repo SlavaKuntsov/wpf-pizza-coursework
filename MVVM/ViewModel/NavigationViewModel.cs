@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Windows.Input;
 
 using Pizza.Abstractions;
+using Pizza.DataAccess;
+using Pizza.Encrypt;
 using Pizza.Manager;
 using Pizza.Utilities;
 
@@ -13,6 +15,9 @@ namespace Pizza.MVVM.ViewModel
 {
 	public class NavigationViewModel : BaseViewModel
 	{
+		UnitOfWork _unitOfWork;
+		AuthManager _authManager;
+
 		private readonly ProgramAbstraction programAbstraction;
 		private readonly LocalizationManager _localizationManager;
 		private readonly CatalogStateManager _catalogStateManager;
@@ -26,7 +31,46 @@ namespace Pizza.MVVM.ViewModel
 
 		public ICommand HomeCommand { get; set; }
 		public ICommand CatalogCommand { get; set; }
-		public ICommand SearchCommand { get; set; }
+		public ICommand BasketCommand { get; set; }
+		public ICommand LogOutCommand { get; set; }
+
+		private void LogOut(object obj)
+		{
+			SaveUserDataHelper file = new SaveUserDataHelper();
+			file.ClearUserData();
+			
+			_authManager.CheckRoleAndConnection();
+
+			Console.WriteLine("CLEAR");
+		}
+
+		public Dictionary<ProgramLanguages, string> ProgramLanguagesDictionary;
+		public NavigationViewModel()
+		{
+			HomeCommand = new RelayCommand(Home);
+			CatalogCommand = new RelayCommand(Catalog);
+			BasketCommand = new RelayCommand(Basket);
+			LogOutCommand = new RelayCommand(LogOut);
+
+			CurrentView = new CatalogViewModel();
+			//CurrentView = new HomeViewModel();
+
+			programAbstraction = new ProgramAbstraction();
+			ProgramLanguagesDictionary = programAbstraction.ProgramLanguagesDictionary;
+
+			_localizationManager = LocalizationManager.Instance;
+
+			_catalogStateManager = CatalogStateManager.Instance;
+			SearchVisibility = _catalogStateManager.SearchVisibility;
+			SortVisibility = _catalogStateManager.SortVisibility;
+			ButtonsVisibility = _catalogStateManager.ButtonsVisibility;
+
+			_authManager = AuthManager.Instance;
+			_unitOfWork = new UnitOfWork(_authManager.ConnectionString);
+
+			Role = _authManager.Role;
+			Console.WriteLine("NAV ROLE: " + Role);
+		}
 
 		private void Home(object obj)
 		{
@@ -40,34 +84,11 @@ namespace Pizza.MVVM.ViewModel
 			ButtonsVisibility = true;
 		}
 
-		private void Search(object obj)
+		private void Basket(object obj)
 		{
-			//CurrentView = new SearchViewModel();
+			CurrentView = new BasketViewModel();
 			ButtonsVisibility = false;
 		}
-
-		public Dictionary<ProgramLanguages, string> ProgramLanguagesDictionary;
-
-		public NavigationViewModel()
-		{
-			HomeCommand = new RelayCommand(Home);
-			CatalogCommand = new RelayCommand(Catalog);
-			//SearchCommand = new RelayCommand(Search);
-
-			CurrentView = new HomeViewModel();
-
-			programAbstraction = new ProgramAbstraction();
-			ProgramLanguagesDictionary = programAbstraction.ProgramLanguagesDictionary;
-
-			_localizationManager = LocalizationManager.Instance;
-
-			_catalogStateManager = CatalogStateManager.Instance;
-			SearchVisibility = _catalogStateManager.SearchVisibility;
-			SortVisibility = _catalogStateManager.SortVisibility;
-			ButtonsVisibility = _catalogStateManager.ButtonsVisibility;
-
-		}
-
 
 		public ProgramLanguages _language { get; set; }
 		public ProgramLanguages Language
@@ -124,6 +145,13 @@ namespace Pizza.MVVM.ViewModel
 				_buttonsVisibility = value;
 				OnPropertyChanged(nameof(ButtonsVisibility));
 			}
+		}
+
+		private AppRoles _role { get; set; }
+		public AppRoles Role
+		{
+			get { return _role; }
+			set { _role = value; OnPropertyChanged(nameof(Role)); }
 		}
 	}
 }
