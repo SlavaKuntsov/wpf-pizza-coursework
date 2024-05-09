@@ -22,7 +22,7 @@
 		</Grid.RowDefinitions>
 
 		<TextBlock
-			Text="{DynamicResource Main}"
+			Text="Добавление нового продукта"
 			Style="{StaticResource Text}"
 			FontWeight="SemiBold"
 			FontSize="20"

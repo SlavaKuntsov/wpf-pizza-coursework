@@ -18,42 +18,42 @@ namespace Pizza.Manager
 
 		public AuthManager()
 		{
+			User = new UserModel();
+
 			CheckRoleAndConnection();
 		}
 
 		public void CheckRoleAndConnection()
 		{
-			UserData user = file.GetUserAuthData();
+			UserModel user = file.GetUserAuthData();
 
 			Console.WriteLine("********************************* CheckRoleAndConnection");
 			if (user != null)
 			//if (!string.IsNullOrEmpty(user.Email))
 			{
-				Console.WriteLine("--------- STORED EMAIL: " + user.Email);
+				Console.WriteLine("--------- STORED EMAIL: " + user.Email + " " + user.Id + " " + user.Role);
+
+				User = user;
 
 				ConnectionString = ConfigurationManager.ConnectionStrings["db_auth"].ConnectionString;
 				_unitOfWork = new UnitOfWork(ConnectionString);
 
-				Role = _unitOfWork.User.GetUserRole(user.Id);
+				User.Role = _unitOfWork.User.GetUserRole(user.Id);
 
 				//Console.WriteLine("ROLEEEEE: " + Role + " !!!");
 
-				switch (Role)
+				switch (User.Role)
 				{
 					case AppRoles.Customer:
-						// Логика для роли Customer
 						ConnectionString = ConfigurationManager.ConnectionStrings["db_customer"].ConnectionString;
 						break;
 					case AppRoles.Manager:
-						// Логика для роли Manager
 						ConnectionString = ConfigurationManager.ConnectionStrings["db_manager"].ConnectionString;
 						break;
 					case AppRoles.Seller:
-						// Логика для роли Seller
 						ConnectionString = ConfigurationManager.ConnectionStrings["db_seller"].ConnectionString;
 						break;
 					case AppRoles.Courier:
-						// Логика для роли Courier
 						ConnectionString = ConfigurationManager.ConnectionStrings["db_courier"].ConnectionString;
 						break;
 				}
@@ -63,12 +63,13 @@ namespace Pizza.Manager
 			else
 			{
 				Console.WriteLine("--------- No email found in the file.");
-				Role = AppRoles.Auth;
+				User.Role = AppRoles.Auth;
+
 				ConnectionString = ConfigurationManager.ConnectionStrings["db_auth"].ConnectionString;
 				Auth = false;
 			}
 
-			Console.WriteLine("ROLEEEEE: " + Role + " !!!");
+			Console.WriteLine("ROLEEEEE: " + User.Role + " !!!");
 			Console.WriteLine(ConnectionString);
 		}
 
@@ -96,11 +97,19 @@ namespace Pizza.Manager
 			get { return _connectionString; }
 			set { _connectionString = value; OnPropertyChanged(nameof(ConnectionString)); }
 		}
-		private AppRoles _role { get; set; }
-		public AppRoles Role
+		//private AppRoles _role { get; set; }
+		//public AppRoles Role
+		//{
+		//	get { return _role; }
+		//	set { _role = value; OnPropertyChanged(nameof(Role)); }
+		//}
+
+		private UserModel _user { get; set; }
+
+		public UserModel User
 		{
-			get { return _role; }
-			set { _role = value; OnPropertyChanged(nameof(Role)); }
+			get { return _user; }
+			set { _user = value; Console.WriteLine("USERRR: " + value.Name); OnPropertyChanged(nameof(User)); }
 		}
 
 		//private bool _name { get; set; }

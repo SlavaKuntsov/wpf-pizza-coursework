@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,11 @@ namespace Pizza.Abstractions
 	{
 		public enum PizzaCategories
 		{
+			[Description("Pizza")]
 			Pizza,
+			[Description("Dessert")]
 			Dessert,
+			[Description("Drink")]
 			Drink
 		}
 

@@ -1,5 +1,5 @@
 ﻿<UserControl
-	x:Class="Pizza.MVVM.View.ProductCardView"
+	x:Class="Pizza.MVVM.View.BasketProductCardView"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -7,8 +7,7 @@
 	xmlns:vm="clr-namespace:Pizza.MVVM.ViewModel"
 	xmlns:u="clr-namespace:Pizza.Utilities"
 	xmlns:c="clr-namespace:Pizza.Utilities.Converter"
-	xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-	d:DataContext="{d:DesignInstance Type=vm:CatalogViewModel}"
+	d:DataContext="{d:DesignInstance Type=vm:BasketViewModel}"
 	mc:Ignorable="d"
 	d:Width="800"
 	d:Height="400">
@@ -30,15 +29,6 @@
 			ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 			HorizontalContentAlignment="Center"
 			d:ItemsSource="{d:SampleData ItemCount=5}">
-			
-			<i:Interaction.Triggers>
-				<i:EventTrigger
-					EventName="ScrollChanged">
-					<i:InvokeCommandAction
-						Command="{Binding LoadMoreCommand}" />
-				</i:EventTrigger>
-			</i:Interaction.Triggers>
-			
 			<ListView.ItemsPanel>
 				<ItemsPanelTemplate>
 					<WrapPanel
@@ -137,15 +127,15 @@
 											<RowDefinition />
 										</Grid.RowDefinitions>
 
-										<!--<Image
-											Source="{Binding Image}"
+										<Image
+											Source="{Binding ImageSource}"
 											Width="auto"
 											Height="auto"
-											Margin="5" />-->
+											Margin="5" />
 
 										<TextBlock
 											Grid.Row="1"
-											Text="{Binding Name}"
+											Text="{Binding ShortName}"
 											FontSize="20"
 											FontWeight="SemiBold"
 											Style="{StaticResource Text}"

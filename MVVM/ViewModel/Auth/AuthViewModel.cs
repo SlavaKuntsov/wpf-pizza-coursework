@@ -79,7 +79,7 @@ namespace Pizza.MVVM.ViewModel.Auth
 			}
 
 			SaveUserDataHelper file = new SaveUserDataHelper();
-			file.SaveUserAuthData(login.Value, LoginEmail);
+			file.SaveUserAuthData(login.Value.Id, login.Value.Name, login.Value.Surname, login.Value.Email, login.Value.Password);
 
 			_authManager.CheckRoleAndConnection();
 
@@ -103,9 +103,9 @@ namespace Pizza.MVVM.ViewModel.Auth
 				}
 
 				SaveUserDataHelper file = new SaveUserDataHelper();
-				file.SaveUserAuthData(signup.Value, Email);
+				file.SaveUserAuthData(signup.Value.Id, signup.Value.Name, signup.Value.Surname, signup.Value.Email, signup.Value.Password);
 
-				UserData user = file.GetUserAuthData();
+				UserModel user = file.GetUserAuthData();
 
 				if (user != null)
 				{
@@ -159,7 +159,7 @@ namespace Pizza.MVVM.ViewModel.Auth
 		public string Email
 		{
 			get { return _email; }
-			set { _email = value; Console.WriteLine("Email", value); OnPropertyChanged(nameof(Email)); }
+			set { _email = value; OnPropertyChanged(nameof(Email)); }
 		}
 
 		private string _password { get; set; }
@@ -173,14 +173,14 @@ namespace Pizza.MVVM.ViewModel.Auth
 		public string LoginEmail
 		{
 			get { return _loginEmail; }
-			set { _loginEmail = value; Console.WriteLine("LoginEmail " + value); OnPropertyChanged(nameof(LoginEmail)); }
+			set { _loginEmail = value; OnPropertyChanged(nameof(LoginEmail)); }
 		}
 
 		private string _loginPassword { get; set; }
 		public string LoginPassword
 		{
 			get { return _loginPassword; }
-			set { _loginPassword = value; Console.WriteLine("LoginPassword " + value); OnPropertyChanged(nameof(LoginPassword)); }
+			set { _loginPassword = value; OnPropertyChanged(nameof(LoginPassword)); }
 		}
 
 		private string _authError { get; set; }

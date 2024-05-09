@@ -62,6 +62,9 @@
     <Reference Include="Microsoft.EntityFrameworkCore.Relational.Design, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.EntityFrameworkCore.Relational.Design.1.1.0\lib\net451\Microsoft.EntityFrameworkCore.Relational.Design.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Extensions.Caching.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
     </Reference>
@@ -138,6 +141,7 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Globalization.Calendars, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Globalization.Calendars.4.3.0\lib\net46\System.Globalization.Calendars.dll</HintPath>
       <Private>True</Private>
@@ -261,6 +265,9 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -292,7 +299,9 @@
     <Compile Include="Encrypt\EncryptClass.cs" />
     <Compile Include="Abstractions\IEncrypt.cs" />
     <Compile Include="Encrypt\SaveUserDataHelper.cs" />
-    <Compile Include="MVVM\Model\UserData.cs" />
+    <Compile Include="MVVM\Model\ProductModelNew.cs" />
+    <Compile Include="MVVM\Model\ProductPreviewModel.cs" />
+    <Compile Include="MVVM\Model\UserModel.cs" />
     <Compile Include="Manager\AuthManager.cs" />
     <Compile Include="MVVM\ViewModel\Auth\SignUpViewModel.cs" />
     <Compile Include="MVVM\ViewModel\Auth\AuthViewModel.cs" />
@@ -315,6 +324,9 @@
     </Compile>
     <Compile Include="MVVM\View\OrdersView.xaml.cs">
       <DependentUpon>OrdersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\BasketProductCardView.xaml.cs">
+      <DependentUpon>BasketProductCardView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\View\ProfileView.xaml.cs">
       <DependentUpon>ProfileView.xaml</DependentUpon>
@@ -376,6 +388,10 @@
     <Page Include="MVVM\View\OrdersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\View\BasketProductCardView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MVVM\View\ProductCardView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -492,6 +508,7 @@
     </EmbeddedResource>
     <None Include="appsettings.json" />
     <None Include="Encrypt\Products.json" />
+    <None Include="userData.json" />
     <Resource Include="Fonts\Gilroy-Black.ttf" />
     <Resource Include="Fonts\Gilroy-Bold.ttf" />
     <Resource Include="Fonts\Gilroy-Extrabold.ttf" />

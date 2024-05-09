@@ -8,6 +8,7 @@ using static Pizza.Abstractions.ProgramAbstraction;
 using System.ComponentModel;
 using System.Reflection;
 using NpgsqlTypes;
+using Pizza.MVVM.Model;
 
 namespace Pizza.Repository
 {
@@ -20,7 +21,7 @@ namespace Pizza.Repository
 			_connectionString = connection;
 		}
 
-		public Result<Guid> LogIn(string email, string password)
+		public Result<UserModel> LogIn(string email, string password)
 		{
 			Console.WriteLine("string email, string password:" + " " + email + " " + password);
 			try
@@ -29,35 +30,63 @@ namespace Pizza.Repository
 				{
 					connection.Open();
 
-					using (NpgsqlCommand command = new NpgsqlCommand("SELECT procedures.login(@email, @password)", connection))
-					{
-						command.Parameters.AddWithValue("email", email);
-						command.Parameters.AddWithValue("password", password);
+					NpgsqlCommand command = new NpgsqlCommand("procedures.login", connection);
+					command.CommandType = CommandType.StoredProcedure;
 
-						NpgsqlDataReader reader = command.ExecuteReader();
-						if (reader.HasRows && reader.Read())
+
+					command.Parameters.Add("@email", NpgsqlDbType.Varchar).Value = email;
+					command.Parameters.Add("@password", NpgsqlDbType.Varchar).Value = password;
+
+
+					command.Parameters.Add("@id", NpgsqlDbType.Uuid).Direction = ParameterDirection.Output;
+					command.Parameters.Add("@name", NpgsqlDbType.Varchar, 100).Direction = ParameterDirection.Output;
+					command.Parameters.Add("@surname", NpgsqlDbType.Varchar, 100).Direction = ParameterDirection.Output;
+					command.Parameters.Add("@error", NpgsqlDbType.Varchar, 100).Direction = ParameterDirection.Output;
+
+					command.ExecuteNonQuery();
+
+					string error = command.Parameters["@error"].Value.ToString();
+
+					if (!string.IsNullOrEmpty(error))
+					{
+						return Result.Failure<UserModel>(error);
+					}
+					else
+					{
+						Guid role_id = (Guid)command.Parameters["@id"].Value;
+						string role_name = command.Parameters["@name"].Value.ToString();
+						string role_surname = command.Parameters["@surname"].Value.ToString();
+
+						Console.WriteLine(role_id + " " + role_name + " " + role_surname);
+
+						Console.WriteLine("Пользователь авторизован. ID: " + role_id);
+
+						UserModel user = new UserModel
 						{
-							Guid result = reader.GetGuid(0);
-							Console.WriteLine("Пользователь авторизован. ID: " + result);
-							return Result.Success(result);
-						}
-						return Result.Failure<Guid>("Неверные учетные данные пользователя1.");
+							Id = role_id,
+							Name = role_name,
+							Surname = role_surname,
+							Email = email,
+							Password = password
+						};
+
+						return Result.Success(user);
 					}
 				}
 			}
 			catch (InvalidCastException)
 			{
 				Console.WriteLine("Неверные учетные данные пользователя2.");
-				return Result.Failure<Guid>("Неверные учетные данные пользователя2.");
+				return Result.Failure<UserModel>("Неверные учетные данные пользователя2.");
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine("ERROR: " + ex.Message);
-				return Result.Failure<Guid>("Ошибка запроса или соединения.");
+				return Result.Failure<UserModel>("Ошибка запроса или соединения.");
 			}
 		}
 
-		public Result<Guid> SignUp(AppRoles role, string name, string surname, string email, string password)
+		public Result<UserModel> SignUp(AppRoles role, string name, string surname, string email, string password)
 		{
 			try
 			{
@@ -84,40 +113,49 @@ namespace Pizza.Repository
 					command.ExecuteNonQuery();
 
 					string error = command.Parameters["@error"].Value.ToString();
-					Console.WriteLine("Error: " + error);
 
-
-
-					// Обработка результата
 					if (!string.IsNullOrEmpty(error))
 					{
 						switch (error)
 						{
 							case "Invalid email format!":
-								return Result.Failure<Guid>("Неверная форма почты!");
+								return Result.Failure<UserModel>("Неверная форма почты!");
 							case "Customer already exists!":
-								return Result.Failure<Guid>("Такой Пользователь уже существует.");
+								return Result.Failure<UserModel>("Такой Пользователь уже существует.");
 							case "Manager already exists!":
-								return Result.Failure<Guid>("Такой Менеджер уже существует.");
+								return Result.Failure<UserModel>("Такой Менеджер уже существует.");
 							case "Seller already exists!":
-								return Result.Failure<Guid>("Такой Продавец уже существует.");
+								return Result.Failure<UserModel>("Такой Продавец уже существует.");
 							case "Courier already exists!":
-								return Result.Failure<Guid>("Такой Курьер уже существует.");
+								return Result.Failure<UserModel>("Такой Курьер уже существует.");
+							default:
+								return Result.Failure<UserModel>("Ошибка запроса или соединения.1");
 						}
 					}
 					else
 					{
 						Guid role_id = (Guid)command.Parameters["@role_id"].Value;
+
+						Console.WriteLine("&&&&&&&&&&&&&&&");
 						Console.WriteLine("Role ID: " + role_id);
-						return Result.Success(role_id);
+
+						UserModel user = new UserModel
+						{
+							Id = role_id,
+							Name = name,
+							Surname = surname,
+							Email = email,
+							Password = password
+						};
+
+						return Result.Success(user);
 					}
-					return Result.Failure<Guid>("Ошибка запроса или соединения.1");
 				}
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine("ERROR: " + ex.Message);
-				return Result.Failure<Guid>("Ошибка запроса или соединения.2");
+				return Result.Failure<UserModel>("Ошибка запроса или соединения.2");
 			}
 		}
 

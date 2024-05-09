@@ -185,7 +185,7 @@
 						<RadioButton
 							IsChecked="True"
 							Command="{Binding HomeCommand}"
-							Content="Главная"
+							Content="Добавление"
 							Style="{StaticResource MenuButton}">
 							<RadioButton.Visibility>
 								<MultiBinding

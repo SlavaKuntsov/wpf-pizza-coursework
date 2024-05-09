@@ -35,7 +35,7 @@ namespace Pizza.MVVM.ViewModel
 			PizzaCategoryDictionary = productAbstraction.PizzaCategoriesDictionary;
 			PizzaSizesDictionary = productAbstraction.PizzaSizesDictionary;
 
-			SliderValue = 4;
+			//SliderValue = 4;
 			Size = PizzaSizes.Medium;
 
 			SaveCommand = new RelayCommand(Save);
@@ -44,7 +44,7 @@ namespace Pizza.MVVM.ViewModel
 
 		private void Save(object obj)
 		{
-			var addedProduct = ProductModel.Create(Guid.NewGuid(), ShortName, FullName, Description, Price, Image, Category, Size, Rating, Count);
+			var addedProduct = ProductModel.Create(Guid.NewGuid(), Name, FullName, Description, Price, Image, Category, Size, Rating, Count);
 
 			if (addedProduct.IsFailure)
 			{
@@ -61,8 +61,8 @@ namespace Pizza.MVVM.ViewModel
 
 		private void ResetAll()
 		{
-			ShortName = "";
-			FullName = "";
+			Name = "";
+			//FullName = "";
 			Description = "";
 			Image = "";
 			SelectedImage = BitmapImage.Create(
@@ -76,9 +76,9 @@ namespace Pizza.MVVM.ViewModel
 				1);
 			Category = PizzaCategories.Pizza;
 			Size = PizzaSizes.Big;
-			SliderValue = 4;
+			//SliderValue = 4;
 			PriceString = "";
-			CountString = "";
+			//CountString = "";
 		}
 
 		private void OpenImageFile(object obj)
@@ -118,16 +118,16 @@ namespace Pizza.MVVM.ViewModel
 			get { return _product; }
 			set { _product = value; OnPropertyChanged(nameof(Product)); }
 		}
-		public string ShortName
+		public string Name
 		{
 			get { return _product.ShortName; }
-			set { _product.ShortName = value; OnPropertyChanged(nameof(ShortName)); }
+			set { _product.ShortName = value; OnPropertyChanged(nameof(Name)); }
 		}
-		public string FullName
-		{
-			get { return _product.FullName; }
-			set { _product.FullName = value; OnPropertyChanged(nameof(FullName)); }
-		}
+		//public string FullName
+		//{
+		//	get { return _product.FullName; }
+		//	set { _product.FullName = value; OnPropertyChanged(nameof(FullName)); }
+		//}
 		public string Description
 		{
 			get { return _product.Description; }
@@ -183,23 +183,24 @@ namespace Pizza.MVVM.ViewModel
 				OnPropertyChanged(nameof(Size)); 
 			}
 		}
-		private double _sliderValue { get; set; }
-		public double SliderValue
-		{
-			get { return _sliderValue; }
-			set
-			{
-				_sliderValue = value;
-				OnPropertyChanged(nameof(SliderValue));
-				Rating convertRating = ConvertSliderValueToRating(value);
-				Rating = convertRating;
-			}
-		}
-		public Rating Rating
-		{
-			get { return _product.Rating; }
-			set { _product.Rating = value; OnPropertyChanged(nameof(Rating)); }
-		}
+		//private double _sliderValue { get; set; }
+		//public double SliderValue
+		//{
+		//	get { return _sliderValue; }
+		//	set
+		//	{
+		//		_sliderValue = value;
+		//		OnPropertyChanged(nameof(SliderValue));
+		//		Rating convertRating = ConvertSliderValueToRating(value);
+		//		Rating = convertRating;
+		//	}
+		//}
+		//public Rating Rating
+		//{
+		//	get { return _product.Rating; }
+		//	set { _product.Rating = value; OnPropertyChanged(nameof(Rating)); }
+		//}
+
 		private string _priceString;
 		public string PriceString
 		{
@@ -221,43 +222,43 @@ namespace Pizza.MVVM.ViewModel
 			set { _product.Price = value; OnPropertyChanged(nameof(Price)); }
 		}
 		private string _countString;
-		public string CountString
-		{
-			get { return _countString; }
-			set
-			{
-				_countString = value;
-				OnPropertyChanged(nameof(CountString));
-				int convertCount;
-				if (int.TryParse(value, out convertCount))
-				{
-					Count = convertCount;
-				}
-			}
-		}
-		public int Count
-		{
-			get { return _product.Count; }
-			set { _product.Count = value; OnPropertyChanged(nameof(Count)); }
-		}
+		//public string CountString
+		//{
+		//	get { return _countString; }
+		//	set
+		//	{
+		//		_countString = value;
+		//		OnPropertyChanged(nameof(CountString));
+		//		int convertCount;
+		//		if (int.TryParse(value, out convertCount))
+		//		{
+		//			Count = convertCount;
+		//		}
+		//	}
+		//}
+		//public int Count
+		//{
+		//	get { return _product.Count; }
+		//	set { _product.Count = value; OnPropertyChanged(nameof(Count)); }
+		//}
 
-		private Rating ConvertSliderValueToRating(double sliderValue)
-		{
-			switch (sliderValue)
-			{
-				case 1:
-					return Rating.One;
-				case 2:
-					return Rating.Two;
-				case 3:
-					return Rating.Three;
-				case 4:
-					return Rating.Four;
-				case 5:
-					return Rating.Five;
-				default:
-					return Rating.None;
-			}
-		}
+		//private Rating ConvertSliderValueToRating(double sliderValue)
+		//{
+		//	switch (sliderValue)
+		//	{
+		//		case 1:
+		//			return Rating.One;
+		//		case 2:
+		//			return Rating.Two;
+		//		case 3:
+		//			return Rating.Three;
+		//		case 4:
+		//			return Rating.Four;
+		//		case 5:
+		//			return Rating.Five;
+		//		default:
+		//			return Rating.None;
+		//	}
+		//}
 	}
 }

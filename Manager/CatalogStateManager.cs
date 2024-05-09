@@ -15,7 +15,7 @@ namespace Pizza.Manager
 
 			AuthManager authManager = AuthManager.Instance;
 
-			switch (authManager.Role)
+			switch (authManager.User.Role)
 			{
 				case Abstractions.ProgramAbstraction.AppRoles.Customer:
 					ButtonsVisibility = true;

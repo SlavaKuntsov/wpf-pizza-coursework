@@ -19,7 +19,7 @@ namespace Pizza.Manager
 		private static DataManager instance;
 		private string _connectionString;
 
-		private ObservableCollection<ProductModel> _products;
+		private ObservableCollection<ProductPreviewModel> _products;
 		private ObservableCollection<ProductModel> _basketProducts;
 
 		UnitOfWork _unitOfWork;
@@ -33,10 +33,11 @@ namespace Pizza.Manager
 
 			ChangeConnection();
 
-			_products = new ObservableCollection<ProductModel>();
+			_products = new ObservableCollection<ProductPreviewModel>();
 			_basketProducts = new ObservableCollection<ProductModel>();
 
-			//ReadData();
+			Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+			ReadData();
 			//ReadBasketData();
 		}
 
@@ -68,7 +69,7 @@ namespace Pizza.Manager
 		public void AddProduct(ProductModel product)
 		{
 			Console.WriteLine("add prod: " + product.ShortName);
-			_products.Add(product);
+			//_products.Add(product);
 
 			_unitOfWork.Product.AddProduct(product);
 		}
@@ -96,7 +97,9 @@ namespace Pizza.Manager
 			ReadData();
 		}
 
-		public ObservableCollection<ProductModel> GetAllProducts()
+		//public
+
+		public ObservableCollection<ProductPreviewModel> GetAllProducts()
 		{
 			return _products;
 		}
@@ -105,19 +108,28 @@ namespace Pizza.Manager
 			return _basketProducts;
 		}
 
-		private void ReadData()
+		private async void ReadData()
 		{
-			var products = _unitOfWork.Product.GetAllProducts();
 
+			Console.WriteLine("############# 1");
+			var products = await _unitOfWork.Basket.GetAllProductsPreview();
+
+
+			Console.WriteLine("############# 2");
 			if (products.IsFailure)
 			{
 				return;
 			}
 			_products.Clear();
-			foreach (var item in products.Value)
+			Console.WriteLine("############# 3");
+			foreach (ProductPreviewModel item in products.Value)
 			{
 				_products.Add(item);
 			}
+
+			//_products = products.Value;
+			Console.WriteLine("PROD LENGTH: " + _products.Count());
+
 		}
 
 		private void ReadBasketData()

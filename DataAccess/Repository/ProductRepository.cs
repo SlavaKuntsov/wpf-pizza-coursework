@@ -64,7 +64,7 @@ namespace Pizza.Repository
 
 								var product = ProductModel.Create(id, shortName, fullName, description, price, image, imageData, category, size, rating, count, date);
 
-								Console.WriteLine($"Id: {id}, ShortName: {shortName}, FullName: {fullName}, Description: {description}, Price: {price}, Image: {image}, Category: {category}, Size: {size}, Rating: {rating}, Count: {count}, InStock: {inStock}, Date: {date}");
+								Console.WriteLine($"Id: {id}, Name: {shortName}, FullName: {fullName}, Description: {description}, Price: {price}, Image: {image}, Category: {category}, Size: {size}, Rating: {rating}, Count: {count}, InStock: {inStock}, Date: {date}");
 
 								if (product.IsFailure)
 								{
@@ -92,7 +92,7 @@ namespace Pizza.Repository
 			{
 				connection.Open();
 
-				string sql = "INSERT INTO public.product (id, shortname, fullname, description, price, image, imageData, size, rating, count, instock, date, category) VALUES (@Id, @ShortName, @FullName, @Description, @Price, @Image, @ImageData, @Size, @Rating, @Count, @InStock, @Date, @Category)";
+				string sql = "INSERT INTO public.product (id, shortname, fullname, description, price, image, imageData, size, rating, count, instock, date, category) VALUES (@Id, @Name, @FullName, @Description, @Price, @Image, @ImageData, @Size, @Rating, @Count, @InStock, @Date, @Category)";
 
 				using (NpgsqlCommand command = new NpgsqlCommand(sql, connection))
 				//using (NpgsqlCommand command = new NpgsqlCommand("add_product", connection))
@@ -105,7 +105,7 @@ namespace Pizza.Repository
 						//var imageByte = ConvertImageToByteArray(product.ImageSource.ToString());
 
 						command.Parameters.AddWithValue("Id", product.Id);
-						command.Parameters.AddWithValue("ShortName", product.ShortName);
+						command.Parameters.AddWithValue("Name", product.ShortName);
 						command.Parameters.AddWithValue("FullName", product.FullName);
 						command.Parameters.AddWithValue("Description", product.Description);
 						command.Parameters.AddWithValue("Price", product.Price);
@@ -189,7 +189,7 @@ namespace Pizza.Repository
 				connection.Open();
 
 				string sql = @"UPDATE public.product 
-					SET shortname = @ShortName, 
+					SET shortname = @Name, 
 						fullname = @FullName, 
 						description = @Description, 
 						price = @Price, 
@@ -209,7 +209,7 @@ namespace Pizza.Repository
 						Console.WriteLine("DATE: " + product.Date);
 
 						command.Parameters.AddWithValue("Id", product.Id);
-						command.Parameters.AddWithValue("ShortName", product.ShortName);
+						command.Parameters.AddWithValue("Name", product.ShortName);
 						command.Parameters.AddWithValue("FullName", product.FullName);
 						command.Parameters.AddWithValue("Description", product.Description);
 						command.Parameters.AddWithValue("Price", product.Price);

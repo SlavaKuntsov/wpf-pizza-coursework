@@ -29,8 +29,96 @@
 			VerticalAlignment="Center"
 			HorizontalAlignment="Center" />
 
-		<v:ProductCardView
-			Grid.Row="1" />
+		<StackPanel
+			Grid.Row="1"
+			Margin="20,20, 20, 0"
+			Orientation="Vertical">
+
+			<StackPanel
+				Margin="0 0 0 20"
+				VerticalAlignment="Center"
+				Orientation="Horizontal">
+
+				<TextBlock
+					Margin="0 0 20 0"
+					FontSize="16"
+					VerticalAlignment="Center"
+					Text="Имя:"
+					Style="{StaticResource Text}" />
+
+				<TextBlock
+					Margin="0 0 20 0"
+					FontSize="16"
+					VerticalAlignment="Center"
+					Text="{Binding User.Name}"
+					Style="{StaticResource Text}" />
+
+			</StackPanel>
+
+			<StackPanel
+				Margin="0 0 0 20"
+				VerticalAlignment="Center"
+				Orientation="Horizontal">
+
+				<TextBlock
+					Margin="0 0 20 0"
+					FontSize="16"
+					VerticalAlignment="Center"
+					Text="Фамилия:"
+					Style="{StaticResource Text}" />
+
+				<TextBlock
+					Margin="0 0 20 0"
+					FontSize="16"
+					VerticalAlignment="Center"
+					Text="{Binding User.Surname}"
+					Style="{StaticResource Text}" />
+
+			</StackPanel>
+
+			<StackPanel
+				Margin="0 0 0 20"
+				VerticalAlignment="Center"
+				Orientation="Horizontal">
+
+				<TextBlock
+					Margin="0 0 20 0"
+					FontSize="16"
+					VerticalAlignment="Center"
+					Text="Email:"
+					Style="{StaticResource Text}" />
+
+				<TextBlock
+					Margin="0 0 20 0"
+					FontSize="16"
+					VerticalAlignment="Center"
+					Text="{Binding User.Email}"
+					Style="{StaticResource Text}" />
+
+			</StackPanel>
+
+			<StackPanel
+				Margin="0 0 0 20"
+				VerticalAlignment="Center"
+				Orientation="Horizontal">
+
+				<TextBlock
+					Margin="0 0 20 0"
+					FontSize="16"
+					VerticalAlignment="Center"
+					Text="Роль:"
+					Style="{StaticResource Text}" />
+
+				<TextBlock
+					Margin="0 0 20 0"
+					FontSize="16"
+					VerticalAlignment="Center"
+					Text="{Binding User.Role}"
+					Style="{StaticResource Text}" />
+
+			</StackPanel>
+			
+		</StackPanel>
 
 	</Grid>
 

@@ -42,7 +42,7 @@ namespace Pizza.MVVM.ViewModel
 			_authManager = AuthManager.Instance;
 			_unitOfWork = new UnitOfWork(_authManager.ConnectionString);
 
-			Role = _authManager.Role;
+			Role = _authManager.User.Role;
 			Console.WriteLine("NAV ROLE: " + Role);
 
 			HomeCommand = new RelayCommand(Home);
@@ -75,7 +75,6 @@ namespace Pizza.MVVM.ViewModel
 			SearchVisibility = _catalogStateManager.SearchVisibility;
 			SortVisibility = _catalogStateManager.SortVisibility;
 			ButtonsVisibility = _catalogStateManager.ButtonsVisibility;
-
 		}
 
 		private void Home(object obj)

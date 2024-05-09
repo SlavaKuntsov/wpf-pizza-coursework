@@ -14,6 +14,10 @@ using CSharpFunctionalExtensions;
 using Npgsql;
 
 using static Pizza.Abstractions.ProductAbstraction;
+using System.Data;
+using System.Diagnostics;
+using System.Xml.Linq;
+using System.Threading.Tasks;
 
 namespace Pizza.Repository
 {
@@ -24,6 +28,44 @@ namespace Pizza.Repository
 		public BasketRepository(string connection)
 		{
 			_connectionString = connection;
+		}
+
+		public async Task<Result<ObservableCollection<ProductPreviewModel>>> GetAllProductsPreview()
+		{
+			Console.WriteLine("_______________ GetAllProductsPreview ________________");
+			ObservableCollection<ProductPreviewModel> products = new ObservableCollection<ProductPreviewModel>();
+
+			using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+			{
+				connection.Open();
+
+				using (NpgsqlCommand command = new NpgsqlCommand("procedures.get_all_products_preview", connection))
+				{
+					command.CommandType = CommandType.StoredProcedure;
+
+					using (NpgsqlDataReader reader = (NpgsqlDataReader)await command.ExecuteReaderAsync())
+					{
+						while (await reader.ReadAsync())
+						{
+							int productId = reader.GetInt32(reader.GetOrdinal("product_id"));
+							string productName = reader.GetString(reader.GetOrdinal("product_name"));
+							string productDescription = reader.GetString(reader.GetOrdinal("product_description"));
+							byte[] imageBytes = reader.IsDBNull(reader.GetOrdinal("product_image")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("product_image"));
+							double productPrice = reader.GetDouble(reader.GetOrdinal("product_price"));
+							bool productInStock = reader.GetBoolean(reader.GetOrdinal("product_instock"));
+							string productCategoryName = reader.GetString(reader.GetOrdinal("product_category_name"));
+
+							Console.WriteLine("NAME: " + productName);
+
+							var product = ProductPreviewModel.Create(productId, productName, productDescription, imageBytes, productPrice, productInStock, productCategoryName);
+
+							products.Add(product.Value);
+						}
+					}
+				}
+			}
+
+			return Result.Success(products);
 		}
 
 		public Result<ObservableCollection<ProductModel>> GetBasket()
@@ -64,7 +106,7 @@ namespace Pizza.Repository
 
 								var product = ProductModel.Create(id, shortName, fullName, description, price, image, imageData, category, size, rating, count, date);
 
-								Console.WriteLine($"Id: {id}, ShortName: {shortName}, FullName: {fullName}, Description: {description}, Price: {price}, Image: {image}, Category: {category}, Size: {size}, Rating: {rating}, Count: {count}, InStock: {inStock}, Date: {date}");
+								Console.WriteLine($"Id: {id}, Name: {shortName}, FullName: {fullName}, Description: {description}, Price: {price}, Image: {image}, Category: {category}, Size: {size}, Rating: {rating}, Count: {count}, InStock: {inStock}, Date: {date}");
 
 								if (product.IsFailure)
 								{
@@ -92,7 +134,7 @@ namespace Pizza.Repository
 			using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
 			{
 				connection.Open();
-				
+
 				string sql1 = "INSERT INTO basket (fk_product_id) VALUES (@id)";
 
 				using (NpgsqlCommand command1 = new NpgsqlCommand(sql1, connection))
