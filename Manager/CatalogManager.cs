@@ -1,17 +1,25 @@
-﻿using Pizza.Utilities;
+﻿using Pizza.MVVM.Model;
+using System.Collections.Generic;
+
+using Pizza.Utilities;
 
 namespace Pizza.Manager
 {
-	public class CatalogStateManager : BaseViewModel
+	public class CatalogManager : BaseViewModel
 	{
-		private static CatalogStateManager instance;
-		public CatalogStateManager()
+		private static CatalogManager instance;
+		public CatalogManager()
 		{
+			//NumberSelectionModel = new PageInfoModel();
+			LastPageProductId = null;
+			CurrentPage = 1;
+
 			_searchText = "";
 			IsFullSearch = false;
 
 			SearchVisibility = false;
 			SortVisibility = false;
+			//NumberSelectionModel.LastProductId = null;
 
 			AuthManager authManager = AuthManager.Instance;
 
@@ -33,16 +41,37 @@ namespace Pizza.Manager
 
 		}
 
-		public static CatalogStateManager Instance
+		public static CatalogManager Instance
 		{
 			get
 			{
 				if (instance == null)
 				{
-					instance = new CatalogStateManager();
+					instance = new CatalogManager();
 				}
 				return instance;
 			}
+		}
+
+		private int? _lastPageProductId { get; set; }
+		public int? LastPageProductId	
+		{
+			get { return _lastPageProductId; }
+			set { _lastPageProductId = value; OnPropertyChanged(nameof(LastPageProductId)); }
+		}
+
+		private int _productOnPage { get; set; }
+		public int ProductOnPage
+		{
+			get { return _productOnPage; }
+			set { _productOnPage = value; OnPropertyChanged(nameof(ProductOnPage)); }
+		}
+
+		private int _currentPage { get; set; }
+		public int CurrentPage
+		{
+			get { return _currentPage; }
+			set { _currentPage = value; OnPropertyChanged(nameof(CurrentPage)); }
 		}
 
 		private string _searchText { get; set; }

@@ -20,25 +20,28 @@
 
 	<Grid
 		x:Name="CatalogGrid">
-		
+
 		<ListView
+			PreviewMouseWheel="ListView_PreviewMouseWheel"
 			Padding="10 0"
 			Grid.Row="1"
 			Background="Transparent"
 			BorderBrush="Transparent"
 			ItemsSource="{Binding Products}"
+			ScrollViewer.CanContentScroll="False"
 			ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+			ScrollViewer.VerticalScrollBarVisibility="Disabled"
 			HorizontalContentAlignment="Center"
 			d:ItemsSource="{d:SampleData ItemCount=5}">
-			
-			<i:Interaction.Triggers>
-				<i:EventTrigger
-					EventName="ScrollChanged">
-					<i:InvokeCommandAction
-						Command="{Binding LoadMoreCommand}" />
-				</i:EventTrigger>
-			</i:Interaction.Triggers>
-			
+
+			<!--<i:Interaction.Triggers>
+			<i:EventTrigger
+				EventName="ScrollChanged">
+				<i:InvokeCommandAction
+					Command="{Binding LoadMoreCommand}" />
+			</i:EventTrigger>
+		</i:Interaction.Triggers>-->
+
 			<ListView.ItemsPanel>
 				<ItemsPanelTemplate>
 					<WrapPanel
@@ -48,7 +51,7 @@
 				</ItemsPanelTemplate>
 			</ListView.ItemsPanel>
 
-			<ListView.Resources>
+			<!--<ListView.Resources>
 				<Style
 					TargetType="ScrollBar">
 					<Setter
@@ -95,8 +98,8 @@
 						</Setter.Value>
 					</Setter>
 				</Style>
-			</ListView.Resources>
-			
+			</ListView.Resources>-->
+
 			<ListView.ItemContainerStyle>
 				<Style
 					TargetType="ListViewItem">
@@ -119,6 +122,7 @@
 
 							<ControlTemplate
 								TargetType="ListBoxItem">
+								<!--MouseLeftButtonDown="OnShowModalClick"-->
 								<Border
 									Background="{TemplateBinding Background}"
 									BorderThickness="0"
@@ -137,11 +141,11 @@
 											<RowDefinition />
 										</Grid.RowDefinitions>
 
-										<!--<Image
-											Source="{Binding Image}"
+										<Image
+											Source="{Binding ImageSource}"
 											Width="auto"
 											Height="auto"
-											Margin="5" />-->
+											Margin="5" />
 
 										<TextBlock
 											Grid.Row="1"
@@ -180,11 +184,11 @@
 													FontWeight="SemiBold"
 													Style="{StaticResource Text}">
 													<Run
-														Text="{DynamicResource From}" />
+														Text="от" />
 													<Run
 														Text="{Binding Price}" />
 													<Run
-														Text="{DynamicResource Rub}" />
+														Text="руб." />
 												</TextBlock>
 											</StackPanel>
 
@@ -209,7 +213,7 @@
 													</ControlTemplate>
 												</Button.Template>
 												<TextBlock
-													Text="{DynamicResource Buy}"
+													Text="Подробнее"
 													FontSize="14"
 													Padding="10 4"
 													Style="{StaticResource Text}" />

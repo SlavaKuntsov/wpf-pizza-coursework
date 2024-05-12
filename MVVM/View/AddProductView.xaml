@@ -97,7 +97,7 @@
 					Style="{StaticResource Text}" />
 
 				<Image
-					Source="{Binding SelectedImage}"
+					Source="{Binding Image}"
 					Width="80"
 					Height="80" />
 

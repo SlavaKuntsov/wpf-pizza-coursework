@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
+using System.Threading.Tasks;
+
+using CSharpFunctionalExtensions;
 
 using Pizza.Abstractions;
 using Pizza.DataAccess;
@@ -19,25 +22,27 @@ namespace Pizza.Manager
 		private static DataManager instance;
 		private string _connectionString;
 
-		private ObservableCollection<ProductPreviewModel> _products;
+		private ObservableCollection<ProductModelNew> _products;
 		private ObservableCollection<ProductModel> _basketProducts;
 
-		UnitOfWork _unitOfWork;
-		AuthManager _authManager;
+		private readonly CatalogManager _catalogManager;
+		private UnitOfWork _unitOfWork;
+		private readonly AuthManager _authManager;
 
 		public DataManager()
 		{
+			_catalogManager = CatalogManager.Instance;
 			_authManager = AuthManager.Instance;
 			_connectionString = _authManager.ConnectionString;
 			_authManager.PropertyChanged += _authManager_PropertyChanged;
 
 			ChangeConnection();
 
-			_products = new ObservableCollection<ProductPreviewModel>();
+			_products = new ObservableCollection<ProductModelNew>();
 			_basketProducts = new ObservableCollection<ProductModel>();
 
 			Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-			ReadData();
+			//ReadData();
 			//ReadBasketData();
 		}
 
@@ -66,12 +71,12 @@ namespace Pizza.Manager
 			}
 		}
 
-		public void AddProduct(ProductModel product)
+		public async void AddProduct(ProductModelNew product)
 		{
-			Console.WriteLine("add prod: " + product.ShortName);
+			Console.WriteLine("add prod: " + product.Name);
 			//_products.Add(product);
 
-			_unitOfWork.Product.AddProduct(product);
+			await _unitOfWork.Product.AddProduct(product);
 		}
 
 		public void AddInBasket(ProductModel product)
@@ -97,22 +102,35 @@ namespace Pizza.Manager
 			ReadData();
 		}
 
-		//public
-
-		public ObservableCollection<ProductPreviewModel> GetAllProducts()
+		public ObservableCollection<ProductModelNew> GetAllProducts()
 		{
 			return _products;
 		}
+
 		public ObservableCollection<ProductModel> GetBasket()
 		{
 			return _basketProducts;
 		}
 
-		private async void ReadData()
+		public int? GetProductsCount()
+		{
+			Result<int> result = _unitOfWork.Product.GetProductsCount();
+
+			Console.WriteLine("!!!! 2");
+
+			if (result.IsFailure)
+			{
+				return null;
+			}
+			return result.Value;
+		}
+
+		public async void ReadData()
 		{
 
 			Console.WriteLine("############# 1");
-			var products = await _unitOfWork.Basket.GetAllProductsPreview();
+			//var products = await _unitOfWork.Product.GetAllProductsPreview();
+			var products = await _unitOfWork.Product.GetProductPage();
 
 
 			Console.WriteLine("############# 2");
@@ -122,14 +140,47 @@ namespace Pizza.Manager
 			}
 			_products.Clear();
 			Console.WriteLine("############# 3");
-			foreach (ProductPreviewModel item in products.Value)
+			foreach (ProductModelNew item in products.Value)
 			{
 				_products.Add(item);
 			}
 
+			_catalogManager.LastPageProductId = _products.Last().Id;
+			Console.WriteLine("_catalogManager.NumberSelectionModel.LastProductId: " + _catalogManager.LastPageProductId);
+
 			//_products = products.Value;
 			Console.WriteLine("PROD LENGTH: " + _products.Count());
+		}
 
+		public void ClearData()
+		{
+			_products.Clear();
+		}
+
+		public async Task ReadDataAsync()
+		{
+
+			Console.WriteLine("############# 1");
+			//var products = await _unitOfWork.Product.GetAllProductsPreview();
+			var products = await _unitOfWork.Product.GetProductPage();
+
+
+			Console.WriteLine("############# 2");
+			if (products.IsFailure)
+			{
+				return;
+			}
+			_products.Clear();
+			Console.WriteLine("############# 3");
+			foreach (ProductModelNew item in products.Value)
+			{
+				_products.Add(item);
+			}
+
+			//PageInfoModel.LastProductId = _products.Last().Id;
+
+			//_products = products.Value;
+			Console.WriteLine("PROD LENGTH: " + _products.Count());
 		}
 
 		private void ReadBasketData()

@@ -28,7 +28,7 @@ namespace Pizza.MVVM.ViewModel
 		
 		public AddProductViewModel()
 		{
-			_product = new ProductModel();
+			_product = new ProductModelNew();
 			Category = PizzaCategories.Pizza;
 
 			productAbstraction = new ProductAbstraction();
@@ -36,7 +36,7 @@ namespace Pizza.MVVM.ViewModel
 			PizzaSizesDictionary = productAbstraction.PizzaSizesDictionary;
 
 			//SliderValue = 4;
-			Size = PizzaSizes.Medium;
+			//Size = PizzaSizes.Medium;
 
 			SaveCommand = new RelayCommand(Save);
 			OpenImageFileCommand = new RelayCommand(OpenImageFile);
@@ -44,7 +44,8 @@ namespace Pizza.MVVM.ViewModel
 
 		private void Save(object obj)
 		{
-			var addedProduct = ProductModel.Create(Guid.NewGuid(), Name, FullName, Description, Price, Image, Category, Size, Rating, Count);
+			var addedProduct = ProductModelNew.Create(Name, Description, Image, Price, true, PizzaCategories.Pizza, new List<string>{ "Размер" }, new List<string>{ "Средний" });
+			//var addedProduct = ProductModelNew.Create(Name, Description, Image, Price, true, Category, new List<string>{ "Размер" }, new List<string>{ "Средний" });
 
 			if (addedProduct.IsFailure)
 			{
@@ -64,18 +65,18 @@ namespace Pizza.MVVM.ViewModel
 			Name = "";
 			//FullName = "";
 			Description = "";
-			Image = "";
-			SelectedImage = BitmapImage.Create(
-				2,
-				2,
-				96,
-				96,
-				PixelFormats.Indexed1,
-				new BitmapPalette(new List<Color> { Colors.Transparent }),
-				new byte[] { 0, 0, 0, 0 },
-				1);
+			//Image = "";
+			//Image = BitmapImage.Create(
+			//	2,
+			//	2,
+			//	96,
+			//	96,
+			//	PixelFormats.Indexed1,
+			//	new BitmapPalette(new List<Color> { Colors.Transparent }),
+			//	new byte[] { 0, 0, 0, 0 },
+			//	1);
 			Category = PizzaCategories.Pizza;
-			Size = PizzaSizes.Big;
+			//Size = PizzaSizes.Big;
 			//SliderValue = 4;
 			PriceString = "";
 			//CountString = "";
@@ -90,7 +91,7 @@ namespace Pizza.MVVM.ViewModel
 
 			//openFileDialog.InitialDirectory = Path.GetFullPath(initialDirectory);
 
-			string initialDirectory = @"C:\my\study\wpf\labs\4\Assets\pizza";
+			string initialDirectory = @"C:\my\projects\dotnet_templates\wpf\PIzza\PIzza\Assets\pizza";
 
 			openFileDialog.InitialDirectory = initialDirectory;
 			openFileDialog.Filter = "Image Files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg";
@@ -99,55 +100,54 @@ namespace Pizza.MVVM.ViewModel
 			{
 				string selectedImagePath = openFileDialog.FileName;
 
-				string selectedImageName = Path.GetFileName(selectedImagePath);
+				//string selectedImageName = Path.GetFileName(selectedImagePath);
 
 				BitmapImage bitmapImage = new BitmapImage(new Uri(selectedImagePath));
 
-				SelectedImage = bitmapImage;
-				Image = selectedImageName;
+				Image = bitmapImage;
+				//Image = selectedImageName;
 			}
 			else
 			{
-				SelectedImage = null;
+				Image = null;
 			}
 		}
 
-		private ProductModel _product { get; set; }
-		public ProductModel Product
+		private ProductModelNew _product { get; set; }
+		public ProductModelNew Product
 		{
 			get { return _product; }
 			set { _product = value; OnPropertyChanged(nameof(Product)); }
 		}
 		public string Name
 		{
-			get { return _product.ShortName; }
-			set { _product.ShortName = value; OnPropertyChanged(nameof(Name)); }
+			get { return _product.Name; }
+			set { _product.Name = value; OnPropertyChanged(nameof(Name)); }
 		}
+
 		//public string FullName
 		//{
 		//	get { return _product.FullName; }
 		//	set { _product.FullName = value; OnPropertyChanged(nameof(FullName)); }
 		//}
+
 		public string Description
 		{
 			get { return _product.Description; }
 			set { _product.Description = value; OnPropertyChanged(nameof(Description)); }
 		}
-		public string Image
+
+		private BitmapImage _image;
+		public BitmapImage Image
 		{
-			get { return _product.Image; }
-			set { _product.Image = value; OnPropertyChanged(nameof(Image)); }
-		}
-		private ImageSource _selectedImage;
-		public ImageSource SelectedImage
-		{
-			get { return _selectedImage; }
+			get { return _image; }
 			set
 			{
-				_selectedImage = value;
-				OnPropertyChanged(nameof(SelectedImage));
+				_image = value;
+				OnPropertyChanged(nameof(Image));
 			}
 		}
+
 		public PizzaCategories Category
 		{
 			get { return _product.Category; }
@@ -168,21 +168,23 @@ namespace Pizza.MVVM.ViewModel
 				}
 			}
 		}
+
 		private bool _sizesVisibility { get; set; }
 		public bool SizesVisibility
 		{
 			get { return _sizesVisibility; }
 			set { _sizesVisibility = value; OnPropertyChanged(nameof(SizesVisibility)); }
 		}
-		public PizzaSizes Size
-		{
-			get { return _product.Size; }
-			set
-			{
-				_product.Size = value;
-				OnPropertyChanged(nameof(Size)); 
-			}
-		}
+
+		//public PizzaSizes Size
+		//{
+		//	get { return _product.Size; }
+		//	set
+		//	{
+		//		_product.Size = value;
+		//		OnPropertyChanged(nameof(Size));
+		//	}
+		//}
 		//private double _sliderValue { get; set; }
 		//public double SliderValue
 		//{
@@ -221,7 +223,7 @@ namespace Pizza.MVVM.ViewModel
 			get { return _product.Price; }
 			set { _product.Price = value; OnPropertyChanged(nameof(Price)); }
 		}
-		private string _countString;
+		//private string _countString;
 		//public string CountString
 		//{
 		//	get { return _countString; }

@@ -20,7 +20,7 @@ namespace Pizza.MVVM.ViewModel
 
 		private readonly ProgramAbstraction programAbstraction;
 		private readonly LocalizationManager _localizationManager;
-		private readonly CatalogStateManager _catalogStateManager;
+		private readonly CatalogManager _catalogStateManager;
 
 		private object _currentView;
 		public object CurrentView
@@ -71,7 +71,7 @@ namespace Pizza.MVVM.ViewModel
 
 			_localizationManager = LocalizationManager.Instance;
 
-			_catalogStateManager = CatalogStateManager.Instance;
+			_catalogStateManager = CatalogManager.Instance;
 			SearchVisibility = _catalogStateManager.SearchVisibility;
 			SortVisibility = _catalogStateManager.SortVisibility;
 			ButtonsVisibility = _catalogStateManager.ButtonsVisibility;

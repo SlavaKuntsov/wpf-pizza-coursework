@@ -21,15 +21,15 @@ namespace Pizza.MVVM.ViewModel
 		public Dictionary<PizzaSizes, string> PizzaSizesDictionary { get; set; }
 		public Dictionary<PizzaCategories, string> PizzaCategoryDictionary { get; set; }
 
-		public ProductModalViewModel(ProductModel product)
+		public ProductModalViewModel(ProductModelNew product)
 		{
 			Product = product;
-			ChangedProduct = product.DeepCopy();
+			//ChangedProduct = product.DeepCopy();
 
 			CategoryString = Product.GetCategoryString(Product.Category);
-			SizeString = Product.GetSizeString(Product.Size);
+			//SizeString = Product.GetSizeString(Product.Size);
 
-			SliderValue = (double)ChangedProduct.Rating;
+			//SliderValue = (double)ChangedProduct.Rating;
 			//CategoryString = "123";
 
 			var productAbstraction = new ProductAbstraction();
@@ -47,7 +47,7 @@ namespace Pizza.MVVM.ViewModel
 
 		private void Delete(object obj)
 		{
-			DataManager.Instance.DeleteProduct(_product.Id);
+			//DataManager.Instance.DeleteProduct(_product.Id);
 
 			Console.WriteLine("Элемент успешно удален из JSON.");
 		}
@@ -64,16 +64,15 @@ namespace Pizza.MVVM.ViewModel
 
 			Console.WriteLine("изменить");
 
-			Console.WriteLine("product: " + Product.ShortName);
-			Console.WriteLine("changedProduct: " + ChangedProduct.ShortName);
+			Console.WriteLine("product: " + Product.Name);
 		}
 
 		private void SaveEdit(object obj)
 		{
-			DataManager.Instance.EditProduct(_changedProduct);
-			Console.WriteLine("_changedProduct.Rating: " + _changedProduct.Rating);
+			//DataManager.Instance.EditProduct(_changedProduct);
+			//Console.WriteLine("_changedProduct.Rating: " + _changedProduct.Rating);
 
-			Console.WriteLine("измененно и сохраненно");
+			//Console.WriteLine("измененно и сохраненно");
 		}
 
 		private bool _isEdit { get; set; }
@@ -97,8 +96,8 @@ namespace Pizza.MVVM.ViewModel
 			set { _invisible = value; OnPropertyChanged(nameof(Invisible)); }
 		}
 
-		private ProductModel _product { get; set; }
-		public ProductModel Product
+		private ProductModelNew _product { get; set; }
+		public ProductModelNew Product
 		{
 			get { return _product; }
 			set { _product = value; OnPropertyChanged(nameof(Product)); }
@@ -122,24 +121,18 @@ namespace Pizza.MVVM.ViewModel
 			}
 		}
 
-		private ProductModel _changedProduct { get; set; }
-		public ProductModel ChangedProduct
+		private ProductModelNew _changedProduct { get; set; }
+		public ProductModelNew ChangedProduct
 		{
 			get { return _changedProduct; }
 			set { _changedProduct = value; OnPropertyChanged(nameof(ChangedProduct)); }
 		}
 
-		private string _shortName { get; set; }
-		public string ShortName
+		private string _name { get; set; }
+		public string Name	
 		{
-			get { return _shortName; }
-			set { _shortName = value; OnPropertyChanged(nameof(ShortName)); }
-		}
-		public string _fullName { get; set; }
-		public string FullName
-		{
-			get { return _fullName; }
-			set { _fullName = value; OnPropertyChanged(nameof(FullName)); }
+			get { return _name; }
+			set { _name = value; OnPropertyChanged(nameof(Name)); }
 		}
 		public string _description { get; set; }
 		public string Description
@@ -198,82 +191,82 @@ namespace Pizza.MVVM.ViewModel
 				OnPropertyChanged(nameof(Size));
 			}
 		}
-		private double _sliderValue { get; set; }
-		public double SliderValue
-		{
-			get { return _sliderValue; }
-			set
-			{
-				_sliderValue = value;
-				OnPropertyChanged(nameof(SliderValue));
-				Rating convertRating = ConvertSliderValueToRating(value);
-				ChangedProduct.Rating = convertRating;
-			}
-		}
-		public Rating _rating { get; set; }
-		public Rating Rating
-		{
-			get { return _rating; }
-			set { _rating = value; OnPropertyChanged(nameof(Rating)); }
-		}
-		private string _priceString;
-		public string PriceString
-		{
-			get { return _priceString; }
-			set
-			{
-				_priceString = value;
-				OnPropertyChanged(nameof(PriceString));
-				double convertPrice;
-				if (double.TryParse(value, out convertPrice))
-				{
-					Price = convertPrice;
-				}
-			}
-		}
+		//private double _sliderValue { get; set; }
+		//public double SliderValue
+		//{
+		//	get { return _sliderValue; }
+		//	set
+		//	{
+		//		_sliderValue = value;
+		//		OnPropertyChanged(nameof(SliderValue));
+		//		Rating convertRating = ConvertSliderValueToRating(value);
+		//		ChangedProduct.Rating = convertRating;
+		//	}
+		//}
+		//public Rating _rating { get; set; }
+		//public Rating Rating
+		//{
+		//	get { return _rating; }
+		//	set { _rating = value; OnPropertyChanged(nameof(Rating)); }
+		//}
+		//private string _priceString;
+		//public string PriceString
+		//{
+		//	get { return _priceString; }
+		//	set
+		//	{
+		//		_priceString = value;
+		//		OnPropertyChanged(nameof(PriceString));
+		//		double convertPrice;
+		//		if (double.TryParse(value, out convertPrice))
+		//		{
+		//			Price = convertPrice;
+		//		}
+		//	}
+		//}
 		public double Price
 		{
 			get { return Price; }
 			set { Price = value; OnPropertyChanged(nameof(Price)); }
 		}
-		private string _countString;
-		public string CountString
-		{
-			get { return _countString; }
-			set
-			{
-				_countString = value;
-				OnPropertyChanged(nameof(CountString));
-				int convertCount;
-				if (int.TryParse(value, out convertCount))
-				{
-					Count = convertCount;
-				}
-			}
-		}
-		public int Count
-		{
-			get { return Count; }
-			set { Count = value; OnPropertyChanged(nameof(Count)); }
-		}
+		//private string _countString;
+		//public string CountString
+		//{
+		//	get { return _countString; }
+		//	set
+		//	{
+		//		_countString = value;
+		//		OnPropertyChanged(nameof(CountString));
+		//		int convertCount;
+		//		if (int.TryParse(value, out convertCount))
+		//		{
+		//			Count = convertCount;
+		//		}
+		//	}
+		//}
+		//public int Count
+		//{
+		//	get { return Count; }
+		//	set { Count = value; OnPropertyChanged(nameof(Count)); }
+		//}
 
-		private Rating ConvertSliderValueToRating(double sliderValue)
-		{
-			switch (sliderValue)
-			{
-				case 1:
-					return Rating.One;
-				case 2:
-					return Rating.Two;
-				case 3:
-					return Rating.Three;
-				case 4:
-					return Rating.Four;
-				case 5:
-					return Rating.Five;
-				default:
-					return Rating.None;
-			}
-		}
+		//private Rating ConvertSliderValueToRating(double sliderValue)
+		//{
+		//	switch (sliderValue)
+		//	{
+		//		case 1:
+		//			return Rating.One;
+		//		case 2:
+		//			return Rating.Two;
+		//		case 3:
+		//			return Rating.Three;
+		//		case 4:
+		//			return Rating.Four;
+		//		case 5:
+		//			return Rating.Five;
+		//		default:
+		//			return Rating.None;
+		//	}
+		//}
 	}
 }

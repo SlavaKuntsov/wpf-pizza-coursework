@@ -13,10 +13,9 @@ namespace Pizza.Abstractions
 {
 	public interface IProductRepository
 	{
-		Result<ObservableCollection<ProductModel>> GetAllProducts();
+		Task<Result<ObservableCollection<ProductModelNew>>> GetAllProductsPreview();
+		Task<Result> AddProduct(ProductModelNew product);
 		ProductModel GetProductById(int id);
-
-		void AddProduct(ProductModel product);
 		Result<bool> UpdateProduct(ProductModel product);
 		Result<bool> DeleteProduct(Guid id);
 

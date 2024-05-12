@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.IO;
-using System.Windows.Media;
 
 using Pizza.Abstractions;
 using Pizza.MVVM.Model;
@@ -12,8 +7,10 @@ using Pizza.MVVM.Model;
 using CSharpFunctionalExtensions;
 
 using Npgsql;
-
-using static Pizza.Abstractions.ProductAbstraction;
+using System.Data;
+using System.Threading.Tasks;
+using NpgsqlTypes;
+using Pizza.Manager;
 
 namespace Pizza.Repository
 {
@@ -26,59 +23,46 @@ namespace Pizza.Repository
 			_connectionString = connection;
 		}
 
-		public Result<ObservableCollection<ProductModel>> GetAllProducts()
+		public async Task<Result<ObservableCollection<ProductModelNew>>> GetAllProductsPreview()
 		{
-			ObservableCollection<ProductModel> products = new ObservableCollection<ProductModel>();
+			Console.WriteLine("_______________ GetAllProductsPreview ________________");
+			//MessageBox.Show("GetAllProductsPreview");
+			ObservableCollection<ProductModelNew> products = new ObservableCollection<ProductModelNew>();
 
 			using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
 			{
 				connection.Open();
 
-				string sql = "SELECT * FROM product;";
-
-				using (NpgsqlCommand command = new NpgsqlCommand(sql, connection))
+				using (NpgsqlCommand command = new NpgsqlCommand("procedures.get_all_products_preview_limit", connection))
 				{
-					try
+					command.CommandType = CommandType.StoredProcedure;
+
+					using (NpgsqlDataReader reader = (NpgsqlDataReader)await command.ExecuteReaderAsync())
 					{
-						using (NpgsqlDataReader reader = command.ExecuteReader())
+						while (await reader.ReadAsync())
 						{
-							while (reader.Read())
-							{
-								Guid id = reader.GetGuid(reader.GetOrdinal("id"));
-								string shortName = reader.GetString(reader.GetOrdinal("shortname"));
-								string fullName = reader.GetString(reader.GetOrdinal("fullname"));
-								string description = reader.GetString(reader.GetOrdinal("description"));
-								double price = reader.GetDouble(reader.GetOrdinal("price"));
-								string image = reader.GetString(reader.GetOrdinal("image"));
-								byte[] imageData = new byte[reader.GetBytes(reader.GetOrdinal("imagedata"), 0, null, 0, int.MaxValue)];
-								reader.GetBytes(reader.GetOrdinal("imagedata"), 0, imageData, 0, imageData.Length);
-								string categoryString = reader.GetString(reader.GetOrdinal("category"));
-								PizzaCategories category = (PizzaCategories)Enum.Parse(typeof(PizzaCategories), categoryString);
-								string sizeString = reader.GetString(reader.GetOrdinal("size"));
-								PizzaSizes size = (PizzaSizes)Enum.Parse(typeof(PizzaSizes), sizeString);
-								string ratingString = reader.GetString(reader.GetOrdinal("rating"));
-								Rating rating = (Rating)Enum.Parse(typeof(Rating), ratingString);
-								int count = reader.GetInt32(reader.GetOrdinal("count"));
-								bool inStock = reader.GetBoolean(reader.GetOrdinal("instock"));
-								string date = reader.GetString(reader.GetOrdinal("date"));
+							int productId = reader.GetInt32(reader.GetOrdinal("product_id"));
+							string productName = reader.GetString(reader.GetOrdinal("product_name"));
+							string productDescription = reader.GetString(reader.GetOrdinal("product_description"));
+							byte[] imageBytes = reader.IsDBNull(reader.GetOrdinal("product_image")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("product_image"));
+							double productPrice = reader.GetDouble(reader.GetOrdinal("product_price"));
+							bool productInStock = reader.GetBoolean(reader.GetOrdinal("product_instock"));
+							string productCategoryName = reader.GetString(reader.GetOrdinal("product_category_name"));
 
-								var product = ProductModel.Create(id, shortName, fullName, description, price, image, imageData, category, size, rating, count, date);
+							Console.WriteLine("NAME: " + productName);
+							//if (productName == "img")
+							//{
+							//var product = ProductPreviewModel.Create(productId, productName, productDescription, imageBytes, productPrice, productInStock, productCategoryName);
+							//products.Add(product.Value);
+							ProductModelNew product = new ProductModelNew(productId, productName, productDescription, imageBytes, productPrice, productInStock, productCategoryName);
+							products.Add(product);
+							//}
 
-								Console.WriteLine($"Id: {id}, Name: {shortName}, FullName: {fullName}, Description: {description}, Price: {price}, Image: {image}, Category: {category}, Size: {size}, Rating: {rating}, Count: {count}, InStock: {inStock}, Date: {date}");
 
-								if (product.IsFailure)
-								{
-									throw new Exception("ProductModel Create Failed");
-								}
 
-								products.Add(product.Value);
-							}
+							//var product = ProductPreviewModel.Create(productId, productName, productDescription, imageBytes, productPrice, productInStock, productCategoryName);
+
 						}
-					}
-					catch (SqlException ex)
-					{
-						Console.WriteLine("Ошибка выполнения запроса к базе данных: " + ex.Message);
-						return Result.Failure<ObservableCollection<ProductModel>>("Ошибка выполнения запроса к базе данных: " + ex.Message);
 					}
 				}
 			}
@@ -86,61 +70,299 @@ namespace Pizza.Repository
 			return Result.Success(products);
 		}
 
-		public void AddProduct(ProductModel product)
+		public async Task<Result<ObservableCollection<ProductModelNew>>> GetProductPage()
+		{
+			Console.WriteLine("_______________ GetProductPage ________________");
+			ObservableCollection<ProductModelNew> products = new ObservableCollection<ProductModelNew>();
+			//try
+			//{
+			using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+			{
+				await connection.OpenAsync();
+
+				using (NpgsqlCommand command = new NpgsqlCommand("procedures.get_paged_data", connection))
+				{
+					command.CommandType = CommandType.StoredProcedure;
+
+					CatalogManager catalogManager = CatalogManager.Instance;
+
+					Console.WriteLine("catalogManager.CurrentPage: " + catalogManager.CurrentPage);
+
+					command.Parameters.Add(new NpgsqlParameter("page_number", NpgsqlDbType.Integer) { Value = catalogManager.CurrentPage });
+					command.Parameters.Add(new NpgsqlParameter("page_size", NpgsqlDbType.Integer) { Value = catalogManager.ProductOnPage });
+
+					using (NpgsqlDataReader reader = (NpgsqlDataReader)await command.ExecuteReaderAsync())
+					{
+						while (await reader.ReadAsync())
+						{
+							int productId = reader.GetInt32(reader.GetOrdinal("product_id"));
+							string productName = reader.GetString(reader.GetOrdinal("product_name"));
+							string productDescription = reader.GetString(reader.GetOrdinal("product_description"));
+							byte[] imageBytes = reader.IsDBNull(reader.GetOrdinal("product_image")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("product_image"));
+							double productPrice = reader.GetDouble(reader.GetOrdinal("product_price"));
+							bool productInStock = reader.GetBoolean(reader.GetOrdinal("product_instock"));
+							string productCategoryName = reader.GetString(reader.GetOrdinal("product_category_name"));
+							string error = reader.IsDBNull(reader.GetOrdinal("error")) ? "" : reader.GetString(reader.GetOrdinal("error"));
+
+
+							Console.WriteLine("NAME: " + productName);
+
+
+							if (!string.IsNullOrEmpty(error))
+							{
+								Console.WriteLine(error);
+								return Result.Failure<ObservableCollection<ProductModelNew>>("Неправильный номер страницы!");
+							}
+							else
+							{
+								ProductModelNew product = new ProductModelNew(productId, productName, productDescription, imageBytes, productPrice, productInStock, productCategoryName);
+								products.Add(product);
+							}
+						}
+					}
+				}
+			}
+
+			return Result.Success(products);
+			//}
+			//catch (Exception ex)
+			//{
+			//	// Обработка ошибки
+			//	return Result.Failure<ObservableCollection<ProductModelNew>>(ex.Message);
+			//}
+		}
+
+
+		public Result<int> GetProductsCount()
+		{
+			//try
+			//{
+				using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+				{
+					connection.Open();
+
+					using (NpgsqlCommand command = new NpgsqlCommand("procedures.get_products_count", connection))
+					{
+						command.CommandType = CommandType.StoredProcedure;
+
+						int count = (int) command.ExecuteScalar();
+						Console.WriteLine("count: " + count);
+						return Result.Success(count);
+					}
+				}
+			//}
+			//catch (Exception ex)
+			//{
+			//	// Обработка ошибок
+			//	return Result.Failure<int>(ex.Message);
+			//}
+		}
+
+
+		public async Task<Result> AddProduct(ProductModelNew product)
 		{
 			using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
 			{
-				connection.Open();
-
-				string sql = "INSERT INTO public.product (id, shortname, fullname, description, price, image, imageData, size, rating, count, instock, date, category) VALUES (@Id, @Name, @FullName, @Description, @Price, @Image, @ImageData, @Size, @Rating, @Count, @InStock, @Date, @Category)";
-
-				using (NpgsqlCommand command = new NpgsqlCommand(sql, connection))
-				//using (NpgsqlCommand command = new NpgsqlCommand("add_product", connection))
+				await connection.OpenAsync();
+				//for (int i = 1; i <= 10000; i++)
+				//{
+				using (var transaction = connection.BeginTransaction())
 				{
-					Console.WriteLine("))))))))))))))))))))))))))))))))))))))))))))))))))))");
-					try
+					int product_id;
+					using (NpgsqlCommand command = new NpgsqlCommand("procedures.add_product", connection))
 					{
-						//command.CommandType = System.Data.CommandType.StoredProcedure;
+						command.CommandType = CommandType.StoredProcedure;
 
-						//var imageByte = ConvertImageToByteArray(product.ImageSource.ToString());
+						Console.WriteLine(Convert.ToBase64String(product.Image));
 
-						command.Parameters.AddWithValue("Id", product.Id);
-						command.Parameters.AddWithValue("Name", product.ShortName);
-						command.Parameters.AddWithValue("FullName", product.FullName);
-						command.Parameters.AddWithValue("Description", product.Description);
-						command.Parameters.AddWithValue("Price", product.Price);
-						command.Parameters.AddWithValue("Image", product.Image);
-						command.Parameters.AddWithValue("ImageData", product.ImageData);
-						command.Parameters.AddWithValue("Size", NpgsqlTypes.NpgsqlDbType.Varchar, product.Size.ToString());
-						command.Parameters.AddWithValue("Rating", NpgsqlTypes.NpgsqlDbType.Varchar, product.Rating.ToString());
-						command.Parameters.AddWithValue("Count", product.Count);
-						command.Parameters.AddWithValue("InStock", product.InStock);
-						command.Parameters.AddWithValue("Date", NpgsqlTypes.NpgsqlDbType.Date).Value = product.Date;
-						command.Parameters.AddWithValue("Category", NpgsqlTypes.NpgsqlDbType.Varchar, product.Category.ToString());
+						command.Parameters.Add(new NpgsqlParameter("name", NpgsqlDbType.Varchar) { Value = product.Name });
+						command.Parameters.Add(new NpgsqlParameter("description", NpgsqlDbType.Text) { Value = product.Description });
+						command.Parameters.Add(new NpgsqlParameter("image", NpgsqlDbType.Bytea) { Value = product.Image });
+						command.Parameters.Add(new NpgsqlParameter("price", NpgsqlDbType.Double) { Value = product.Price });
+						command.Parameters.Add(new NpgsqlParameter("instock", NpgsqlDbType.Boolean) { Value = product.InStock });
+						command.Parameters.Add(new NpgsqlParameter("category", NpgsqlDbType.Varchar) { Value = product.GetCategoryString(product.Category) });
 
-						command.ExecuteNonQuery();
+						var idParam = new NpgsqlParameter("id", NpgsqlDbType.Integer);
+						idParam.Direction = ParameterDirection.Output;
+						command.Parameters.Add(idParam);
 
-						int rowsAffected = command.ExecuteNonQuery();
+						var errorParam = new NpgsqlParameter("error", NpgsqlDbType.Varchar, 100);
+						errorParam.Direction = ParameterDirection.Output;
+						command.Parameters.Add(errorParam);
 
-						if (rowsAffected > 0)
+						await command.ExecuteNonQueryAsync();
+
+						string error = errorParam.Value.ToString();
+
+						if (!string.IsNullOrEmpty(error))
 						{
-							Console.WriteLine("Продукт успешно удален.");
+							Console.WriteLine(error);
+							switch (error)
+							{
+								case "Category not found!":
+									return Result.Failure<UserModel>("Такой категории не существует!");
+								case "Product already exists!":
+									return Result.Failure<UserModel>("Такой Продукт уже существует.");
+								default:
+									return Result.Failure<UserModel>("Ошибка запроса или соединения.1");
+							}
 						}
 						else
 						{
-							Console.WriteLine("Продукт с указанным идентификатором не найден.");
-							//return Result.Failure<bool>("Продукт с указанным идентификатором не найден.");
+							product_id = (int)idParam.Value;
+							//productId = (int)command.Parameters["@id"].Value;
+
+							Console.WriteLine("&&&&&&&&&&&&&&&");
+							Console.WriteLine("productId: " + product_id);
 						}
 					}
-					catch (Exception ex)
+					for (int j = 0; j < product.PropertyName.Count; j++)
 					{
-						Console.WriteLine("Ошибка выполнения запроса к базе данных: " + ex.Message);
-						//return Result.Failure<bool>("Ошибка выполнения запроса к базе данных: " + ex.Message);
-					}
+						using (NpgsqlCommand command = new NpgsqlCommand("CALL procedures.add_property_for_product(@product_id_, @name, @value)", connection))
+						{
+							command.Parameters.Add(new NpgsqlParameter("@product_id_", NpgsqlDbType.Integer) { Value = product_id });
+							command.Parameters.Add(new NpgsqlParameter("@name", NpgsqlDbType.Varchar) { Value = product.PropertyName[j] });
+							command.Parameters.Add(new NpgsqlParameter("@value", NpgsqlDbType.Varchar) { Value = product.PropertyValue[j] });
 
+							await command.ExecuteNonQueryAsync();
+						}
+					}
+					// Здесь вы можете выполнить дополнительные операции или вызвать другие хранимые процедуры.
+					// Например, в вашем случае вызов `procedures.add_property_for_product`.
+
+					transaction.Commit();
+					Console.WriteLine("Transaction committed successfully.");
 				}
+				//}
 			}
+			return Result.Success();
 		}
+
+
+		//public async Task<Result> AddProduct(ProductModelNew product)
+		//{
+		//	Console.WriteLine("Name: " + product.Name);
+		//	Console.WriteLine("Description: " + product.Description);
+		//	Console.WriteLine("Price: " + product.Price);
+		//	Console.WriteLine("Image: " + Convert.ToBase64String(product.Image));
+		//	Console.WriteLine("InStock: " + product.InStock);
+		//	//try
+		//	//{
+		//	using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+		//	{
+		//		await connection.OpenAsync();
+
+		//		// Начать транзакцию
+		//		using (var transaction = connection.BeginTransaction())
+		//		{
+		//			//try
+		//			//{
+		//			// Выполнить первую функцию add_product
+		//			int productId;
+		//			string error = "";
+
+		//			using (var command = new NpgsqlCommand("procedures.add_product", connection))
+		//			{
+		//				command.CommandType = CommandType.StoredProcedure;
+
+		//				//command.Parameters.AddWithValue("@name", product.Name);	
+		//				//command.Parameters.AddWithValue("@description", product.Description);
+		//				//command.Parameters.AddWithValue("@image", product.Image);
+		//				//command.Parameters.AddWithValue("@price", product.Price);
+		//				//command.Parameters.AddWithValue("@inStock", product.InStock);
+		//				//command.Parameters.AddWithValue("@category", product.GetCategoryString(product.Category));
+		//				command.Parameters.Add("@name", NpgsqlDbType.Varchar).Value = product.Name;
+		//				command.Parameters.Add("@description", NpgsqlDbType.Text).Value = product.Description;
+		//				command.Parameters.Add("@image", NpgsqlDbType.Bytea).Value = product.Image;
+		//				command.Parameters.Add("@price", NpgsqlDbType.Double).Value = product.Price;
+		//				command.Parameters.Add("@inStock", NpgsqlDbType.Boolean).Value = product.InStock;
+		//				command.Parameters.Add("@category", NpgsqlDbType.Varchar).Value = (string)product.GetCategoryString(product.Category);
+
+		//				command.Parameters.Add("@id", NpgsqlDbType.Integer).Direction = ParameterDirection.Output;
+		//				command.Parameters.Add("@error", NpgsqlDbType.Varchar, 100).Direction = ParameterDirection.Output;
+
+		//				await command.ExecuteNonQueryAsync();
+
+		//				error = command.Parameters["@error"].Value.ToString();
+
+		//				if (!string.IsNullOrEmpty(error))
+		//				{
+		//					switch (error)
+		//					{
+		//						case "Category not found!":
+		//							return Result.Failure<UserModel>("Такой категории не существует!");
+		//						case "Product already exists!":
+		//							return Result.Failure<UserModel>("Такой Продукт уже существует.");
+		//						default:
+		//							return Result.Failure<UserModel>("Ошибка запроса или соединения.1");
+		//					}
+		//				}
+		//				else
+		//				{
+		//					productId = (int)command.Parameters["@id"].Value;
+
+		//					Console.WriteLine("&&&&&&&&&&&&&&&");
+		//					Console.WriteLine("productId: " + productId);
+		//				}
+		//			}
+
+
+		//			//NpgsqlCommand command1 = new NpgsqlCommand("select procedures.add_product", connection);
+		//			//command1.CommandType = CommandType.StoredProcedure;
+
+		//			//command1.Parameters.Add("@name", NpgsqlDbType.Varchar).Value = product.Name;
+		//			//command1.Parameters.Add("@description", NpgsqlDbType.Text).Value = product.Description;
+		//			//command1.Parameters.Add("@image", NpgsqlDbType.Bytea).Value = product.Image;
+		//			//command1.Parameters.Add("@price", NpgsqlDbType.Double).Value = product.Price;
+		//			//command1.Parameters.Add("@inStock", NpgsqlDbType.Boolean).Value = product.InStock;
+		//			//command1.Parameters.Add("@category", NpgsqlDbType.Varchar).Value = (string)product.GetCategoryString(product.Category);
+
+		//			//command1.Parameters.Add("@id", NpgsqlDbType.Integer).Direction = ParameterDirection.Output;
+		//			//command1.Parameters.Add("@error", NpgsqlDbType.Varchar, 100).Direction = ParameterDirection.Output;
+
+		//			////await connection.OpenAsync();
+		//			//command1.ExecuteNonQuery();
+		//			//await command1.ExecuteNonQueryAsync();
+
+		//			//string error = command1.Parameters["@error"].Value.ToString();
+
+
+
+		//			// Выполнить вторую функцию add_property_for_product
+		//			for (int j = 0; j < product.PropertyValue.Count; j++)
+		//			{
+		//				var command2 = new NpgsqlCommand("CALL procedures.add_property_for_product(@product_id, @name, @value)", connection);
+		//				command2.CommandType = CommandType.StoredProcedure;
+		//				command2.Parameters.Add("@product_id", NpgsqlDbType.Integer).Value = productId;
+		//				command2.Parameters.Add("@name", NpgsqlDbType.Varchar).Value = product.PropertyName[j];
+		//				command2.Parameters.Add("@value", NpgsqlDbType.Varchar).Value = product.PropertyValue[j];
+
+		//				await command2.ExecuteNonQueryAsync();
+		//			}
+
+		//			// Завершить транзакцию
+		//			transaction.Commit();
+		//			Console.WriteLine("Transaction committed successfully.");
+		//			//}
+		//			//catch (Exception ex)
+		//			//{
+		//			//	// Если произошла ошибка, откатить транзакцию
+		//			//	transaction.Rollback();
+		//			//	Console.WriteLine("Transaction rolled back. Error: " + ex.Message);
+		//			//}
+		//		}
+		//	}
+		//	return Result.Success();
+		//	//}
+		//	//catch (Exception ex)
+		//	//{
+		//	//	// Обработка ошибок
+		//	//	return Result.Failure("Failed to add product: " + ex.Message);
+		//	//}
+		//}
+
+
+
 
 		public Result<bool> DeleteProduct(Guid id)
 		{
@@ -254,5 +476,11 @@ namespace Pizza.Repository
 			throw new NotImplementedException();
 		}
 
+	}
+
+	public class Prop
+	{
+		public string PropName { get; set; }
+		public string PropValue { get; set; }
 	}
 }

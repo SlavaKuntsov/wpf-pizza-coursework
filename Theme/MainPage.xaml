@@ -15,7 +15,7 @@
 			Value="750" />-->
 		<Setter
 			Property="ResizeMode"
-			Value="CanResizeWithGrip" />
+			Value="CanResize" />
 		<Setter
 			Property="AllowsTransparency"
 			Value="True" />
