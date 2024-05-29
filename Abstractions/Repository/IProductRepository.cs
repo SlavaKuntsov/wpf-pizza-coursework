@@ -13,11 +13,11 @@ namespace Pizza.Abstractions
 {
 	public interface IProductRepository
 	{
-		Task<Result<ObservableCollection<ProductModelNew>>> GetAllProductsPreview();
-		Task<Result> AddProduct(ProductModelNew product);
-		ProductModel GetProductById(int id);
-		Result<bool> UpdateProduct(ProductModel product);
-		Result<bool> DeleteProduct(Guid id);
+		//Task<Result<ObservableCollection<ProductModelNew>>> GetAllProductsPreview();
+		//Task<Result> AddProduct(ProductModelNew product);
+		//ProductModel GetProductById(int id);
+		//Result<bool> UpdateProduct(ProductModel product);
+		//Result<bool> DeleteProduct(Guid id);
 
-	}
+	}	
 }

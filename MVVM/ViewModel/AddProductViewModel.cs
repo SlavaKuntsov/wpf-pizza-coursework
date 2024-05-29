@@ -25,18 +25,22 @@ namespace Pizza.MVVM.ViewModel
 		public ICommand OpenImageFileCommand { get; set; }
 		public Dictionary<PizzaCategories, string> PizzaCategoryDictionary { get; set; }
 		public Dictionary<PizzaSizes, string> PizzaSizesDictionary { get; set; }
-		
+		public Dictionary<PizzaTypes, string> PizzaTypesDictionary { get; set; }
+
 		public AddProductViewModel()
 		{
 			_product = new ProductModelNew();
-			Category = PizzaCategories.Pizza;
+			ProductCategory = PizzaCategories.Pizza;
 
-			productAbstraction = new ProductAbstraction();
-			PizzaCategoryDictionary = productAbstraction.PizzaCategoriesDictionary;
-			PizzaSizesDictionary = productAbstraction.PizzaSizesDictionary;
+			//productAbstraction = new ProductAbstraction();
+			//PizzaCategoryDictionary = productAbstraction.PizzaCategoriesDictionary;
+			//PizzaSizesDictionary = productAbstraction.PizzaSizesDictionary;
+			//PizzaTypesDictionary = productAbstraction.PizzaTypesDictionary;
 
 			//SliderValue = 4;
-			//Size = PizzaSizes.Medium;
+			ProductCategory = PizzaCategories.Pizza;
+			ProductSize = PizzaSizes.Medium;
+			ProductType = PizzaTypes.Default;
 
 			SaveCommand = new RelayCommand(Save);
 			OpenImageFileCommand = new RelayCommand(OpenImageFile);
@@ -44,8 +48,9 @@ namespace Pizza.MVVM.ViewModel
 
 		private void Save(object obj)
 		{
-			var addedProduct = ProductModelNew.Create(Name, Description, Image, Price, true, PizzaCategories.Pizza, new List<string>{ "Размер" }, new List<string>{ "Средний" });
-			//var addedProduct = ProductModelNew.Create(Name, Description, Image, Price, true, Category, new List<string>{ "Размер" }, new List<string>{ "Средний" });
+			var addedProduct = ProductModelNew.Create(Name, Description, Image, Price, true, ProductCategory, new List<string>{ "Размер", "Тесто" }, new List<string>{ ProductSize.GetDescription(), ProductType.GetDescription() });
+			//var addedProduct = ProductModelNew.Create(Name, Description, Image, Price, true, ProductCategory, new List<string>{ "Размер" }, new List<string>{ "Средний" });
+			Console.WriteLine("ProductSize.GetDescription(): " + ProductSize.GetDescription());
 
 			if (addedProduct.IsFailure)
 			{
@@ -75,8 +80,8 @@ namespace Pizza.MVVM.ViewModel
 			//	new BitmapPalette(new List<Color> { Colors.Transparent }),
 			//	new byte[] { 0, 0, 0, 0 },
 			//	1);
-			Category = PizzaCategories.Pizza;
-			//Size = PizzaSizes.Big;
+			ProductCategory = PizzaCategories.Pizza;
+			//ProductSize = PizzaSizes.Big;
 			//SliderValue = 4;
 			PriceString = "";
 			//CountString = "";
@@ -148,43 +153,55 @@ namespace Pizza.MVVM.ViewModel
 			}
 		}
 
-		public PizzaCategories Category
+		public PizzaCategories ProductCategory
 		{
 			get { return _product.Category; }
 			set
 			{
 				_product.Category = value;
-				OnPropertyChanged(nameof(Category));
+				OnPropertyChanged(nameof(ProductCategory));
 
-				if (Category == PizzaCategories.Pizza)
+				if (ProductCategory == PizzaCategories.Pizza)
 				{
-					SizesVisibility = true;
-					Console.WriteLine(_sizesVisibility);
+					PizzaPropertyVisibility = true;
+					Console.WriteLine(_pizzaPropertyVisibility);
 				}
 				else
 				{
-					SizesVisibility = false;
-					Console.WriteLine(_sizesVisibility);
+					PizzaPropertyVisibility = false;
+					Console.WriteLine(_pizzaPropertyVisibility);
 				}
 			}
 		}
 
-		private bool _sizesVisibility { get; set; }
-		public bool SizesVisibility
+		private bool _pizzaPropertyVisibility { get; set; }
+		public bool PizzaPropertyVisibility
 		{
-			get { return _sizesVisibility; }
-			set { _sizesVisibility = value; OnPropertyChanged(nameof(SizesVisibility)); }
+			get { return _pizzaPropertyVisibility; }
+			set { _pizzaPropertyVisibility = value; OnPropertyChanged(nameof(PizzaPropertyVisibility)); }
 		}
 
-		//public PizzaSizes Size
-		//{
-		//	get { return _product.Size; }
-		//	set
-		//	{
-		//		_product.Size = value;
-		//		OnPropertyChanged(nameof(Size));
-		//	}
-		//}
+		public PizzaSizes _size { get; set; }
+		public PizzaSizes ProductSize
+		{
+			get { return _size; }
+			set
+			{
+				_size = value;
+				OnPropertyChanged(nameof(ProductSize));
+			}
+		}
+
+		public PizzaTypes _type { get; set; }
+		public PizzaTypes ProductType
+		{
+			get { return _type; }
+			set
+			{
+				_type = value;
+				OnPropertyChanged(nameof(ProductType));
+			}
+		}
 		//private double _sliderValue { get; set; }
 		//public double SliderValue
 		//{

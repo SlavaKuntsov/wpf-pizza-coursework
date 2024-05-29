@@ -7,14 +7,32 @@
 	xmlns:local="clr-namespace:Pizza.MVVM.View"
 	xmlns:v="clr-namespace:Pizza.MVVM.View"
 	xmlns:vm="clr-namespace:Pizza.MVVM.ViewModel"
+	xmlns:c="clr-namespace:Pizza.Utilities.Converter"
 	d:DataContext="{d:DesignInstance Type=vm:ProfileViewModel}"
 	mc:Ignorable="d"
 	d:DesignHeight="450"
-	d:DesignWidth="800">
+	d:DesignWidth="800"
+	Style="{StaticResource Page}">
 
-	<Grid>
+	<UserControl.Resources>
+		<c:WidthConverter
+			x:Key="WidthConverter" />
+		<c:BoolToVisibilityConverter
+			x:Key="BoolToVisibilityConverter" />
+		<c:BoolToVisibilityMultiConverter
+			x:Key="BoolToVisibilityMultiConverter" />
+		<c:StringAndBoolToVisibilityMultiConverter
+			x:Key="StringAndBoolToVisibilityMultiConverter" />
+	</UserControl.Resources>
+
+	<Grid
+		x:Name="OrderGrid">
 
 		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="50" />
+			<RowDefinition
+				Height="auto" />
 			<RowDefinition
 				Height="50" />
 			<RowDefinition
@@ -30,95 +48,590 @@
 			HorizontalAlignment="Center" />
 
 		<StackPanel
+			HorizontalAlignment="Stretch"
 			Grid.Row="1"
-			Margin="20,20, 20, 0"
 			Orientation="Vertical">
 
+			<Grid
+				Margin="20,20, 20, 0">
+
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition
+						Width="*" />
+					<ColumnDefinition
+						Width="*" />
+					<ColumnDefinition
+						Width="*" />
+					<ColumnDefinition
+						Width="*" />
+				</Grid.ColumnDefinitions>
+
+				<StackPanel
+					Margin="0 0 0 20"
+					Orientation="Horizontal"
+					VerticalAlignment="Center">
+
+					<TextBlock
+						Margin="0 0 20 0"
+						FontSize="16"
+						VerticalAlignment="Center"
+						Text="Имя:"
+						Style="{StaticResource Text}" />
+
+					<TextBlock
+						Margin="0 0 20 0"
+						FontSize="16"
+						VerticalAlignment="Center"
+						Text="{Binding User.Name}"
+						Style="{StaticResource Text}" />
+
+				</StackPanel>
+
+				<StackPanel
+					Grid.Column="1"
+					Margin="0 0 0 20"
+					VerticalAlignment="Center"
+					Orientation="Horizontal">
+
+					<TextBlock
+						Margin="0 0 20 0"
+						FontSize="16"
+						VerticalAlignment="Center"
+						Text="Фамилия:"
+						Style="{StaticResource Text}" />
+
+					<TextBlock
+						Margin="0 0 20 0"
+						FontSize="16"
+						VerticalAlignment="Center"
+						Text="{Binding User.Surname}"
+						Style="{StaticResource Text}" />
+
+				</StackPanel>
+
+				<StackPanel
+					Grid.Column="2"
+					Margin="0 0 0 20"
+					VerticalAlignment="Center"
+					Orientation="Horizontal">
+
+					<TextBlock
+						Margin="0 0 20 0"
+						FontSize="16"
+						VerticalAlignment="Center"
+						Text="Email:"
+						Style="{StaticResource Text}" />
+
+					<TextBlock
+						Margin="0 0 20 0"
+						FontSize="16"
+						VerticalAlignment="Center"
+						Text="{Binding User.Email}"
+						Style="{StaticResource Text}" />
+
+				</StackPanel>
+
+				<StackPanel
+					Grid.Column="3"
+					Margin="0 0 0 20"
+					VerticalAlignment="Center"
+					Orientation="Horizontal">
+
+					<TextBlock
+						Margin="0 0 20 0"
+						FontSize="16"
+						VerticalAlignment="Center"
+						Text="Роль:"
+						Style="{StaticResource Text}" />
+
+					<TextBlock
+						Margin="0 0 20 0"
+						FontSize="16"
+						VerticalAlignment="Center"
+						Text="{Binding User.Role}"
+						Style="{StaticResource Text}" />
+
+				</StackPanel>
+
+			</Grid>
+
 			<StackPanel
-				Margin="0 0 0 20"
-				VerticalAlignment="Center"
+				Margin="20 0 0 0"
 				Orientation="Horizontal">
 
 				<TextBlock
 					Margin="0 0 20 0"
 					FontSize="16"
 					VerticalAlignment="Center"
-					Text="Имя:"
+					Text="Адрес:"
 					Style="{StaticResource Text}" />
 
-				<TextBlock
+				<TextBox
 					Margin="0 0 20 0"
 					FontSize="16"
+					MinWidth="200"
+					MaxWidth="300"
 					VerticalAlignment="Center"
-					Text="{Binding User.Name}"
-					Style="{StaticResource Text}" />
+					HorizontalAlignment="Left"
+					Text="{Binding User.Address, UpdateSourceTrigger=PropertyChanged}"
+					Style="{StaticResource TextBox}" />
+
+				<Button
+					Command="{Binding UpdateUserCommand}"
+					Grid.Column="2"
+					Background="#D0FF6D00"
+					BorderThickness="0"
+					Padding="20 10"
+					HorizontalAlignment="Right">
+					<Button.Template>
+						<ControlTemplate
+							TargetType="Button">
+							<Border
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								CornerRadius="5">
+								<ContentPresenter
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center" />
+							</Border>
+						</ControlTemplate>
+					</Button.Template>
+					<TextBlock
+						Text="Сохранить"
+						FontSize="13"
+						Padding="10 5"
+						Style="{StaticResource Text}" />
+				</Button>
 
 			</StackPanel>
 
-			<StackPanel
-				Margin="0 0 0 20"
-				VerticalAlignment="Center"
-				Orientation="Horizontal">
-
-				<TextBlock
-					Margin="0 0 20 0"
-					FontSize="16"
-					VerticalAlignment="Center"
-					Text="Фамилия:"
-					Style="{StaticResource Text}" />
-
-				<TextBlock
-					Margin="0 0 20 0"
-					FontSize="16"
-					VerticalAlignment="Center"
-					Text="{Binding User.Surname}"
-					Style="{StaticResource Text}" />
-
-			</StackPanel>
-
-			<StackPanel
-				Margin="0 0 0 20"
-				VerticalAlignment="Center"
-				Orientation="Horizontal">
-
-				<TextBlock
-					Margin="0 0 20 0"
-					FontSize="16"
-					VerticalAlignment="Center"
-					Text="Email:"
-					Style="{StaticResource Text}" />
-
-				<TextBlock
-					Margin="0 0 20 0"
-					FontSize="16"
-					VerticalAlignment="Center"
-					Text="{Binding User.Email}"
-					Style="{StaticResource Text}" />
-
-			</StackPanel>
-
-			<StackPanel
-				Margin="0 0 0 20"
-				VerticalAlignment="Center"
-				Orientation="Horizontal">
-
-				<TextBlock
-					Margin="0 0 20 0"
-					FontSize="16"
-					VerticalAlignment="Center"
-					Text="Роль:"
-					Style="{StaticResource Text}" />
-
-				<TextBlock
-					Margin="0 0 20 0"
-					FontSize="16"
-					VerticalAlignment="Center"
-					Text="{Binding User.Role}"
-					Style="{StaticResource Text}" />
-
-			</StackPanel>
-			
 		</StackPanel>
+
+
+		<TextBlock
+			Visibility="{Binding OrdersVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+			Grid.Row="2"
+			Style="{StaticResource Text}"
+			Text="Заказы"
+			FontWeight="SemiBold"
+			FontSize="20"
+			VerticalAlignment="Center"
+			HorizontalAlignment="Center" />
+
+		<ScrollViewer
+			Grid.Row="3"
+			CanContentScroll="True"
+			x:Name="scrollViewer">
+
+			<ScrollViewer.Resources>
+				<Style
+					TargetType="ScrollBar">
+					<Setter
+						Property="Background"
+						Value="Gray" />
+					<Setter
+						Property="Width"
+						Value="10" />
+					<Setter
+						Property="Template">
+						<Setter.Value>
+							<ControlTemplate
+								TargetType="ScrollBar">
+								<Grid>
+									<Border
+										Background="Transparent"
+										BorderBrush="Transparent"
+										BorderThickness="0"
+										CornerRadius="7" />
+									<Track
+										x:Name="PART_Track"
+										IsDirectionReversed="True">
+										<Track.DecreaseRepeatButton>
+											<RepeatButton
+												Command="{x:Static ScrollBar.PageUpCommand}"
+												Opacity="0" />
+										</Track.DecreaseRepeatButton>
+										<Track.Thumb>
+											<Thumb
+												Padding="0"
+												Margin="0"
+												Background="#202020"
+												BorderBrush="Transparent"
+												BorderThickness="0" />
+										</Track.Thumb>
+										<Track.IncreaseRepeatButton>
+											<RepeatButton
+												Command="{x:Static ScrollBar.PageDownCommand}"
+												Opacity="0" />
+										</Track.IncreaseRepeatButton>
+									</Track>
+								</Grid>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</ScrollViewer.Resources>
+
+			<ListView
+				Grid.Row="1"
+				PreviewMouseWheel="ListView_PreviewMouseWheel"
+				Padding="10 0"
+				Background="Transparent"
+				BorderBrush="Transparent"
+				ItemsSource="{Binding Orders}"
+				ScrollViewer.CanContentScroll="False"
+				ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+				ScrollViewer.VerticalScrollBarVisibility="Disabled"
+				HorizontalContentAlignment="Stretch"
+				d:ItemsSource="{d:SampleData ItemCount=2}">
+
+				<ListView.ItemsPanel>
+					<ItemsPanelTemplate>
+						<VirtualizingStackPanel
+							Orientation="Vertical"
+							HorizontalAlignment="Stretch" />
+					</ItemsPanelTemplate>
+				</ListView.ItemsPanel>
+				<ListView.ItemContainerStyle>
+					<Style
+						TargetType="ListViewItem">
+
+						<Setter
+							Property="Background"
+							Value="#D0FF8224" />
+
+						<Setter
+							Property="BorderBrush"
+							Value="Transparent" />
+
+						<Setter
+							Property="BorderThickness"
+							Value="0" />
+
+						<Setter
+							Property="Template">
+							<Setter.Value>
+
+								<ControlTemplate
+									TargetType="ListBoxItem">
+									<!--MouseLeftButtonDown="OnShowModalClick"-->
+									<Border
+										Background="#FFB37A"
+										BorderThickness="0"
+										Height="auto"
+										CornerRadius="10"
+										Margin="18 15"
+										Padding="15 10">
+
+										<Grid
+											Margin="10 0 0 0">
+
+											<Grid.RowDefinitions>
+												<RowDefinition />
+												<RowDefinition
+													Height="*" />
+												<RowDefinition />
+												<RowDefinition />
+											</Grid.RowDefinitions>
+
+
+											<StackPanel
+												Orientation="Horizontal">
+
+												<TextBlock
+													Text="Заказ"
+													FontSize="18"
+													FontWeight="SemiBold"
+													Style="{StaticResource Text}"
+													Foreground="#181818"
+													HorizontalAlignment="Left" />
+
+												<TextBlock
+													Text="{Binding Id}"
+													FontSize="18"
+													FontWeight="SemiBold"
+													Style="{StaticResource Text}"
+													Foreground="#181818"
+													HorizontalAlignment="Left" />
+
+											</StackPanel>
+
+											<Grid
+												Grid.Row="1">
+
+												<Grid.RowDefinitions>
+													<RowDefinition />
+													<RowDefinition
+														Height="*" />
+												</Grid.RowDefinitions>
+
+												<TextBlock
+													Text="Краткий список:"
+													FontSize="16"
+													Margin="5 5 0 13"
+													FontWeight="SemiBold"
+													Style="{StaticResource Text}"
+													Foreground="#181818"
+													HorizontalAlignment="Left" />
+
+												<Border
+													Grid.Row="1"
+													Padding="10"
+													CornerRadius="6"
+													Background="#ffa05a">
+
+													<ListView
+														PreviewMouseWheel="ListView_PreviewMouseWheel"
+														Background="Transparent"
+														BorderBrush="Transparent"
+														ItemsSource="{Binding OrderProducts}"
+														ScrollViewer.CanContentScroll="False"
+														ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+														ScrollViewer.VerticalScrollBarVisibility="Disabled"
+														HorizontalContentAlignment="Stretch"
+														d:ItemsSource="{d:SampleData ItemCount=2}">
+
+														<ListView.ItemsPanel>
+															<ItemsPanelTemplate>
+																<VirtualizingStackPanel
+																	Orientation="Vertical"
+																	HorizontalAlignment="Stretch" />
+															</ItemsPanelTemplate>
+														</ListView.ItemsPanel>
+
+														<ListView.ItemContainerStyle>
+															<Style
+																TargetType="ListViewItem">
+																<Setter
+																	Property="HorizontalContentAlignment"
+																	Value="Stretch" />
+																<Setter
+																	Property="Template">
+																	<Setter.Value>
+																		<ControlTemplate
+																			TargetType="ListBoxItem">
+
+																			<Grid
+																				VerticalAlignment="Center">
+																				<Grid.ColumnDefinitions>
+																					<ColumnDefinition
+																						Width="auto" />
+																					<ColumnDefinition
+																						Width="*" />
+																					<ColumnDefinition
+																						Width="*" />
+																					<ColumnDefinition
+																						Width="auto" />
+																				</Grid.ColumnDefinitions>
+
+																				<Image
+																					Source="{Binding ImageSource}"
+																					Width="50"
+																					Height="50"
+																					Margin="5" />
+
+																				<TextBlock
+																					VerticalAlignment="Center"
+																					Grid.Column="1"
+																					Text="{Binding Name}"
+																					FontSize="16"
+																					Foreground="#181818"
+																					FontWeight="SemiBold"
+																					Style="{StaticResource Text}" />
+
+																				<StackPanel
+																					VerticalAlignment="Center"
+																					Grid.Column="2"
+																					Orientation="Horizontal">
+																					<TextBlock
+																						Text="Количество:"
+																						FontSize="16"
+																						Foreground="#181818"
+																						FontWeight="SemiBold"
+																						Style="{StaticResource Text}" />
+																					<TextBlock
+																						Text="{Binding Count}"
+																						FontSize="16"
+																						Foreground="#181818"
+																						FontWeight="SemiBold"
+																						Style="{StaticResource Text}" />
+																				</StackPanel>
+
+																				<StackPanel
+																					VerticalAlignment="Center"
+																					Grid.Column="3"
+																					Orientation="Horizontal">
+																					<TextBlock
+																						Text="Цена:"
+																						FontSize="16"
+																						Foreground="#181818"
+																						FontWeight="SemiBold"
+																						Style="{StaticResource Text}" />
+																					<TextBlock
+																						Text="{Binding SumPrice}"
+																						FontSize="16"
+																						Foreground="#181818"
+																						FontWeight="SemiBold"
+																						Style="{StaticResource Text}" />
+																				</StackPanel>
+																			</Grid>
+																		</ControlTemplate>
+																	</Setter.Value>
+																</Setter>
+															</Style>
+														</ListView.ItemContainerStyle>
+													</ListView>
+												</Border>
+
+											</Grid>
+
+											<StackPanel
+												Margin="5 5 0 0"
+												Grid.Row="2"
+												VerticalAlignment="Center"
+												Orientation="Horizontal">
+												<StackPanel.Visibility>
+													<MultiBinding
+														Converter="{StaticResource BoolToVisibilityMultiConverter}">
+														<Binding
+															Path="DataContext.CustomerVisibility"
+															RelativeSource="{RelativeSource AncestorType=UserControl}" />
+														<Binding
+															Path="IsDelivery" />
+													</MultiBinding>
+												</StackPanel.Visibility>
+												<TextBlock
+													Text="Доставка:"
+													FontSize="16"
+													Foreground="#181818"
+													FontWeight="SemiBold"
+													Style="{StaticResource Text}" />
+
+												<TextBlock
+													Text="{Binding IsDelivery}"
+													FontSize="16"
+													Foreground="#181818"
+													FontWeight="SemiBold"
+													Style="{StaticResource Text}" />
+
+											</StackPanel>
+
+											<Grid
+												Grid.Row="3"
+												HorizontalAlignment="Stretch"
+												Margin="5 5">
+
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition
+														Width="*" />
+													<ColumnDefinition
+														Width="*" />
+													<ColumnDefinition
+														Width="Auto" />
+												</Grid.ColumnDefinitions>
+
+												<StackPanel
+													VerticalAlignment="Center"
+													Orientation="Horizontal">
+
+													<TextBlock
+														Text="Статус:"
+														FontSize="18"
+														Foreground="#181818"
+														FontWeight="SemiBold"
+														Style="{StaticResource Text}" />
+													<TextBlock
+														Text="{Binding Status}"
+														FontSize="18"
+														Foreground="#181818"
+														FontWeight="SemiBold"
+														Style="{StaticResource Text}" />
+
+												</StackPanel>
+
+												<StackPanel
+													Grid.Column="1"
+													VerticalAlignment="Center"
+													Orientation="Horizontal">
+
+													<TextBlock
+														Text="Цена:"
+														FontSize="18"
+														Foreground="#181818"
+														FontWeight="SemiBold"
+														Style="{StaticResource Text}" />
+													<TextBlock
+														Text="{Binding TotalPrice}"
+														FontSize="18"
+														Foreground="#181818"
+														FontWeight="SemiBold"
+														Style="{StaticResource Text}" />
+
+												</StackPanel>
+
+												<!--Command="{Binding CancelOrderCommand}"-->
+												<Button
+													Click="Button_Click"
+													DataContext="{Binding}"
+													Grid.Column="2"
+													Background="#D0FF6D00"
+													BorderThickness="0"
+													Padding="20 10"
+													HorizontalAlignment="Right">
+													<Button.Visibility>
+														<MultiBinding
+															Converter="{StaticResource StringAndBoolToVisibilityMultiConverter}">
+															<Binding
+																Path="DataContext.Role"
+																RelativeSource="{RelativeSource AncestorType=UserControl}" />
+															<Binding
+																Source="Customer" />
+															<Binding
+																Path="Status" />
+															<Binding
+																Source="Оформлен" />
+														</MultiBinding>
+													</Button.Visibility>
+													<Button.Template>
+														<ControlTemplate
+															TargetType="Button">
+															<Border
+																Background="{TemplateBinding Background}"
+																BorderBrush="{TemplateBinding BorderBrush}"
+																BorderThickness="{TemplateBinding BorderThickness}"
+																CornerRadius="5">
+																<ContentPresenter
+																	HorizontalAlignment="Center"
+																	VerticalAlignment="Center" />
+															</Border>
+														</ControlTemplate>
+													</Button.Template>
+													<TextBlock
+														Text="Отменить :("
+														FontSize="16"
+														Padding="10 5"
+														Style="{StaticResource Text}" />
+												</Button>
+											</Grid>
+
+										</Grid>
+
+									</Border>
+								</ControlTemplate>
+
+							</Setter.Value>
+						</Setter>
+
+						<!--<EventSetter
+								Event="PreviewMouseLeftButtonDown"
+								Handler="OnShowModalClick" />-->
+
+					</Style>
+				</ListView.ItemContainerStyle>
+			</ListView>
+
+		</ScrollViewer>
 
 	</Grid>
 

@@ -21,270 +21,408 @@
 			x:Key="BoolToVisibilityConverter" />
 		<c:SizeToBooleanConverter
 			x:Key="SizeToBooleanConverter" />
+		<c:BoolToVisibilityMultiConverter
+			x:Key="BoolToVisibilityMultiConverter" />
+		<c:TypeToBooleanConverter
+			x:Key="TypeToBooleanConverter" />
+		<c:InStockToBooleanConverter
+			x:Key="InStockToBooleanConverter" />
 	</UserControl.Resources>
 
-	<Grid>
 
-		<Rectangle
-			x:Name="restangle"
-			Fill="#181818"
-			Opacity=".8"
-			MouseDown="Rectangle_MouseDown" />
+	<ScrollViewer
+		CanContentScroll="True"
+		x:Name="scrollViewer">
 
-		<Border
-			Background="#dd6002"
-			BorderThickness="0"
-			CornerRadius="20"
-			Padding="20"
-			VerticalAlignment="Center"
-			HorizontalAlignment="Center">
+		<ScrollViewer.Resources>
+			<Style
+				TargetType="ScrollBar">
+				<Setter
+					Property="Background"
+					Value="Gray" />
+				<Setter
+					Property="Width"
+					Value="10" />
+				<Setter
+					Property="Template">
+					<Setter.Value>
+						<ControlTemplate
+							TargetType="ScrollBar">
+							<Grid>
+								<Border
+									Background="Transparent"
+									BorderBrush="Transparent"
+									BorderThickness="0"
+									CornerRadius="7" />
+								<Track
+									x:Name="PART_Track"
+									IsDirectionReversed="True">
+									<Track.DecreaseRepeatButton>
+										<RepeatButton
+											Command="{x:Static ScrollBar.PageUpCommand}"
+											Opacity="0" />
+									</Track.DecreaseRepeatButton>
+									<Track.Thumb>
+										<Thumb
+											Padding="0"
+											Margin="0"
+											Background="#202020"
+											BorderBrush="Transparent"
+											BorderThickness="0" />
+									</Track.Thumb>
+									<Track.IncreaseRepeatButton>
+										<RepeatButton
+											Command="{x:Static ScrollBar.PageDownCommand}"
+											Opacity="0" />
+									</Track.IncreaseRepeatButton>
+								</Track>
+							</Grid>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
+		</ScrollViewer.Resources>
+		<Grid>
 
-			<Grid
-				Opacity="1"
-				Margin="10 0 0 0">
+			<Rectangle
+				x:Name="restangle"
+				Fill="#181818"
+				Opacity=".8"
+				MouseDown="Rectangle_MouseDown" />
 
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition
-						Width="auto" />
-					<ColumnDefinition
-						Width="auto" />
-				</Grid.ColumnDefinitions>
+			<Border
+				Background="#dd6002"
+				BorderThickness="0"
+				CornerRadius="20"
+				Padding="20"
+				Margin="0 20 0 15"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center">
 
-				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition
-							Height="*" />
-						<RowDefinition
-							Height="1" />
-					</Grid.RowDefinitions>
+				<Grid
+					Opacity="1"
+					Margin="10 0 0 0">
 
-					<Image
-						Source="{Binding Product.ImageSource}"
-						Width="250"
-						Height="auto"
-						Margin="5 5 50 5" />
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition
+							Width="auto" />
+						<ColumnDefinition
+							Width="auto" />
+					</Grid.ColumnDefinitions>
+
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition
+								Height="*" />
+							<RowDefinition
+								Height="1" />
+						</Grid.RowDefinitions>
+
+						<Image
+							Source="{Binding AddedProduct.ImageSource}"
+							Width="250"
+							Height="auto"
+							Margin="5 5 50 5" />
+
+						<StackPanel
+							Orientation="Horizontal">
+
+							<Button
+								Visibility="{Binding ManagerBoolVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+								Command="{Binding DeleteCommand}"
+								Background="#FFFF8000"
+								BorderThickness="0"
+								Padding="20 10"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Top">
+
+								<Button.Template>
+									<ControlTemplate
+										TargetType="Button">
+										<Border
+											x:Name="border"
+											Padding="15 8"
+											Background="{TemplateBinding Background}"
+											BorderBrush="{TemplateBinding BorderBrush}"
+											BorderThickness="{TemplateBinding BorderThickness}"
+											CornerRadius="15">
+											<ContentPresenter
+												HorizontalAlignment="Center"
+												VerticalAlignment="Center" />
+										</Border>
+										<ControlTemplate.Triggers>
+											<EventTrigger
+												RoutedEvent="Button.MouseEnter">
+												<BeginStoryboard>
+													<Storyboard>
+														<ColorAnimation
+															Storyboard.TargetName="border"
+															Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+															To="#FFFFA449"
+															Duration="0:0:0.3" />
+													</Storyboard>
+												</BeginStoryboard>
+											</EventTrigger>
+											<EventTrigger
+												RoutedEvent="Button.MouseLeave">
+												<BeginStoryboard>
+													<Storyboard>
+														<ColorAnimation
+															Storyboard.TargetName="border"
+															Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+															To="#FFFF8000"
+															Duration="0:0:0.3" />
+													</Storyboard>
+												</BeginStoryboard>
+											</EventTrigger>
+										</ControlTemplate.Triggers>
+									</ControlTemplate>
+								</Button.Template>
+
+								<StackPanel
+									Orientation="Horizontal">
+									<Image
+										Width="20"
+										Height="20"
+										Source="/Assets/icons/delete.png" />
+									<TextBlock
+										Text="{DynamicResource Delete}"
+										FontSize="14"
+										Style="{StaticResource Text}" />
+								</StackPanel>
+							</Button>
+
+							<Button
+								Visibility="{Binding ManagerBoolVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+								Command="{Binding EditCommand}"
+								Margin="10 0 0 0"
+								Background="#FFFF8000"
+								BorderThickness="0"
+								Padding="20 10"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Top">
+								<Button.Template>
+									<ControlTemplate
+										TargetType="Button">
+										<Border
+											x:Name="border"
+											Padding="15 8"
+											Background="{TemplateBinding Background}"
+											BorderBrush="{TemplateBinding BorderBrush}"
+											BorderThickness="{TemplateBinding BorderThickness}"
+											CornerRadius="15">
+											<ContentPresenter
+												HorizontalAlignment="Center"
+												VerticalAlignment="Center" />
+										</Border>
+										<ControlTemplate.Triggers>
+											<EventTrigger
+												RoutedEvent="Button.MouseEnter">
+												<BeginStoryboard>
+													<Storyboard>
+														<ColorAnimation
+															Storyboard.TargetName="border"
+															Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+															To="#FFFFA449"
+															Duration="0:0:0.3" />
+													</Storyboard>
+												</BeginStoryboard>
+											</EventTrigger>
+											<EventTrigger
+												RoutedEvent="Button.MouseLeave">
+												<BeginStoryboard>
+													<Storyboard>
+														<ColorAnimation
+															Storyboard.TargetName="border"
+															Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+															To="#FFFF8000"
+															Duration="0:0:0.3" />
+													</Storyboard>
+												</BeginStoryboard>
+											</EventTrigger>
+										</ControlTemplate.Triggers>
+									</ControlTemplate>
+								</Button.Template>
+								<StackPanel
+									Orientation="Horizontal">
+									<Image
+										Width="20"
+										Height="20"
+										Source="/Assets/icons/edit.png" />
+									<TextBlock
+										Text="{DynamicResource Change}"
+										FontSize="14"
+										Style="{StaticResource Text}" />
+								</StackPanel>
+							</Button>
+
+						</StackPanel>
+
+					</Grid>
 
 					<StackPanel
-						Orientation="Horizontal">
-						<Button
-							Command="{Binding DeleteCommand}"
-							Click="Rectangle_MouseDown"
-							Background="#FFFF8000"
-							BorderThickness="0"
-							Padding="20 10"
-							HorizontalAlignment="Left"
-							VerticalAlignment="Top">
-							<Button.Template>
-								<ControlTemplate
-									TargetType="Button">
-									<Border
-										x:Name="border"
-										Padding="15 8"
-										Background="{TemplateBinding Background}"
-										BorderBrush="{TemplateBinding BorderBrush}"
-										BorderThickness="{TemplateBinding BorderThickness}"
-										CornerRadius="15">
-										<ContentPresenter
-											HorizontalAlignment="Center"
-											VerticalAlignment="Center" />
-									</Border>
-									<ControlTemplate.Triggers>
-										<EventTrigger
-											RoutedEvent="Button.MouseEnter">
-											<BeginStoryboard>
-												<Storyboard>
-													<ColorAnimation
-														Storyboard.TargetName="border"
-														Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-														To="#FFFFA449"
-														Duration="0:0:0.3" />
-												</Storyboard>
-											</BeginStoryboard>
-										</EventTrigger>
-										<EventTrigger
-											RoutedEvent="Button.MouseLeave">
-											<BeginStoryboard>
-												<Storyboard>
-													<ColorAnimation
-														Storyboard.TargetName="border"
-														Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-														To="#FFFF8000"
-														Duration="0:0:0.3" />
-												</Storyboard>
-											</BeginStoryboard>
-										</EventTrigger>
-									</ControlTemplate.Triggers>
-								</ControlTemplate>
-							</Button.Template>
-							<StackPanel
-								Orientation="Horizontal">
-								<Image
-									Width="20"
-									Height="20"
-									Source="/Assets/icons/delete.png" />
-								<TextBlock
-									Text="{DynamicResource Delete}"
-									FontSize="14"
-									Style="{StaticResource Text}" />
-							</StackPanel>
-						</Button>
+						Grid.Column="1"
+						Width="auto"
+						Orientation="Vertical"
+						HorizontalAlignment="Left">
 
-						<Button
-							Command="{Binding EditCommand}"
-							Margin="10 0 0 0"
-							Background="#FFFF8000"
-							BorderThickness="0"
-							Padding="20 10"
-							HorizontalAlignment="Left"
-							VerticalAlignment="Top">
-							<Button.Template>
-								<ControlTemplate
-									TargetType="Button">
-									<Border
-										x:Name="border"
-										Padding="15 8"
-										Background="{TemplateBinding Background}"
-										BorderBrush="{TemplateBinding BorderBrush}"
-										BorderThickness="{TemplateBinding BorderThickness}"
-										CornerRadius="15">
-										<ContentPresenter
-											HorizontalAlignment="Center"
-											VerticalAlignment="Center" />
-									</Border>
-									<ControlTemplate.Triggers>
-										<EventTrigger
-											RoutedEvent="Button.MouseEnter">
-											<BeginStoryboard>
-												<Storyboard>
-													<ColorAnimation
-														Storyboard.TargetName="border"
-														Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-														To="#FFFFA449"
-														Duration="0:0:0.3" />
-												</Storyboard>
-											</BeginStoryboard>
-										</EventTrigger>
-										<EventTrigger
-											RoutedEvent="Button.MouseLeave">
-											<BeginStoryboard>
-												<Storyboard>
-													<ColorAnimation
-														Storyboard.TargetName="border"
-														Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-														To="#FFFF8000"
-														Duration="0:0:0.3" />
-												</Storyboard>
-											</BeginStoryboard>
-										</EventTrigger>
-									</ControlTemplate.Triggers>
-								</ControlTemplate>
-							</Button.Template>
-							<StackPanel
-								Orientation="Horizontal">
-								<Image
-									Width="20"
-									Height="20"
-									Source="/Assets/icons/edit.png" />
-								<TextBlock
-									Text="{DynamicResource Change}"
-									FontSize="14"
-									Style="{StaticResource Text}" />
-							</StackPanel>
-						</Button>
+						<TextBlock
+							Text="{Binding AddedProduct.Name}"
+							Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
+							FontSize="25"
+							FontWeight="SemiBold"
+							Style="{StaticResource Text}"
+							HorizontalAlignment="Left" />
 
-					</StackPanel>
+						<TextBox
+							Text="{Binding ChangedProduct.Name}"
+							Margin="0 0 0 10"
+							Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
+							FontSize="18"
+							FontWeight="SemiBold"
+							Style="{StaticResource TextBox}"
+							HorizontalAlignment="Left" />
 
-				</Grid>
+						<TextBlock
+							Text="{Binding AddedProduct.Description}"
+							Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
+							FontSize="15"
+							Margin="5 10 0 0"
+							Opacity=".8"
+							FontWeight="SemiBold"
+							Style="{StaticResource Text}"
+							HorizontalAlignment="Left" />
 
-				<StackPanel
-					Grid.Column="1"
-					Width="210"
-					Orientation="Vertical"
-					HorizontalAlignment="Left">
+						<TextBox
+							Text="{Binding ChangedProduct.Description}"
+							Margin="0 0 0 10"
+							Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
+							FontSize="15"
+							Opacity=".8"
+							FontWeight="SemiBold"
+							Style="{StaticResource TextBox}"
+							HorizontalAlignment="Left" />
 
-					<TextBlock
-						Text="{Binding Product.ShortName}"
-						Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
-						FontSize="25"
-						FontWeight="SemiBold"
-						Style="{StaticResource Text}"
-						HorizontalAlignment="Left" />
-
-					<TextBox
-						Text="{Binding ChangedProduct.ShortName}"
-						Margin="0 0 0 10"
-						Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
-						FontSize="18"
-						FontWeight="SemiBold"
-						Style="{StaticResource TextBox}"
-						HorizontalAlignment="Left" />
-
-					<TextBlock
+						<!--<TextBlock
 						Text="{Binding Product.FullName}"
 						Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
 						FontSize="15"
 						Opacity=".8"
 						FontWeight="Regular"
 						Style="{StaticResource Text}"
-						HorizontalAlignment="Left" />
+						HorizontalAlignment="Left" />-->
 
 
-					<!--??????????????????? изменение-->
+						<!--??????????????????? изменение-->
 
-					<TextBox
+						<!--<TextBox
 						Text="{Binding ChangedProduct.FullName}"
 						Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
 						FontSize="15"
 						Opacity=".8"
 						FontWeight="Regular"
 						Style="{StaticResource TextBox}"
-						HorizontalAlignment="Left" />
-
-					<WrapPanel
-						Orientation="Horizontal">
-
-						<TextBlock
-							Text="{DynamicResource Category}"
-							FontWeight="Regular"
-							FontSize="15"
-							Opacity=".9"
-							Margin="5 5 0 5"
-							Style="{StaticResource Text}"
-							HorizontalAlignment="Left" />
-
-						<TextBlock
-							Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
-							Text="{Binding CategoryString}"
-							FontWeight="SemiBold"
-							FontSize="15"
-							Opacity=".9"
-							Margin="5 5 0 5"
-							Style="{StaticResource Text}"
-							HorizontalAlignment="Left" />
-
+						HorizontalAlignment="Left" />-->
 
 						<WrapPanel
-							Margin="0 0 20 0"
-							Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}">
+							Margin="0 5 0 5"
+							Orientation="Horizontal">
 
-							<RadioButton
-								IsChecked="{Binding ChangedProduct.Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Pizza}"
-								Content="{DynamicResource Pizza}"
-								Style="{StaticResource ProductButton}" />
-							<RadioButton
-								IsChecked="{Binding ChangedProduct.Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Dessert}"
-								Content="{DynamicResource Dessert}"
-								Style="{StaticResource ProductButton}" />
-							<RadioButton
-								IsChecked="{Binding ChangedProduct.Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Drink}"
-								Content="{DynamicResource Drink}"
-								Style="{StaticResource ProductButton}" />
+							<TextBlock
+								Text="{DynamicResource Category}"
+								FontWeight="Regular"
+								FontSize="15"
+								Opacity=".9"
+								Margin="5 15 0 5"
+								Style="{StaticResource Text}"
+								HorizontalAlignment="Left" />
+
+							<TextBlock
+								Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
+								Text="{Binding CategoryString}"
+								FontWeight="SemiBold"
+								FontSize="15"
+								Opacity="1"
+								Margin="5 15 0 5"
+								Style="{StaticResource Text}"
+								HorizontalAlignment="Left" />
+
+
+							<WrapPanel
+								Margin="0 0 20 0"
+								Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}">
+
+								<RadioButton
+									IsChecked="{Binding ChangedProduct.Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Pizza}"
+									Content="{DynamicResource Pizza}"
+									Style="{StaticResource ProductButton}" />
+								<RadioButton
+									IsChecked="{Binding ChangedProduct.Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Dessert}"
+									Content="{DynamicResource Dessert}"
+									Style="{StaticResource ProductButton}" />
+								<RadioButton
+									IsChecked="{Binding ChangedProduct.Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Drink}"
+									Content="{DynamicResource Drink}"
+									Style="{StaticResource ProductButton}" />
+
+							</WrapPanel>
 
 						</WrapPanel>
 
-					</WrapPanel>
+						<StackPanel
+							Margin="0 0 0 10"
+							Orientation="Horizontal">
 
-					<ItemsControl
+							<TextBlock
+								Text="Наличие:"
+								FontWeight="Regular"
+								FontSize="15"
+								Opacity=".9"
+								Margin="5 15 0 5"
+								Style="{StaticResource Text}"
+								HorizontalAlignment="Left" />
+
+							<TextBlock
+								Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
+								Text="{Binding AddedProduct.InStock}"
+								FontWeight="Bold"
+								FontSize="15"
+								Opacity=".9"
+								Margin="5 15 0 5"
+								Style="{StaticResource Text}"
+								HorizontalAlignment="Left" />
+
+							<StackPanel
+								Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
+								Orientation="Horizontal">
+								<RadioButton
+									IsChecked="{Binding InStock, Mode=TwoWay, Converter={StaticResource InStockToBooleanConverter}, ConverterParameter=Yes}"
+									Content="Да"
+									Style="{StaticResource ProductButton}" />
+								<RadioButton
+									IsChecked="{Binding InStock, Mode=TwoWay, Converter={StaticResource InStockToBooleanConverter}, ConverterParameter=No}"
+									Content="Нет"
+									Style="{StaticResource ProductButton}" />
+							</StackPanel>
+
+							<!--<StackPanel
+								Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
+								Orientation="Horizontal">
+
+								<RadioButton
+									IsChecked="{Binding ChangedProduct.InStock, Mode=TwoWay, Converter={StaticResource InStockToBooleanConverter}, ConverterParameter=Yes}"
+									Content="Да"
+									Style="{StaticResource ProductButton}" />
+								<RadioButton
+									IsChecked="{Binding ChangedProduct.InStock, Mode=TwoWay, Converter={StaticResource InStockToBooleanConverter}, ConverterParameter=False}"
+									Content="Нет"
+									Style="{StaticResource ProductButton}" />
+
+							</StackPanel>-->
+
+						</StackPanel>
+
+						<!--<ItemsControl
 						Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
 						Margin="5 10 0 0"
 						ItemsSource="{Binding ChangedProduct.StringRating}">
@@ -303,23 +441,24 @@
 									StrokeThickness="1" />
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>
-					</ItemsControl>
+					</ItemsControl>-->
 
-					<StackPanel
+						<!--<StackPanel
 						Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
 						VerticalAlignment="Center"
 						Orientation="Horizontal">
 
-						<TextBlock
+						-->
+						<!--<TextBlock
 							Text="{DynamicResource Rating}"
 							FontWeight="Regular"
 							FontSize="15"
 							Opacity=".9"
 							Margin="5 5 15 5"
 							Style="{StaticResource Text}"
-							HorizontalAlignment="Left" />
+							HorizontalAlignment="Left" />-->
 
-						<Slider
+						<!--<Slider
 							x:Name="Slider"
 							Value="{Binding SliderValue, Mode=TwoWay}"
 							Minimum="1"
@@ -336,198 +475,232 @@
 							FontSize="16"
 							VerticalAlignment="Center"
 							Text="{Binding SliderValue}"
-							Style="{StaticResource Text}" />
+							Style="{StaticResource Text}" />-->
+						<!--
 
-					</StackPanel>
+					</StackPanel>-->
 
-					<TextBlock
+						<!--<TextBlock
 						FontSize="16"
 						Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
 						FontWeight="Regular"
 						Margin="5 10"
 						Text="{Binding Product.Description}"
-						Style="{StaticResource Text}" />
+						Style="{StaticResource Text}" />-->
 
-					<TextBox
-						FontSize="16"
-						Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
-						FontWeight="Regular"
-						Margin="5 10"
-						Text="{Binding ChangedProduct.Description}"
-						Style="{StaticResource TextBox}" />
-
-					<WrapPanel
-						Visibility="{Binding ChangedProduct.Category, Converter={StaticResource CategoryToVisibilityConverter}}"
-						Orientation="Horizontal">
-
-						<TextBlock
-							Text="{DynamicResource Size}"
+						<!--<TextBox
+							FontSize="16"
+							Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
 							FontWeight="Regular"
-							FontSize="15"
-							Opacity=".9"
-							Margin="5 5 0 5"
-							Style="{StaticResource Text}"
-							HorizontalAlignment="Left" />
-						
+							Margin="5 10"
+							Text="{Binding ChangedProduct.Description}"
+							Style="{StaticResource TextBox}" />-->
 
-						<TextBlock
-							Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
-							Text="{Binding SizeString}"
-							FontWeight="SemiBold"
-							FontSize="15"
-							Opacity=".9"
-							Margin="5 5 0 5"
-							Style="{StaticResource Text}"
-							HorizontalAlignment="Left" />
+						<!--Visibility="{Binding ChangedProduct.Category, Converter={StaticResource CategoryToVisibilityConverter}}"-->
+						<WrapPanel
+							Visibility="{Binding CustomerBoolVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+							Orientation="Horizontal">
 
+							<TextBlock
+								Text="{DynamicResource Size}"
+								FontWeight="Regular"
+								FontSize="15"
+								Opacity=".9"
+								Margin="5 12 10 5"
+								Style="{StaticResource Text}"
+								HorizontalAlignment="Left" />
+
+
+							<!--<TextBlock
+								Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
+								Text="{Binding AddedProduct.Size}"
+								FontWeight="SemiBold"
+								FontSize="15"
+								Opacity=".9"
+								Margin="5 5 0 5"
+								Style="{StaticResource Text}"
+								HorizontalAlignment="Left" />-->
+
+
+							<WrapPanel
+								Margin="0 0 20 0"
+								Visibility="{Binding CustomerBoolVisibility, Converter={StaticResource BoolToVisibilityConverter}}">
+
+								<RadioButton
+									IsChecked="{Binding Size, Mode=TwoWay, Converter={StaticResource SizeToBooleanConverter}, ConverterParameter=Small}"
+									Content="{DynamicResource Small}"
+									Style="{StaticResource ProductButton}" />
+								<RadioButton
+									IsChecked="{Binding Size, Mode=TwoWay, Converter={StaticResource SizeToBooleanConverter}, ConverterParameter=Medium}"
+									Content="{DynamicResource Medium}"
+									Style="{StaticResource ProductButton}" />
+								<RadioButton
+									IsChecked="{Binding Size, Mode=TwoWay, Converter={StaticResource SizeToBooleanConverter}, ConverterParameter=Big}"
+									Content="{DynamicResource Big}"
+									Style="{StaticResource ProductButton}" />
+
+							</WrapPanel>
+
+						</WrapPanel>
 
 						<WrapPanel
-							Margin="0 0 20 0"
-							Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}">
+							Visibility="{Binding CustomerBoolVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+							Margin="0 10"
+							Orientation="Horizontal">
+							<!--Visibility="{Binding AddedProduct.Category, Converter={StaticResource CategoryToVisibilityConverter}}"-->
 
-							<RadioButton
-								IsChecked="{Binding ChangedProduct.Size, Mode=TwoWay, Converter={StaticResource SizeToBooleanConverter}, ConverterParameter=Small}"
-								Content="{DynamicResource Small}"
-								Style="{StaticResource ProductButton}" />
-							<RadioButton
-								IsChecked="{Binding ChangedProduct.Size, Mode=TwoWay, Converter={StaticResource SizeToBooleanConverter}, ConverterParameter=Medium}"
-								Content="{DynamicResource Medium}"
-								Style="{StaticResource ProductButton}" />
-							<RadioButton
-								IsChecked="{Binding ChangedProduct.Size, Mode=TwoWay, Converter={StaticResource SizeToBooleanConverter}, ConverterParameter=Big}"
-								Content="{DynamicResource Big}"
-								Style="{StaticResource ProductButton}" />
+							<TextBlock
+								Text="Тесто:"
+								FontSize="15"
+								Opacity=".9"
+								Margin="5 12 10 10"
+								Style="{StaticResource Text}"
+								FontWeight="Regular"
+								HorizontalAlignment="Left">
+							</TextBlock>
 
-						</WrapPanel>
+							<!--<TextBlock
+								Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
+								Text="{Binding Product.Type}"
+								FontSize="15"
+								Opacity=".9"
+								Margin="5 0 0 10"
+								Style="{StaticResource Text}"
+								FontWeight="SemiBold"
+								HorizontalAlignment="Left">
+							</TextBlock>-->
 
-					</WrapPanel>
+							<StackPanel
+								Orientation="Horizontal"
+								Margin="0 0 20 0"
+								Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}">
 
-					<!--<WrapPanel
-						Margin="0 10"
-						Visibility="{Binding Product.Category, Converter={StaticResource CategoryToVisibilityConverter}}"
-						Orientation="Vertical">
+								<RadioButton
+									IsChecked="{Binding Type, Mode=TwoWay, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter=Default}"
+									Content="Обычное"
+									Style="{StaticResource ProductButton}" />
+								<RadioButton
+									IsChecked="{Binding Type, Mode=TwoWay, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter=Thin}"
+									Content="Тонкое"
+									Style="{StaticResource ProductButton}" />
 
-						<TextBlock
-							Text="Размер:"
-							FontSize="15"
-							Opacity=".9"
-							Margin="5 0 0 10"
-							Style="{StaticResource Text}"
-							FontWeight="Regular"
-							HorizontalAlignment="Left">
-						</TextBlock>
+								<!--<RadioButton
+									IsChecked="{Binding Product.Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Pizza}"
+									Content="{Binding PizzaCategoryDictionary[Pizza]}"
+									Style="{StaticResource ProductButton}" />
+								<RadioButton
+									IsChecked="{Binding Product.Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Dessert}"
+									Content="{Binding PizzaCategoryDictionary[Dessert]}"
+									Style="{StaticResource ProductButton}" />
+								<RadioButton
+									IsChecked="{Binding Product.Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Drink}"
+									Content="{Binding PizzaCategoryDictionary[Drink]}"
+									Style="{StaticResource ProductButton}" />-->
 
-						<TextBlock
-							Text="{Binding Product.SizeString}"
-							Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
-							FontSize="15"
-							Opacity=".9"
-							Margin="5 0 0 10"
-							Style="{StaticResource Text}"
-							FontWeight="SemiBold"
-							HorizontalAlignment="Left">
-						</TextBlock>-->
-
-
-					<!--<WrapPanel
-							Orientation="Vertical"
-							Margin="0 0 20 0"
-							Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}">
-
-							-->
-					<!--<RadioButton
-								IsChecked="{Binding Product.Size, Mode=TwoWay, Converter={StaticResource SizeToBooleanConverter}, ConverterParameter=Small}"
-								Content="{Binding PizzaSizesDictionary[Small]}"
-								Style="{StaticResource ProductButton}" />
-							<RadioButton
-								IsChecked="{Binding Product.Size, Mode=TwoWay, Converter={StaticResource SizeToBooleanConverter}, ConverterParameter=Medium}"
-								Content="{Binding PizzaSizesDictionary[Medium]}"
-								Style="{StaticResource ProductButton}" />
-							<RadioButton
-								IsChecked="{Binding Product.Size, Mode=TwoWay, Converter={StaticResource SizeToBooleanConverter}, ConverterParameter=Big}"
-								Content="{Binding PizzaSizesDictionary[Big]}"
-								Style="{StaticResource ProductButton}" />-->
-					<!--
-
-
-							<RadioButton
-								IsChecked="{Binding Product.Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Pizza}"
-								Content="{Binding PizzaCategoryDictionary[Pizza]}"
-								Style="{StaticResource ProductButton}"/>
-							<RadioButton
-								IsChecked="{Binding Product.Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Dessert}"
-								Content="{Binding PizzaCategoryDictionary[Dessert]}"
-								Style="{StaticResource ProductButton}" />
-							<RadioButton
-								IsChecked="{Binding Product.Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Drink}"
-								Content="{Binding PizzaCategoryDictionary[Drink]}"
-								Style="{StaticResource ProductButton}" />
+							</StackPanel>
 
 						</WrapPanel>
 
-					</WrapPanel>-->
+						<StackPanel
+							Visibility="{Binding CustomerBoolVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+							Orientation="Horizontal">
+							<!--Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"-->
 
-					<StackPanel
-						Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
-						Margin="5 5 0 10"
-						Orientation="Horizontal"
-						VerticalAlignment="Center"
-						HorizontalAlignment="Left">
-						<TextBlock
-							Margin="0 5 0 5"
-							FontSize="18"
-							Foreground="White"
-							FontWeight="SemiBold"
-							Text="{DynamicResource From}"
-							Style="{StaticResource Text}" />
-						<TextBlock
-							Margin="5 5 0 5"
-							FontSize="18"
-							Foreground="White"
-							FontWeight="SemiBold"
-							Text="{Binding Product.Price}"
-							Style="{StaticResource Text}" />
-						<TextBlock
-							Margin="5 5 0 5"
-							FontSize="18"
-							Foreground="White"
-							FontWeight="SemiBold"
-							Text="{DynamicResource Rub}"
-							Style="{StaticResource Text}" />
-					</StackPanel>
+							
+							
+							
+							<!--// ДОБАВИТЬ НАЛИЧИЕ-->
+							
+							
+							
+							<TextBlock
+								Text="Количество:"
+								FontWeight="Medium"
+								FontSize="16"
+								Opacity="1"
+								Margin="5 5 15 5"
+								Style="{StaticResource Text}"
+								HorizontalAlignment="Left" />
 
-					<StackPanel
-						Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
-						Margin="5 5 0 10"
-						Orientation="Horizontal"
-						VerticalAlignment="Center"
-						HorizontalAlignment="Left">
-						<TextBlock
-							Margin="0 10 0 5"
-							FontSize="18"
-							Foreground="White"
-							FontWeight="SemiBold"
-							Text="{DynamicResource From}"
-							Style="{StaticResource Text}" />
-						<TextBox
-							Margin="5 5 0 5"
-							FontSize="18"
-							Foreground="White"
-							FontWeight="SemiBold"
-							Text="{Binding ChangedProduct.Price}"
-							PreviewKeyDown="TextBox_PreviewKeyDown"
-							PreviewTextInput="TextBox_PreviewTextInput_WithDot"
-							Style="{StaticResource TextBox}" />
-						<TextBlock
-							Margin="5 10 0 5"
-							FontSize="18"
-							Foreground="White"
-							FontWeight="SemiBold"
-							Text="{DynamicResource Rub}"
-							Style="{StaticResource Text}" />
-					</StackPanel>
+							<TextBox
+								Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}"
+								Margin="0 0 0 10"
+								FontSize="15"
+								Opacity="1"
+								FontWeight="SemiBold"
+								Style="{StaticResource TextBox}"
+								PreviewKeyDown="TextBox_PreviewKeyDown"
+								PreviewTextInput="TextBox_PreviewTextInput"
+								HorizontalAlignment="Left" />
 
-					<!--<Grid
+						</StackPanel>
+
+						<StackPanel
+							Orientation="Horizontal">
+							<StackPanel
+								Visibility="{Binding Visible, Converter={StaticResource BoolToVisibilityConverter}}"
+								Margin="5 5 10 10"
+								Orientation="Horizontal"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Left">
+								<TextBlock
+									Margin="0 5 0 5"
+									FontSize="18"
+									Foreground="White"
+									FontWeight="SemiBold"
+									Text="{DynamicResource From}"
+									Style="{StaticResource Text}" />
+								<TextBlock
+									Margin="5 5 0 5"
+									FontSize="18"
+									Foreground="White"
+									FontWeight="SemiBold"
+									Text="{Binding AddedProduct.Price}"
+									Style="{StaticResource Text}" />
+								<TextBlock
+									Margin="5 5 0 5"
+									FontSize="18"
+									Foreground="White"
+									FontWeight="SemiBold"
+									Text="{DynamicResource Rub}"
+									Style="{StaticResource Text}" />
+							</StackPanel>
+
+							<StackPanel
+								Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
+								Margin="5 5 0 10"
+								Orientation="Horizontal"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Left">
+								<TextBlock
+									Margin="0 11 0 5"
+									FontSize="18"
+									Foreground="White"
+									FontWeight="SemiBold"
+									Text="{DynamicResource From}"
+									Style="{StaticResource Text}" />
+								<TextBox
+									Margin="5 5 0 5"
+									FontSize="18"
+									Foreground="White"
+									FontWeight="SemiBold"
+									Text="{Binding ChangedProduct.Price}"
+									PreviewKeyDown="TextBox_PreviewKeyDown"
+									PreviewTextInput="TextBox_PreviewTextInput_WithDot"
+									Style="{StaticResource TextBox}" />
+								<TextBlock
+									Margin="5 10 0 5"
+									FontSize="18"
+									Foreground="White"
+									FontWeight="SemiBold"
+									Text="{DynamicResource Rub}"
+									Style="{StaticResource Text}" />
+							</StackPanel>
+
+						</StackPanel>
+
+
+						<!--<Grid
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Center">
 
@@ -538,109 +711,246 @@
 								Width="Auto" />
 						</Grid.ColumnDefinitions>-->
 
-
-
-
-					<!--<Button
-							Grid.Column="1"
-							Background="#FFFF8000"
-							BorderThickness="0"
-							Padding="20 10"
-							HorizontalAlignment="Right"
-							VerticalAlignment="Bottom">
-							<Button.Template>
-								<ControlTemplate
-									TargetType="Button">
-									<Border
-										Background="{TemplateBinding Background}"
-										BorderBrush="{TemplateBinding BorderBrush}"
-										BorderThickness="{TemplateBinding BorderThickness}"
-										CornerRadius="15">
-										<ContentPresenter
-											HorizontalAlignment="Center"
-											VerticalAlignment="Center" />
-									</Border>
-								</ControlTemplate>
-							</Button.Template>
-							<TextBlock
-								Text="Купить"
-								FontSize="14"
-								Padding="20 5"
-								Style="{StaticResource Text}" />
-						</Button>-->
-					<!--</Grid>-->
-
-					<Button
-						Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
-						Command="{Binding SaveEditCommand}"
-						Click="Rectangle_MouseDown"
-						Background="#FFFF8000"
-						BorderThickness="0"
-						Padding="20 10"
-						HorizontalAlignment="Left"
-						VerticalAlignment="Top">
-						<Button.Template>
-							<ControlTemplate
-								TargetType="Button">
-								<Border
-									x:Name="border"
-									Padding="15 8"
-									Background="{TemplateBinding Background}"
-									BorderBrush="{TemplateBinding BorderBrush}"
-									BorderThickness="{TemplateBinding BorderThickness}"
-									CornerRadius="15">
-									<ContentPresenter
-										HorizontalAlignment="Center"
-										VerticalAlignment="Center" />
-								</Border>
-								<ControlTemplate.Triggers>
-									<EventTrigger
-										RoutedEvent="Button.MouseEnter">
-										<BeginStoryboard>
-											<Storyboard>
-												<ColorAnimation
-													Storyboard.TargetName="border"
-													Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-													To="#FFFFA449"
-													Duration="0:0:0.3" />
-											</Storyboard>
-										</BeginStoryboard>
-									</EventTrigger>
-									<EventTrigger
-										RoutedEvent="Button.MouseLeave">
-										<BeginStoryboard>
-											<Storyboard>
-												<ColorAnimation
-													Storyboard.TargetName="border"
-													Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-													To="#FFFF8000"
-													Duration="0:0:0.3" />
-											</Storyboard>
-										</BeginStoryboard>
-									</EventTrigger>
-								</ControlTemplate.Triggers>
-							</ControlTemplate>
-						</Button.Template>
 						<StackPanel
 							Orientation="Horizontal">
-							<Image
-								Width="20"
-								Height="20"
-								Source="/Assets/icons/save.png" />
-							<TextBlock
-								Text="{DynamicResource Save}"
-								FontSize="14"
-								Style="{StaticResource Text}" />
+
+							<Button
+								Command="{Binding RemoveFromBasketCommand}"
+								Grid.Column="1"
+								Background="#FFFF8000"
+								BorderThickness="0"
+								Padding="20 10"
+								HorizontalAlignment="Right"
+								VerticalAlignment="Bottom">
+								<Button.Visibility>
+									<MultiBinding
+										Converter="{StaticResource BoolToVisibilityMultiConverter}">
+										<Binding
+											Path="CustomerBoolVisibility" />
+										<Binding
+											Path="BasketBoolVisibility" />
+									</MultiBinding>
+								</Button.Visibility>
+								<Button.Template>
+									<ControlTemplate
+										TargetType="Button">
+										<Grid>
+											<VisualStateManager.VisualStateGroups>
+												<VisualStateGroup
+													Name="CommonStates">
+													<VisualState
+														Name="Normal">
+														<Storyboard>
+															<ColorAnimation
+																Storyboard.TargetName="backgroundBrush"
+																Storyboard.TargetProperty="Color"
+																To="#EB8336"
+																Duration="0:0:0.3" />
+														</Storyboard>
+													</VisualState>
+													<VisualState
+														Name="MouseOver">
+														<Storyboard>
+															<ColorAnimation
+																Storyboard.TargetName="backgroundBrush"
+																Storyboard.TargetProperty="Color"
+																To="#F19A5A"
+																Duration="0:0:0.4" />
+														</Storyboard>
+													</VisualState>
+													<VisualState
+														Name="Checked">
+														<Storyboard>
+															<ColorAnimation
+																Storyboard.TargetName="backgroundBrush"
+																Storyboard.TargetProperty="Color"
+																To="#dd6002"
+																Duration="0:0:0.4" />
+														</Storyboard>
+													</VisualState>
+												</VisualStateGroup>
+											</VisualStateManager.VisualStateGroups>
+											<Border
+												x:Name="border"
+												CornerRadius="10">
+												<Border.Background>
+													<SolidColorBrush
+														x:Name="backgroundBrush"
+														Color="#EB8336" />
+												</Border.Background>
+												<StackPanel
+													Margin="8 0"
+													Orientation="Horizontal">
+													<Image
+														Width="15"
+														Height="15"
+														Margin="10 0 0 0"
+														Source="/Assets/icons/delete.png" />
+													<TextBlock
+														Style="{StaticResource Text}"
+														FontSize="16"
+														Foreground="White"
+														Text="Удалить"
+														Padding="5 5"
+														VerticalAlignment="Center" />
+												</StackPanel>
+											</Border>
+										</Grid>
+									</ControlTemplate>
+								</Button.Template>
+							</Button>
+
+							<Button
+								Command="{Binding AddInBasketCommand}"
+								Grid.Column="1"
+								Background="#FFFF8000"
+								BorderThickness="0"
+								Padding="20 10"
+								HorizontalAlignment="Right"
+								VerticalAlignment="Bottom">
+								<Button.Visibility>
+									<MultiBinding
+										Converter="{StaticResource BoolToVisibilityMultiConverter}">
+										<Binding
+											Path="CustomerBoolVisibility" />
+										<Binding
+											Path="CatalogBoolVisibility" />
+									</MultiBinding>
+								</Button.Visibility>
+								<Button.Template>
+									<ControlTemplate
+										TargetType="Button">
+										<Grid>
+											<VisualStateManager.VisualStateGroups>
+												<VisualStateGroup
+													Name="CommonStates">
+													<VisualState
+														Name="Normal">
+														<Storyboard>
+															<ColorAnimation
+																Storyboard.TargetName="backgroundBrush"
+																Storyboard.TargetProperty="Color"
+																To="#EB8336"
+																Duration="0:0:0.3" />
+														</Storyboard>
+													</VisualState>
+													<VisualState
+														Name="MouseOver">
+														<Storyboard>
+															<ColorAnimation
+																Storyboard.TargetName="backgroundBrush"
+																Storyboard.TargetProperty="Color"
+																To="#F19A5A"
+																Duration="0:0:0.4" />
+														</Storyboard>
+													</VisualState>
+													<VisualState
+														Name="Checked">
+														<Storyboard>
+															<ColorAnimation
+																Storyboard.TargetName="backgroundBrush"
+																Storyboard.TargetProperty="Color"
+																To="#dd6002"
+																Duration="0:0:0.4" />
+														</Storyboard>
+													</VisualState>
+												</VisualStateGroup>
+											</VisualStateManager.VisualStateGroups>
+											<Border
+												x:Name="border"
+												CornerRadius="10">
+												<Border.Background>
+													<SolidColorBrush
+														x:Name="backgroundBrush"
+														Color="#EB8336" />
+												</Border.Background>
+												<TextBlock
+													Style="{StaticResource Text}"
+													FontSize="16"
+													Foreground="White"
+													Text="В корзину"
+													Padding="12 5"
+													VerticalAlignment="Center" />
+											</Border>
+										</Grid>
+									</ControlTemplate>
+								</Button.Template>
+							</Button>
+
+							<Button
+								Visibility="{Binding Invisible, Converter={StaticResource BoolToVisibilityConverter}}"
+								Command="{Binding SaveEditCommand}"
+								Click="Rectangle_MouseDown"
+								Background="#FFFF8000"
+								BorderThickness="0"
+								Padding="20 10"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Top">
+								<Button.Template>
+									<ControlTemplate
+										TargetType="Button">
+										<Border
+											x:Name="border"
+											Padding="15 8"
+											Background="{TemplateBinding Background}"
+											BorderBrush="{TemplateBinding BorderBrush}"
+											BorderThickness="{TemplateBinding BorderThickness}"
+											CornerRadius="15">
+											<ContentPresenter
+												HorizontalAlignment="Center"
+												VerticalAlignment="Center" />
+										</Border>
+										<ControlTemplate.Triggers>
+											<EventTrigger
+												RoutedEvent="Button.MouseEnter">
+												<BeginStoryboard>
+													<Storyboard>
+														<ColorAnimation
+															Storyboard.TargetName="border"
+															Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+															To="#FFFFA449"
+															Duration="0:0:0.3" />
+													</Storyboard>
+												</BeginStoryboard>
+											</EventTrigger>
+											<EventTrigger
+												RoutedEvent="Button.MouseLeave">
+												<BeginStoryboard>
+													<Storyboard>
+														<ColorAnimation
+															Storyboard.TargetName="border"
+															Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+															To="#FFFF8000"
+															Duration="0:0:0.3" />
+													</Storyboard>
+												</BeginStoryboard>
+											</EventTrigger>
+										</ControlTemplate.Triggers>
+									</ControlTemplate>
+								</Button.Template>
+								<StackPanel
+									Orientation="Horizontal">
+									<Image
+										Width="20"
+										Height="20"
+										Source="/Assets/icons/save.png" />
+									<TextBlock
+										Text="{DynamicResource Save}"
+										FontSize="14"
+										Style="{StaticResource Text}" />
+								</StackPanel>
+
+							</Button>
 						</StackPanel>
 
-					</Button>
+					</StackPanel>
 
-				</StackPanel>
+				</Grid>
 
-			</Grid>
+			</Border>
+		</Grid>
 
-		</Border>
+	</ScrollViewer>
 
 
-	</Grid>
 </UserControl>

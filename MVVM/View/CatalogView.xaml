@@ -24,216 +24,220 @@
 			x:Key="PageToBolleanConverter" />
 	</UserControl.Resources>
 
-	<ScrollViewer
-		CanContentScroll="True"
-		x:Name="scrollViewer">
+	<Grid
+		x:Name="CatalogGrid">
 
-		<ScrollViewer.Resources>
-			<Style
-				TargetType="ScrollBar">
-				<Setter
-					Property="Background"
-					Value="Gray" />
-				<Setter
-					Property="Width"
-					Value="10" />
-				<Setter
-					Property="Template">
-					<Setter.Value>
-						<ControlTemplate
-							TargetType="ScrollBar">
-							<Grid>
-								<Border
-									Background="Transparent"
-									BorderBrush="Transparent"
-									BorderThickness="0"
-									CornerRadius="7" />
-								<Track
-									x:Name="PART_Track"
-									IsDirectionReversed="True">
-									<Track.DecreaseRepeatButton>
-										<RepeatButton
-											Command="{x:Static ScrollBar.PageUpCommand}"
-											Opacity="0" />
-									</Track.DecreaseRepeatButton>
-									<Track.Thumb>
-										<Thumb
-											Padding="0"
-											Margin="0"
-											Background="#202020"
-											BorderBrush="Transparent"
-											BorderThickness="0" />
-									</Track.Thumb>
-									<Track.IncreaseRepeatButton>
-										<RepeatButton
-											Command="{x:Static ScrollBar.PageDownCommand}"
-											Opacity="0" />
-									</Track.IncreaseRepeatButton>
-								</Track>
-							</Grid>
-						</ControlTemplate>
-					</Setter.Value>
-				</Setter>
-			</Style>
-		</ScrollViewer.Resources>
+		<ScrollViewer
+			CanContentScroll="True"
+			x:Name="scrollViewer">
 
-		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition
-					Height="50" />
-				<RowDefinition
-					Height="auto" />
-				<RowDefinition
-					Height="auto" />
-				<RowDefinition
-					Height="*" />
-				<RowDefinition
-					Height="auto" />
-			</Grid.RowDefinitions>
+			<ScrollViewer.Resources>
+				<Style
+					TargetType="ScrollBar">
+					<Setter
+						Property="Background"
+						Value="Gray" />
+					<Setter
+						Property="Width"
+						Value="10" />
+					<Setter
+						Property="Template">
+						<Setter.Value>
+							<ControlTemplate
+								TargetType="ScrollBar">
+								<Grid>
+									<Border
+										Background="Transparent"
+										BorderBrush="Transparent"
+										BorderThickness="0"
+										CornerRadius="7" />
+									<Track
+										x:Name="PART_Track"
+										IsDirectionReversed="True">
+										<Track.DecreaseRepeatButton>
+											<RepeatButton
+												Command="{x:Static ScrollBar.PageUpCommand}"
+												Opacity="0" />
+										</Track.DecreaseRepeatButton>
+										<Track.Thumb>
+											<Thumb
+												Padding="0"
+												Margin="0"
+												Background="#202020"
+												BorderBrush="Transparent"
+												BorderThickness="0" />
+										</Track.Thumb>
+										<Track.IncreaseRepeatButton>
+											<RepeatButton
+												Command="{x:Static ScrollBar.PageDownCommand}"
+												Opacity="0" />
+										</Track.IncreaseRepeatButton>
+									</Track>
+								</Grid>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</ScrollViewer.Resources>
 
-			<TextBlock
-				Style="{StaticResource Text}"
-				Text="{DynamicResource Catalog}"
-				FontWeight="SemiBold"
-				FontSize="20"
-				VerticalAlignment="Center"
-				HorizontalAlignment="Center" />
+			<Grid>
 
-			<WrapPanel
-				Visibility="{Binding SearchVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
-				Grid.Row="1"
-				Margin="20 0 20 10"
-				VerticalAlignment="Center"
-				Orientation="Horizontal">
+				<Grid.RowDefinitions>
+					<RowDefinition
+						Height="50" />
+					<RowDefinition
+						Height="auto" />
+					<RowDefinition
+						Height="auto" />
+					<RowDefinition
+						Height="*" />
+					<RowDefinition
+						Height="auto" />
+				</Grid.RowDefinitions>
 
 				<TextBlock
-					Text="{DynamicResource SearchBy}"
-					FontSize="16"
-					Margin="5 10 10 5"
-					Style="{StaticResource Text}" />
+					Style="{StaticResource Text}"
+					Text="{DynamicResource Catalog}"
+					FontWeight="SemiBold"
+					FontSize="20"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center" />
 
-				<!--<TextBox
+				<WrapPanel
+					Visibility="{Binding SearchVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+					Grid.Row="1"
+					Margin="20 0 20 10"
+					VerticalAlignment="Center"
+					Orientation="Horizontal">
+
+					<TextBlock
+						Text="{DynamicResource SearchBy}"
+						FontSize="16"
+						Margin="5 10 10 5"
+						Style="{StaticResource Text}" />
+
+					<!--<TextBox
 			MinWidth="150"
 			Margin="5 0 10 0"
 			Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
 			Style="{StaticResource TextBox}"/>-->
 
-				<ToggleButton
-					IsChecked="{Binding IsFullSearch}"
-					Content="{DynamicResource FullSearch}"
-					Style="{StaticResource ToggleButton}" />
+					<ToggleButton
+						IsChecked="{Binding IsFullSearch}"
+						Content="{DynamicResource FullSearch}"
+						Style="{StaticResource ToggleButton}" />
 
-			</WrapPanel>
+				</WrapPanel>
 
-			<WrapPanel
-				Visibility="{Binding SortVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
-				Grid.Row="2"
-				Margin="20 0"
-				VerticalAlignment="Center"
-				Orientation="Horizontal">
+				<WrapPanel
+					Visibility="{Binding SortVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+					Grid.Row="2"
+					Margin="20 0"
+					VerticalAlignment="Center"
+					Orientation="Horizontal">
 
-				<TextBlock
-					Text="{DynamicResource SortBy}"
-					FontSize="16"
-					Style="{StaticResource Text}" />
+					<TextBlock
+						Text="{DynamicResource SortBy}"
+						FontSize="16"
+						Style="{StaticResource Text}" />
 
-				<RadioButton
-					Height="30"
-					IsChecked="{Binding SortByProperty, Mode=TwoWay, Converter={StaticResource SortToBooleanConverter}, ConverterParameter=DateAsc}"
-					Command="{Binding SortByDateAscCommand}"
-					Content="{DynamicResource DateAsc}"
-					Style="{StaticResource ProductButton}" />
-				<RadioButton
-					Height="30"
-					IsChecked="{Binding SortByProperty, Mode=TwoWay, Converter={StaticResource SortToBooleanConverter}, ConverterParameter=DateDesc}"
-					Command="{Binding SortByDateDescCommand}"
-					Content="{DynamicResource DateDesc}"
-					Style="{StaticResource ProductButton}" />
-				<RadioButton
-					Height="30"
-					IsChecked="{Binding SortByProperty, Mode=TwoWay, Converter={StaticResource SortToBooleanConverter}, ConverterParameter=NameAsc}"
-					Command="{Binding SortByNameAscCommand}"
-					Content="{DynamicResource NameAsc}"
-					Style="{StaticResource ProductButton}" />
-				<RadioButton
-					Height="30"
-					IsChecked="{Binding SortByProperty, Mode=TwoWay, Converter={StaticResource SortToBooleanConverter}, ConverterParameter=NameDesc}"
-					Command="{Binding SortByNameDescCommand}"
-					Content="{DynamicResource NameDesc}"
-					Style="{StaticResource ProductButton}" />
-				<RadioButton
-					Height="30"
-					IsChecked="{Binding SortByProperty, Mode=TwoWay, Converter={StaticResource SortToBooleanConverter}, ConverterParameter=PriceAsc}"
-					Command="{Binding SortByPriceAscCommand}"
-					Content="{DynamicResource PriceAsc}"
-					Style="{StaticResource ProductButton}" />
-				<RadioButton
-					Height="30"
-					IsChecked="{Binding SortByProperty, Mode=TwoWay, Converter={StaticResource SortToBooleanConverter}, ConverterParameter=PriceDesc}"
-					Command="{Binding SortByPriceDescCommand}"
-					Content="{DynamicResource PriceDesc}"
-					Style="{StaticResource ProductButton}" />
+					<!--<RadioButton
+						Height="30"
+						IsChecked="{Binding SortByProperty, Mode=TwoWay, Converter={StaticResource SortToBooleanConverter}, ConverterParameter=DateAsc}"
+						Command="{Binding SortByDateAscCommand}"
+						Content="{DynamicResource DateAsc}"
+						Style="{StaticResource ProductButton}" />
+					<RadioButton
+						Height="30"
+						IsChecked="{Binding SortByProperty, Mode=TwoWay, Converter={StaticResource SortToBooleanConverter}, ConverterParameter=DateDesc}"
+						Command="{Binding SortByDateDescCommand}"
+						Content="{DynamicResource DateDesc}"
+						Style="{StaticResource ProductButton}" />-->
+					<RadioButton
+						Height="30"
+						IsChecked="{Binding SortByProperty, Mode=TwoWay, Converter={StaticResource SortToBooleanConverter}, ConverterParameter=NameAsc}"
+						Command="{Binding SortByNameAscCommand}"
+						Content="{DynamicResource NameAsc}"
+						Style="{StaticResource ProductButton}" />
+					<RadioButton
+						Height="30"
+						IsChecked="{Binding SortByProperty, Mode=TwoWay, Converter={StaticResource SortToBooleanConverter}, ConverterParameter=NameDesc}"
+						Command="{Binding SortByNameDescCommand}"
+						Content="{DynamicResource NameDesc}"
+						Style="{StaticResource ProductButton}" />
+					<RadioButton
+						Height="30"
+						IsChecked="{Binding SortByProperty, Mode=TwoWay, Converter={StaticResource SortToBooleanConverter}, ConverterParameter=PriceAsc}"
+						Command="{Binding SortByPriceAscCommand}"
+						Content="{DynamicResource PriceAsc}"
+						Style="{StaticResource ProductButton}" />
+					<RadioButton
+						Height="30"
+						IsChecked="{Binding SortByProperty, Mode=TwoWay, Converter={StaticResource SortToBooleanConverter}, ConverterParameter=PriceDesc}"
+						Command="{Binding SortByPriceDescCommand}"
+						Content="{DynamicResource PriceDesc}"
+						Style="{StaticResource ProductButton}" />
 
-			</WrapPanel>
+				</WrapPanel>
 
-			<v:ProductCardView
-				Grid.Row="3" />
+				<v:ProductCardView
+					Grid.Row="3" />
 
 				<!--MaxWidth="500"-->
-			<ListView
-				Margin="0 5 0 20"
-				Grid.Row="4"
-				Background="Transparent"
-				BorderBrush="Transparent"
-				ItemsSource="{Binding NumberSelection}"
-				ScrollViewer.CanContentScroll="False"
-				ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-				ScrollViewer.VerticalScrollBarVisibility="Disabled"
-				HorizontalContentAlignment="Center"
-				d:ItemsSource="{d:SampleData ItemCount=2}">
+				<ListView
+					Margin="0 5 0 20"
+					Grid.Row="4"
+					Background="Transparent"
+					BorderBrush="Transparent"
+					ItemsSource="{Binding NumberSelection}"
+					ScrollViewer.CanContentScroll="False"
+					ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+					ScrollViewer.VerticalScrollBarVisibility="Disabled"
+					HorizontalContentAlignment="Center"
+					d:ItemsSource="{d:SampleData ItemCount=2}">
 
-				<ListView.ItemsPanel>
-					<ItemsPanelTemplate>
-						<WrapPanel
-							Orientation="Horizontal"
-							HorizontalAlignment="Center" />
-					</ItemsPanelTemplate>
-				</ListView.ItemsPanel>
+					<ListView.ItemsPanel>
+						<ItemsPanelTemplate>
+							<WrapPanel
+								Orientation="Horizontal"
+								HorizontalAlignment="Center" />
+						</ItemsPanelTemplate>
+					</ListView.ItemsPanel>
 
-				<ListView.ItemContainerStyle>
-					<Style
-						TargetType="ListViewItem">
+					<ListView.ItemContainerStyle>
+						<Style
+							TargetType="ListViewItem">
 
-						<Setter
-							Property="Background"
-							Value="#D0FF8224" />
+							<Setter
+								Property="Background"
+								Value="#D0FF8224" />
 
-						<Setter
-							Property="BorderBrush"
-							Value="Transparent" />
+							<Setter
+								Property="BorderBrush"
+								Value="Transparent" />
 
-						<Setter
-							Property="BorderThickness"
-							Value="0" />
+							<Setter
+								Property="BorderThickness"
+								Value="0" />
 
-						<Setter
-							Property="Template">
-							<Setter.Value>
+							<Setter
+								Property="Template">
+								<Setter.Value>
 
-								<ControlTemplate
-									TargetType="ListBoxItem">
+									<ControlTemplate
+										TargetType="ListBoxItem">
 
-									<RadioButton
-										Command="{Binding Command}"
-										CommandParameter="{Binding Number}"
-										IsChecked="{Binding IsSelected}"
-										Background="#FFFF8000"
-										BorderThickness="0"
-										Margin="5"
-										HorizontalAlignment="Center"
-										VerticalAlignment="Center">
+										<RadioButton
+											Command="{Binding Command}"
+											CommandParameter="{Binding Number}"
+											IsChecked="{Binding IsSelected}"
+											Background="#FFFF8000"
+											BorderThickness="0"
+											Margin="5"
+											HorizontalAlignment="Center"
+											VerticalAlignment="Center">
 
-										<!--<RadioButton.IsChecked>
+											<!--<RadioButton.IsChecked>
 											<MultiBinding
 												Converter="{StaticResource PageToBolleanConverter}">
 												<Binding
@@ -241,68 +245,68 @@
 											</MultiBinding>
 										</RadioButton.IsChecked>-->
 
-										<RadioButton.Template>
-											<ControlTemplate
-												TargetType="RadioButton">
-												<Grid>
-													<VisualStateManager.VisualStateGroups>
-														<VisualStateGroup
-															Name="CommonStates">
-															<VisualState
-																Name="Normal">
-																<Storyboard>
-																	<ColorAnimation
-																		Storyboard.TargetName="backgroundBrush"
-																		Storyboard.TargetProperty="Color"
-																		To="#282828"
-																		Duration="0:0:0.3" />
-																</Storyboard>
-															</VisualState>
-															<VisualState
-																Name="MouseOver">
-																<Storyboard>
-																	<ColorAnimation
-																		Storyboard.TargetName="backgroundBrush"
-																		Storyboard.TargetProperty="Color"
-																		To="#3E3E3E"
-																		Duration="0:0:0.4" />
-																</Storyboard>
-															</VisualState>
-															<VisualState
-																Name="Checked">
-																<Storyboard>
-																	<ColorAnimation
-																		Storyboard.TargetName="backgroundBrush"
-																		Storyboard.TargetProperty="Color"
-																		To="#EB8336"
-																		Duration="0:0:0.4" />
-																</Storyboard>
-															</VisualState>
-														</VisualStateGroup>
-													</VisualStateManager.VisualStateGroups>
-													<Border
-														x:Name="border"
-														CornerRadius="10">
-														<Border.Background>
-															<SolidColorBrush
-																x:Name="backgroundBrush"
-																Color="#1D1D1D" />
-														</Border.Background>
-														<TextBlock
-															Style="{StaticResource Text}"
-															FontSize="16"
-															Foreground="White"
-															Text="{Binding Number}"
-															Padding="12 5"
-															VerticalAlignment="Center" />
-													</Border>
-												</Grid>
-											</ControlTemplate>
-										</RadioButton.Template>
-										
-									</RadioButton>
+											<RadioButton.Template>
+												<ControlTemplate
+													TargetType="RadioButton">
+													<Grid>
+														<VisualStateManager.VisualStateGroups>
+															<VisualStateGroup
+																Name="CommonStates">
+																<VisualState
+																	Name="Normal">
+																	<Storyboard>
+																		<ColorAnimation
+																			Storyboard.TargetName="backgroundBrush"
+																			Storyboard.TargetProperty="Color"
+																			To="#282828"
+																			Duration="0:0:0.3" />
+																	</Storyboard>
+																</VisualState>
+																<VisualState
+																	Name="MouseOver">
+																	<Storyboard>
+																		<ColorAnimation
+																			Storyboard.TargetName="backgroundBrush"
+																			Storyboard.TargetProperty="Color"
+																			To="#3E3E3E"
+																			Duration="0:0:0.4" />
+																	</Storyboard>
+																</VisualState>
+																<VisualState
+																	Name="Checked">
+																	<Storyboard>
+																		<ColorAnimation
+																			Storyboard.TargetName="backgroundBrush"
+																			Storyboard.TargetProperty="Color"
+																			To="#EB8336"
+																			Duration="0:0:0.4" />
+																	</Storyboard>
+																</VisualState>
+															</VisualStateGroup>
+														</VisualStateManager.VisualStateGroups>
+														<Border
+															x:Name="border"
+															CornerRadius="10">
+															<Border.Background>
+																<SolidColorBrush
+																	x:Name="backgroundBrush"
+																	Color="#1D1D1D" />
+															</Border.Background>
+															<TextBlock
+																Style="{StaticResource Text}"
+																FontSize="16"
+																Foreground="White"
+																Text="{Binding Number}"
+																Padding="12 5"
+																VerticalAlignment="Center" />
+														</Border>
+													</Grid>
+												</ControlTemplate>
+											</RadioButton.Template>
 
-									<!--<Button
+										</RadioButton>
+
+										<!--<Button
 										Command="{Binding OpenImageFileCommand}"
 										Background="#FFFF8000"
 										BorderThickness="0"
@@ -329,18 +333,20 @@
 											Padding="12 5"
 											Style="{StaticResource Text}" />
 									</Button>-->
-									
-								</ControlTemplate>
 
-							</Setter.Value>
-						</Setter>
+									</ControlTemplate>
 
-					</Style>
-				</ListView.ItemContainerStyle>
-			</ListView>
+								</Setter.Value>
+							</Setter>
 
-		</Grid>
+						</Style>
+					</ListView.ItemContainerStyle>
+				</ListView>
 
-	</ScrollViewer>
+			</Grid>
+
+		</ScrollViewer>
+
+	</Grid>
 
 </UserControl>

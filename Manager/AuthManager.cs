@@ -2,7 +2,6 @@
 using System.Configuration;
 
 using Pizza.DataAccess;
-using Pizza.Encrypt;
 using Pizza.MVVM.Model;
 using Pizza.Utilities;
 
@@ -14,20 +13,28 @@ namespace Pizza.Manager
 	{
 		private static AuthManager instance;
 		UnitOfWork _unitOfWork;
+		CatalogManager _catalogManager;
+		DataManager _dataManager;
 		SaveUserDataHelper file = new SaveUserDataHelper();
 
 		public AuthManager()
 		{
+			System.Console.WriteLine("AUTH MANAGER");
+
 			User = new UserModel();
+
+			Console.WriteLine("DSADASDSASASDSADSAD@@@@@@@@@@@@@@@@@@@@@@");
+
 
 			CheckRoleAndConnection();
 		}
 
 		public void CheckRoleAndConnection()
 		{
-			UserModel user = file.GetUserAuthData();
-
 			Console.WriteLine("********************************* CheckRoleAndConnection");
+			UserModel user = file.GetUserAuthData();
+			ConnectionString = ConfigurationManager.ConnectionStrings["db_auth"].ConnectionString;
+
 			if (user != null)
 			//if (!string.IsNullOrEmpty(user.Email))
 			{
@@ -35,7 +42,7 @@ namespace Pizza.Manager
 
 				User = user;
 
-				ConnectionString = ConfigurationManager.ConnectionStrings["db_auth"].ConnectionString;
+				//ConnectionString = ConfigurationManager.ConnectionStrings["db_auth"].ConnectionString;
 				_unitOfWork = new UnitOfWork(ConnectionString);
 
 				User.Role = _unitOfWork.User.GetUserRole(user.Id);
@@ -65,12 +72,43 @@ namespace Pizza.Manager
 				Console.WriteLine("--------- No email found in the file.");
 				User.Role = AppRoles.Auth;
 
-				ConnectionString = ConfigurationManager.ConnectionStrings["db_auth"].ConnectionString;
+				_catalogManager = CatalogManager.Instance;
+
+
+				_catalogManager.CurrentPage = 1;
+				_dataManager = DataManager.Instance;
+				_dataManager.ClearData();
+
+				//ConnectionString = ConfigurationManager.ConnectionStrings["db_auth"].ConnectionString;
 				Auth = false;
 			}
 
+			Console.WriteLine("___");
 			Console.WriteLine("ROLEEEEE: " + User.Role + " !!!");
 			Console.WriteLine(ConnectionString);
+
+			BasketBoolVisibility = false;
+
+			switch (User.Role)
+			{
+				case AppRoles.Customer:
+					ManagerBoolVisibility = false;
+					break;
+				case AppRoles.Manager:
+					ManagerBoolVisibility = true;
+					break;
+				case AppRoles.Seller:
+					ManagerBoolVisibility = false;
+					break;
+				case AppRoles.Courier:
+					ManagerBoolVisibility = false;
+					break;
+				case AppRoles.Auth:
+					ManagerBoolVisibility = false;
+					break;
+				default:
+					break;
+			}
 		}
 
 		public static AuthManager Instance
@@ -109,7 +147,21 @@ namespace Pizza.Manager
 		public UserModel User
 		{
 			get { return _user; }
-			set { _user = value; Console.WriteLine("USERRR: " + value.Name); OnPropertyChanged(nameof(User)); }
+			set { _user = value;  OnPropertyChanged(nameof(User)); }
+		}
+
+		private bool _managerBoolVisibility { get; set; }
+		public bool ManagerBoolVisibility
+		{
+			get { return _managerBoolVisibility; }
+			set { _managerBoolVisibility = value; OnPropertyChanged(nameof(ManagerBoolVisibility)); }
+		}
+
+		private bool _basketBoolVisibility { get; set; }
+		public bool BasketBoolVisibility
+		{
+			get { return _basketBoolVisibility; }
+			set { _basketBoolVisibility = value; OnPropertyChanged(nameof(BasketBoolVisibility)); }
 		}
 
 		//private bool _name { get; set; }

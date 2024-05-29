@@ -4,17 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Pizza.DataAccess.Repository;
 using Pizza.Repository;
 
 namespace Pizza.DataAccess
 {
 	internal class UnitOfWork : IDisposable
 	{
-		private string _connectionString;
+		private readonly string _connectionString;
 
 		private ProductRepository _productRepository;
 		private BasketRepository _basketRepository;
+		private OrderRepository _orderRepository;
 		private UserRepository _userRepository;
+		private ReviewRepository _reviewRepository;
 		
 		public UnitOfWork(string connectionString)
 		{
@@ -41,6 +44,16 @@ namespace Pizza.DataAccess
 			}
 		}
 
+		public OrderRepository Order
+		{
+			get
+			{
+				if (_orderRepository == null)
+					_orderRepository = new OrderRepository(_connectionString);
+				return _orderRepository;
+			}
+		}
+
 		public UserRepository User
 		{
 			get
@@ -48,6 +61,16 @@ namespace Pizza.DataAccess
 				if (_userRepository == null)
 					_userRepository = new UserRepository(_connectionString);
 				return _userRepository;
+			}
+		}
+
+		public ReviewRepository Review
+		{
+			get
+			{
+				if (_reviewRepository == null)
+					_reviewRepository = new ReviewRepository(_connectionString);
+				return _reviewRepository;
 			}
 		}
 

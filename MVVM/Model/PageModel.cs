@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Pizza.MVVM.Model
 {
-	public class PageModel
-	{
-		public ObservableCollection<ProductModel> Products { get; set; }
-		//public ProductModel AddedProduct { get; set; }
-	}
+	//public class PageModel
+	//{
+	//	public ObservableCollection<ProductModel> Products { get; set; }
+	//	//public ProductModel AddedProduct { get; set; }
+	//}
 }

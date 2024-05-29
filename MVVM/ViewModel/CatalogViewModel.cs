@@ -17,9 +17,9 @@ namespace Pizza.MVVM.ViewModel
 {
 	public class CatalogViewModel : BaseViewModel
 	{
-		private PageModel _pageModel;
 		private DataManager _dataManager;
 		private CatalogManager _catalogManager;
+		private AuthManager _authManager;
 
 		public ICommand SortByDateAscCommand { get; set; }
 		public ICommand SortByDateDescCommand { get; set; }
@@ -30,59 +30,108 @@ namespace Pizza.MVVM.ViewModel
 
 		public CatalogViewModel()
 		{
-			_pageModel = new PageModel();
-			_dataManager = DataManager.Instance;
-
-			_pageModel = new PageModel();
 			_dataManager = DataManager.Instance;
 			_catalogManager = CatalogManager.Instance;
+			_authManager = AuthManager.Instance;
 
-			//получение именно продуктов
-			int count = _dataManager.GetAllProducts().Count;
+			int count;
+			int totalProducts;
 
-			if (count < 1)
+			SortString = "id";
+
+			switch (_authManager.User.Role)
 			{
-				_dataManager.ReadData();
+				case AppRoles.Manager:
+					// получение продуктов
+					count = _dataManager.GetProducts().Count;
+
+					if (count < 1)
+					{
+						_dataManager.ReadData();
+					}
+					Products = _dataManager.GetProducts();
+					Products.CollectionChanged += _products_CollectionChanged;
+
+					NumberSelection = new ObservableCollection<NumberSelectionModel>();
+
+					totalProducts = _dataManager.GetProductsCount();
+					break;
+
+				case AppRoles.Customer:
+					// получение продуктов
+					count = _dataManager.GetProducts().Count;
+
+					if (count < 1)
+					{
+						switch (SortString)
+						{
+							case "NameAsc":
+								_dataManager.ReadDataInstock("product_name", "ASC");
+								break;
+							case "NameDesc":
+								_dataManager.ReadDataInstock("product_name", "DESC");
+								break;
+							case "PriceAsc":
+								_dataManager.ReadDataInstock("product_price", "ASC");
+								break;
+							case "PriceDesc":
+								_dataManager.ReadDataInstock("product_price", "DESC");
+								break;
+							default:
+								_dataManager.ReadDataInstock("product_id", "ASC");
+								break;
+						}
+					}
+					Products = _dataManager.GetProducts();
+					Products.CollectionChanged += _products_CollectionChanged;
+
+					NumberSelection = new ObservableCollection<NumberSelectionModel>();
+
+					totalProducts = _dataManager.GetProductsCountInstock();
+					break;
+				default:
+					totalProducts = totalProducts = _dataManager.GetProductsCountInstock();
+					break;
 			}
-			Products = _dataManager.GetAllProducts();
-			//CopyProducts = _dataManager.GetAllProducts();
-			Products.CollectionChanged += _products_CollectionChanged;
 
-			_catalogManager.ProductOnPage = 501;
-			NumberSelection = new ObservableCollection<NumberSelectionModel>();
-
-			int? totalProducts = _dataManager.GetProductsCount();
-			Console.WriteLine("totalProducts: " + totalProducts);
-			Console.WriteLine("_catalogManager.ProductOnPage: " + _catalogManager.ProductOnPage);
-			int totalPages = (int)Math.Ceiling((double)totalProducts / _catalogManager.ProductOnPage);
-
-			CurrentPage = _catalogManager.CurrentPage;
-
-			for (int i = 1; i <= totalPages; i++)
+			if (totalProducts != 0)
 			{
-				NumberSelectionModel model = new NumberSelectionModel
+				//try
+				//{
+
+				Console.WriteLine("totalProducts: " + totalProducts);
+				Console.WriteLine("_catalogManager.ProductOnPage: " + _catalogManager.ProductOnPage);
+				int totalPages = (int)Math.Ceiling((double)totalProducts / _catalogManager.ProductOnPage);
+				CurrentPage = _catalogManager.CurrentPage;
+
+				for (int i = 1; i <= totalPages; i++)
 				{
-					Number = i,
-					Command = new RelayCommand(HandleNumberSelection),
-					// Привязываем SelectionCommand к Command
-					//SelectionCommand = model.Command
-				};
-				NumberSelection.Add(model);
+					NumberSelectionModel model = new NumberSelectionModel
+					{
+						Number = i,
+						Command = new RelayCommand(HandleNumberSelection)
+					};
+					NumberSelection.Add(model);
+				}
+				//}
+				//catch (Exception)
+				//{
+
+				//}
+
+
 			}
 
 			// Установка первоначального выделения
 			if (NumberSelection.Count > 0)
 			{
-				NumberSelection[0].IsSelected = true;
+				NumberSelection[CurrentPage - 1].IsSelected = true;
 			}
 
 			Console.WriteLine("CurrentPage: " + CurrentPage);
 
-			//ProductsView = CollectionViewSource.GetDefaultView(Products);
-			//CollectionSortBy(Abstractions.ProgramAbstraction.SortByProperty.Date, ListSortDirection.Ascending);
-
-			SortByDateAscCommand = new RelayCommand(SortByDateAsc);
-			SortByDateDescCommand = new RelayCommand(SortByDateDesc);
+			//SortByDateAscCommand = new RelayCommand(SortByDateAsc);
+			//SortByDateDescCommand = new RelayCommand(SortByDateDesc);
 			SortByNameAscCommand = new RelayCommand(SortByNameAsc);
 			SortByNameDescCommand = new RelayCommand(SortByNameDesc);
 			SortByPriceAscCommand = new RelayCommand(SortByPriceAsc);
@@ -90,13 +139,13 @@ namespace Pizza.MVVM.ViewModel
 
 			SortByProperty = SortByPropertyAll.DateAsc;
 
-			//SearchText = _catalogManager.SearchText;
 			IsFullSearch = _catalogManager.IsFullSearch;
 			SearchVisibility = _catalogManager.SearchVisibility;
 			SortVisibility = _catalogManager.SortVisibility;
 
 			_catalogManager.PropertyChanged += _catalogStateManager_PropertyChanged;
 		}
+
 
 		private void HandleNumberSelection(object obj)
 		{
@@ -117,11 +166,37 @@ namespace Pizza.MVVM.ViewModel
 				{
 					_dataManager.ClearData();
 
-					Console.WriteLine(_catalogManager.LastPageProductId);
+					//Console.WriteLine(_catalogManager.LastPageProductId);
+					switch (_authManager.User.Role)
+					{
+						case AppRoles.Customer:
+							switch (SortString)
+							{
+								case "NameAsc":
+									_dataManager.ReadDataInstock("product_name", "ASC");
+									break;
+								case "NameDesc":
+									_dataManager.ReadDataInstock("product_name", "DESC");
+									break;
+								case "PriceAsc":
+									_dataManager.ReadDataInstock("product_price", "ASC");
+									break;
+								case "PriceDesc":
+									_dataManager.ReadDataInstock("product_price", "DESC");
+									break;
+								default:
+									_dataManager.ReadDataInstock("product_id", "ASC");
+									break;
+							}
 
-					_dataManager.ReadData();
+							Products = _dataManager.GetProducts();
+							break;
+						case AppRoles.Manager:
+							_dataManager.ReadData();
 
-					Products = _dataManager.GetAllProducts();
+							Products = _dataManager.GetProducts();
+							break;
+					}
 				}
 			}
 		}
@@ -134,29 +209,33 @@ namespace Pizza.MVVM.ViewModel
 			set { _sortByProperty = value; OnPropertyChanged(nameof(SortByProperty)); }
 		}
 
-		private void SortByDateAsc(object obj)
-		{
-			CollectionSortBy(Abstractions.ProgramAbstraction.SortByProperty.Date, ListSortDirection.Ascending);
-		}
-		private void SortByDateDesc(object obj)
-		{
-			CollectionSortBy(Abstractions.ProgramAbstraction.SortByProperty.Date, ListSortDirection.Descending);
-		}
+		//private void SortByDateAsc(object obj)
+		//{
+		//	CollectionSortBy(Abstractions.ProgramAbstraction.SortByProperty.Date, ListSortDirection.Ascending);
+		//}
+		//private void SortByDateDesc(object obj)
+		//{
+		//	CollectionSortBy(Abstractions.ProgramAbstraction.SortByProperty.Date, ListSortDirection.Descending);
+		//}
 		private void SortByNameAsc(object obj)
 		{
 			CollectionSortBy(Abstractions.ProgramAbstraction.SortByProperty.Name, ListSortDirection.Ascending);
+			SortString = "NameAsc";
 		}
 		private void SortByNameDesc(object obj)
 		{
 			CollectionSortBy(Abstractions.ProgramAbstraction.SortByProperty.Name, ListSortDirection.Descending);
+			SortString = "NameDesc";
 		}
 		private void SortByPriceAsc(object obj)
 		{
 			CollectionSortBy(Abstractions.ProgramAbstraction.SortByProperty.Price, ListSortDirection.Descending);
+			SortString = "PriceAsc";
 		}
 		private void SortByPriceDesc(object obj)
 		{
 			CollectionSortBy(Abstractions.ProgramAbstraction.SortByProperty.Price, ListSortDirection.Ascending);
+			SortString = "PriceDesc";
 		}
 
 		public ObservableCollection<ProductModelNew> _products;
@@ -177,6 +256,12 @@ namespace Pizza.MVVM.ViewModel
 		{
 			get { return _currentPage; }
 			set { _currentPage = value; OnPropertyChanged(nameof(CurrentPage)); }
+		}
+		private string _sortString { get; set; }
+		public string SortString
+		{
+			get { return _sortString; }
+			set { _sortString = value; OnPropertyChanged(nameof(SortString)); }
 		}
 
 		//public ObservableCollection<ProductPreviewModel> _copyProducts { get; set; }
@@ -259,7 +344,7 @@ namespace Pizza.MVVM.ViewModel
 
 		private void _products_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
 		{
-			Products = _dataManager.GetAllProducts();
+			Products = _dataManager.GetProducts();
 		}
 
 		//private string _searchText { get; set; }

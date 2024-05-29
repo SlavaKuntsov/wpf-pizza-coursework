@@ -8,10 +8,15 @@ namespace Pizza.Manager
 	public class CatalogManager : BaseViewModel
 	{
 		private static CatalogManager instance;
+		AuthManager _authManager;
 		public CatalogManager()
 		{
 			//NumberSelectionModel = new PageInfoModel();
-			LastPageProductId = null;
+			ModalProductId = 0;
+			ModalBasketProductId = 0;
+			//LastPageProductId = null;
+			//ProductOnPage = 501;
+			ProductOnPage = 252;
 			CurrentPage = 1;
 
 			_searchText = "";
@@ -19,11 +24,12 @@ namespace Pizza.Manager
 
 			SearchVisibility = false;
 			SortVisibility = false;
-			//NumberSelectionModel.LastProductId = null;
 
-			AuthManager authManager = AuthManager.Instance;
+			_authManager = AuthManager.Instance;
 
-			switch (authManager.User.Role)
+			System.Console.WriteLine("after auth manager");
+
+			switch (_authManager.User.Role)
 			{
 				case Abstractions.ProgramAbstraction.AppRoles.Customer:
 					ButtonsVisibility = true;
@@ -47,18 +53,33 @@ namespace Pizza.Manager
 			{
 				if (instance == null)
 				{
+					System.Console.WriteLine("NEW CATALOG MANAGER");
 					instance = new CatalogManager();
 				}
 				return instance;
 			}
 		}
-
-		private int? _lastPageProductId { get; set; }
-		public int? LastPageProductId	
+		
+		private int _modalProductId { get; set; }
+		public int ModalProductId
 		{
-			get { return _lastPageProductId; }
-			set { _lastPageProductId = value; OnPropertyChanged(nameof(LastPageProductId)); }
+			get { return _modalProductId; }
+			set { _modalProductId = value; OnPropertyChanged(nameof(ModalProductId)); }
 		}
+		
+		private int _modalBasketProductId { get; set; }
+		public int ModalBasketProductId
+		{
+			get { return _modalBasketProductId; }
+			set { _modalBasketProductId = value; OnPropertyChanged(nameof(ModalBasketProductId)); }
+		}
+
+		//private int? _lastPageProductId { get; set; }
+		//public int? LastPageProductId	
+		//{
+		//	get { return _lastPageProductId; }
+		//	set { _lastPageProductId = value; OnPropertyChanged(nameof(LastPageProductId)); }
+		//}
 
 		private int _productOnPage { get; set; }
 		public int ProductOnPage
@@ -107,5 +128,12 @@ namespace Pizza.Manager
 			get { return _buttonsVisibility; }
 			set { _buttonsVisibility = value; OnPropertyChanged(nameof(ButtonsVisibility)); }
 		}
+
+		//private double _priceSum;
+		//public double PriceSum
+		//{
+		//	get { return _priceSum; }
+		//	set { _priceSum = value; OnPropertyChanged(nameof(PriceSum)); }
+		//}
 	}
 }

@@ -17,10 +17,11 @@
 			x:Key="WidthConverter" />
 	</UserControl.Resources>
 
-	<Grid
-		x:Name="CatalogGrid">
-		
+	<!--<Grid
+		x:Name="CatalogGrid">-->
+
 		<ListView
+			PreviewMouseWheel="ListView_PreviewMouseWheel"
 			Padding="10 0"
 			Grid.Row="1"
 			Background="Transparent"
@@ -28,11 +29,10 @@
 			ItemsSource="{Binding Products}"
 			ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 			HorizontalContentAlignment="Center"
-			d:ItemsSource="{d:SampleData ItemCount=15}">
+			d:ItemsSource="{d:SampleData ItemCount=5}">
 			<ListView.ItemsPanel>
 				<ItemsPanelTemplate>
 					<WrapPanel
-						Height="auto"
 						ItemWidth="{Binding ActualWidth, Converter={StaticResource WidthConverter}, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"
 						Orientation="Horizontal"
 						HorizontalAlignment="Center" />
@@ -87,7 +87,7 @@
 					</Setter>
 				</Style>
 			</ListView.Resources>-->
-			
+
 			<ListView.ItemContainerStyle>
 				<Style
 					TargetType="ListViewItem">
@@ -136,7 +136,7 @@
 
 										<TextBlock
 											Grid.Row="1"
-											Text="{Binding ShortName}"
+											Text="{Binding Name}"
 											FontSize="20"
 											FontWeight="SemiBold"
 											Style="{StaticResource Text}"
@@ -223,5 +223,5 @@
 			</ListView.ItemContainerStyle>
 		</ListView>
 
-	</Grid>
+	<!--</Grid>-->
 </UserControl>

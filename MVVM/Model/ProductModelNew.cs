@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Reflection;
 using System.Windows.Media;
@@ -21,9 +22,13 @@ namespace Pizza.MVVM.Model
 		public ImageSource ImageSource { get; set; }
 		public double Price { get; set; }
 		public bool InStock { get; set; }
+		public int Count { get; set; } = 1;
+		public double SumPrice { get; set; }
 		public PizzaCategories Category { get; set; }
 		public List<string> PropertyName = new List<string>();
 		public List<string> PropertyValue = new List<string>();
+		public PizzaSizes Size { get; set; }
+		public PizzaTypes Type { get; set; }
 
 		public ProductModelNew() { }
 
@@ -40,10 +45,78 @@ namespace Pizza.MVVM.Model
 			{
 				PropertyName.Add(propName);
 			}
-			foreach (string propValue in propertyValue)
+			foreach (string propName in propertyValue)
 			{
-				PropertyValue.Add(propValue);
+				PropertyValue.Add(propName);
 			}
+		}
+
+		// для функции получение из бд
+		public ProductModelNew(int id, string name, string description, byte[] image, double price, bool inStock, int count, string category, List<string> propertyName, List<string> propertyValue)
+		{
+			Id = id;
+			Name = name;
+			Description = description;
+			ImageSource = ConvertByteArrayToImageSource(image);
+			Price = price;
+			InStock = inStock;
+			Count = count;
+			Category = ConvertToCategory(category);
+			//Console.WriteLine("propName: " + propName);
+			//Console.WriteLine("propValue: " + propValue);
+
+			//foreach (var item in propertyName)
+			//{
+			//PropertyName.Add(item);
+			//	Console.WriteLine("propertyName: " + item);
+			//}
+			//foreach (var item in propertyValue)
+			//{
+			//PropertyValue.Add(item);
+			//	Console.WriteLine("propertyValue: " + item);
+			//}
+			foreach (string propName in propertyName)
+			{
+				PropertyName.Add(propName);
+			}
+			foreach (string propName in propertyValue)
+			{
+				PropertyValue.Add(propName);
+			}
+			if (Category == PizzaCategories.Pizza)
+				if (propertyName.Count != 0)
+				{
+					for (int i = 0; i < propertyName.Count; i++)
+					{
+						//Console.WriteLine("i: " + i);
+						//Console.WriteLine("PropertyName[i]: " + propertyName[i]);
+						Console.WriteLine("model name i: " + propertyName[i]);
+						Console.WriteLine("model value i: " + propertyValue[i]);
+						switch (propertyValue[i])
+						{
+							case "Маленькая":
+								Size = PizzaSizes.Small;
+								break;
+							case "Средняя":
+								Size = PizzaSizes.Medium;
+								break;
+							case "Большая":
+								Size = PizzaSizes.Big;
+								break;
+						}
+						switch (propertyValue[i])
+						{
+							case "Обычное":
+								Type = PizzaTypes.Default;
+								break;
+							case "Тонкое":
+								Type = PizzaTypes.Thin;
+								break;
+						}
+					}
+				}
+			Console.WriteLine("MODEL SIZE: " + Size);
+			Console.WriteLine("MODEL TYPE: " + Type);
 		}
 
 		// для функции получение из бд
@@ -56,6 +129,17 @@ namespace Pizza.MVVM.Model
 			Price = price;
 			InStock = inStock;
 			Category = ConvertToCategory(category);
+			Console.WriteLine("КАТЕГОРИЯ ДО:" + category);
+			Console.WriteLine("КАТЕГОРИЯ после:" + ConvertToCategory(category));
+		}
+
+		public ProductModelNew(string name, byte[] image, double price, int count)
+		{
+			Name = name;
+			ImageSource = ConvertByteArrayToImageSource(image);
+			Price = price;
+			Count = count;
+			SumPrice = price * count;
 		}
 
 		// для функции добавление нового продукта
@@ -107,7 +191,12 @@ namespace Pizza.MVVM.Model
 		{
 			try
 			{
-				byte[] byteArray = null;
+				if (bitmapImage == null)
+				{
+					return Result.Failure<byte[]>("BitmapImage is null.");
+				}
+
+				byte[] byteArray;
 
 				// Инициализация кодировщика PNG
 				PngBitmapEncoder encoder = new PngBitmapEncoder();
@@ -126,7 +215,6 @@ namespace Pizza.MVVM.Model
 			{
 				return Result.Failure<byte[]>(ex.Message);
 			}
-
 		}
 
 		public static ImageSource ConvertByteArrayToImageSource(byte[] byteArray)
@@ -159,6 +247,42 @@ namespace Pizza.MVVM.Model
 			// Обработка, если категория не найдена
 			// Возвращаемое значение по умолчанию или выбрасывайте исключение, в зависимости от вашей логики
 			return PizzaCategories.Pizza; // Возвращаем значение по умолчанию
+		}
+
+		public ProductModelNew DeepCopy()
+		{
+			if (this.Image == null && this.ImageSource is BitmapImage bitmapImage)
+			{
+				var conversionResult = ConvertBitmapImageToByteArray(bitmapImage);
+				if (conversionResult.IsSuccess)
+				{
+					this.Image = conversionResult.Value;
+				}
+				else
+				{
+					// Обработка ошибки, если произошла ошибка конвертации
+					Console.WriteLine($"Ошибка конвертации изображения: {conversionResult.Error}");
+				}
+			}
+
+			ProductModelNew copiedProduct = new ProductModelNew
+			{
+				Id = this.Id,
+				Name = this.Name,
+				Description = this.Description,
+				Image = this.Image,
+				ImageSource = this.ImageSource,
+				Price = this.Price,
+				InStock = this.InStock,
+				Count = this.Count,
+				Category = this.Category,
+				Size = this.Size,
+				Type = this.Type,
+				PropertyName = this.PropertyName,
+				PropertyValue = this.PropertyValue
+			};
+
+			return copiedProduct;
 		}
 	}
 }

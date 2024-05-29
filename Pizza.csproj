@@ -293,12 +293,33 @@
     <Compile Include="Abstractions\Repository\IBasketRepository.cs" />
     <Compile Include="Abstractions\Repository\IProductRepository.cs" />
     <Compile Include="Abstractions\Repository\IUserRepository.cs" />
+    <Compile Include="DataAccess\Repository\OrderRepository.cs" />
+    <Compile Include="DataAccess\Repository\ReviewRepository.cs" />
     <Compile Include="DataAccess\Repository\UserRepository.cs" />
     <Compile Include="DataAccess\Repository\BasketRepository.cs" />
     <Compile Include="DataAccess\UnitOfWork.cs" />
     <Compile Include="Encrypt\EncryptClass.cs" />
     <Compile Include="Abstractions\IEncrypt.cs" />
-    <Compile Include="Encrypt\SaveUserDataHelper.cs" />
+    <Compile Include="MVVM\Model\AuthPermissionModel.cs" />
+    <Compile Include="MVVM\Model\OrderModel.cs" />
+    <Compile Include="MVVM\Model\ReviewModel.cs" />
+    <Compile Include="MVVM\ViewModel\AuthPermissionViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\EmployeesViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\ReviewsViewModel.cs" />
+    <Compile Include="MVVM\View\AuthPermissionView.xaml.cs">
+      <DependentUpon>AuthPermissionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\EmployeesView.xaml.cs">
+      <DependentUpon>EmployeesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\ReviewsView.xaml.cs">
+      <DependentUpon>ReviewsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\Converter\BooleanToEnabledConverter.cs" />
+    <Compile Include="Utilities\Converter\IsDeliveryToBooleanConverter .cs" />
+    <Compile Include="Utilities\Converter\InStockToBooleanConverter.cs" />
+    <Compile Include="Utilities\Converter\StringAndBoolToVisibilityMultiConverter.cs" />
+    <Compile Include="Utilities\SaveUserDataHelper.cs" />
     <Compile Include="MVVM\Model\PageInfoModel.cs" />
     <Compile Include="MVVM\Model\ProductModelNew.cs" />
     <Compile Include="MVVM\Model\ProductPreviewModel.cs" />
@@ -335,6 +356,7 @@
     <Compile Include="Utilities\BaseViewModel.cs" />
     <Compile Include="Utilities\Converter\BoolToButtonSelectionConverter.cs" />
     <Compile Include="Utilities\Converter\BoolToVisibilityConverter.cs" />
+    <Compile Include="Utilities\Converter\BoolToVisibilityMultiConverter.cs" />
     <Compile Include="Utilities\Converter\CategoryToBooleanConverter.cs" />
     <Compile Include="Utilities\Converter\CategoryToVisibilityConverter.cs" />
     <Compile Include="Utilities\Converter\ContentFitsToVisibilityConverter.cs" />
@@ -344,10 +366,10 @@
     <Compile Include="Utilities\Converter\PageToBolleanConverter.cs" />
     <Compile Include="Utilities\Converter\RoleToBooleanConverter.cs" />
     <Compile Include="Utilities\Converter\RoleToVisibilityConverter.cs" />
+    <Compile Include="Utilities\Converter\TypeToBooleanConverter.cs" />
     <Compile Include="Utilities\Converter\SizeToBooleanConverter.cs" />
     <Compile Include="Utilities\Converter\SortToBooleanConverter.cs" />
     <Compile Include="Utilities\Converter\WidthConverter.cs" />
-    <Compile Include="Utilities\ProductModelValidator.cs" />
     <Compile Include="Utilities\RelayCommand.cs" />
     <Compile Include="Abstractions\ProductAbstraction.cs" />
     <Compile Include="Abstractions\ProgramAbstraction.cs" />
@@ -358,6 +380,10 @@
     <Page Include="MVVM\View\AddProductView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MVVM\View\AuthPermissionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MVVM\View\Auth\AuthView.xaml">
       <SubType>Designer</SubType>
@@ -374,6 +400,10 @@
     <Page Include="MVVM\View\CatalogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MVVM\View\EmployeesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MVVM\View\HomeView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -404,6 +434,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MVVM\View\ProfileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\View\ReviewsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

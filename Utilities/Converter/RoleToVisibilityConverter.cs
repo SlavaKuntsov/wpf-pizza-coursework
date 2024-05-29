@@ -35,13 +35,13 @@ namespace Pizza.Utilities.Converter
 			switch (role)
 			{
 				case AppRoles.Customer:
-					return page == "Catalog" || page == "Basket";
+					return page == "Catalog" || page == "Basket" || page == "Reviews";
 				case AppRoles.Manager:
-					return page == "AddProduct" || page == "Page4";
+					return page == "AddProduct" || page == "Catalog" || page == "Reviews" || page == "AuthPermission" || page == "Employees";
 				case AppRoles.Seller:
-					return page == "Page3" || page == "Page5";
+					return page == "Orders";
 				case AppRoles.Courier:
-					return page == "Page3" || page == "Page5";
+					return page == "Orders";
 				default:
 					return false;
 			}

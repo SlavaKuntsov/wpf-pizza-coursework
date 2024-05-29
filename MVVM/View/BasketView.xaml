@@ -7,31 +7,198 @@
 	xmlns:local="clr-namespace:Pizza.MVVM.View"
 	xmlns:v="clr-namespace:Pizza.MVVM.View"
 	xmlns:vm="clr-namespace:Pizza.MVVM.ViewModel"
+	xmlns:c="clr-namespace:Pizza.Utilities.Converter"
 	d:DataContext="{d:DesignInstance Type=vm:BasketViewModel}"
 	mc:Ignorable="d"
 	d:DesignHeight="450"
 	d:DesignWidth="800">
-	
-	<Grid>
-		
+
+	<UserControl.Resources>
+		<c:IsDeliveryToBooleanConverter
+			x:Key="IsDeliveryToBooleanConverter" />
+	</UserControl.Resources>
+
+	<Grid
+		x:Name="BasketGrid">
+
 		<Grid.RowDefinitions>
 			<RowDefinition
-				Height="50" />
-			<RowDefinition
 				Height="*" />
+			<RowDefinition
+				Height="auto" />
 		</Grid.RowDefinitions>
 
-		<TextBlock
-			Style="{StaticResource Text}"
-			Text="Корзина"
-			FontWeight="SemiBold"
-			FontSize="20"
-			VerticalAlignment="Center"
-			HorizontalAlignment="Center" />
+		<ScrollViewer
+			CanContentScroll="True"
+			x:Name="scrollViewer">
 
-		<v:ProductCardView
-			Grid.Row="1" />
+			<ScrollViewer.Resources>
+				<Style
+					TargetType="ScrollBar">
+					<Setter
+						Property="Background"
+						Value="Gray" />
+					<Setter
+						Property="Width"
+						Value="10" />
+					<Setter
+						Property="Template">
+						<Setter.Value>
+							<ControlTemplate
+								TargetType="ScrollBar">
+								<Grid>
+									<Border
+										Background="Transparent"
+										BorderBrush="Transparent"
+										BorderThickness="0"
+										CornerRadius="7" />
+									<Track
+										x:Name="PART_Track"
+										IsDirectionReversed="True">
+										<Track.DecreaseRepeatButton>
+											<RepeatButton
+												Command="{x:Static ScrollBar.PageUpCommand}"
+												Opacity="0" />
+										</Track.DecreaseRepeatButton>
+										<Track.Thumb>
+											<Thumb
+												Padding="0"
+												Margin="0"
+												Background="#202020"
+												BorderBrush="Transparent"
+												BorderThickness="0" />
+										</Track.Thumb>
+										<Track.IncreaseRepeatButton>
+											<RepeatButton
+												Command="{x:Static ScrollBar.PageDownCommand}"
+												Opacity="0" />
+										</Track.IncreaseRepeatButton>
+									</Track>
+								</Grid>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</ScrollViewer.Resources>
 
+			<Grid>
+
+				<Grid.RowDefinitions>
+					<RowDefinition
+						Height="50" />
+					<RowDefinition
+						Height="*" />
+				</Grid.RowDefinitions>
+
+				<TextBlock
+					Style="{StaticResource Text}"
+					Text="Корзина"
+					FontWeight="SemiBold"
+					FontSize="20"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center" />
+
+				<v:BasketProductCardView
+					Grid.Row="1" />
+
+
+			</Grid>
+
+		</ScrollViewer>
+
+
+		<Border
+			Grid.Row="1"
+			BorderThickness="0 2 0 0"
+			BorderBrush="#ff8224">
+
+			<Grid>
+
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition
+						Width="*" />
+					<ColumnDefinition
+						Width="*" />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+
+				<StackPanel
+					Margin="10 5 10 10"
+					Orientation="Horizontal"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Left">
+					<TextBlock
+						Margin="0 5 0 5"
+						FontSize="18"
+						Foreground="White"
+						FontWeight="SemiBold"
+						Text="{Binding ProductsCount}"
+						Style="{StaticResource Text}" />
+					<TextBlock
+						Margin="5 5 0 5"
+						FontSize="18"
+						Foreground="White"
+						FontWeight="SemiBold"
+						Text="товара на"
+						Style="{StaticResource Text}" />
+					<TextBlock
+						Margin="5 5 0 5"
+						FontSize="18"
+						Foreground="White"
+						FontWeight="SemiBold"
+						Text="{Binding PriceSum}"
+						Style="{StaticResource Text}" />
+					<TextBlock
+						Margin="5 5 0 5"
+						FontSize="18"
+						Foreground="White"
+						FontWeight="SemiBold"
+						Text="{DynamicResource Rub}"
+						Style="{StaticResource Text}" />
+				</StackPanel>
+
+				<StackPanel
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					Grid.Column="1"
+					Orientation="Horizontal">
+
+					<TextBlock
+						VerticalAlignment="Center"
+						Margin="5 5 10 5"
+						FontSize="18"
+						Foreground="White"
+						FontWeight="SemiBold"
+						Text="Доставка:"
+						Style="{StaticResource Text}" />
+
+					<RadioButton
+						Margin="0 3 10 0"
+						IsChecked="{Binding IsDelivery, Mode=TwoWay, Converter={StaticResource IsDeliveryToBooleanConverter}, ConverterParameter=Yes}"
+						Content="Да"
+						Style="{StaticResource ProductButton}" />
+					<RadioButton
+						Margin="0 3 0 0	"
+						IsChecked="{Binding IsDelivery, Mode=TwoWay, Converter={StaticResource IsDeliveryToBooleanConverter}, ConverterParameter=No}"
+						Content="Нет"
+						Style="{StaticResource ProductButton}" />
+
+				</StackPanel>
+
+				<Button
+					Grid.Column="2"
+					Command="{Binding OrderCommand}"
+					Content="Оформить заказ"
+					Margin="0 10 10 10"
+					FontSize="15"
+					HorizontalAlignment="Right"
+					VerticalAlignment="Center"
+					Style="{StaticResource Button}" />
+
+
+			</Grid>
+
+		</Border>
 	</Grid>
-	
+
 </UserControl>

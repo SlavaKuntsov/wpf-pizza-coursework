@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using Pizza.Manager;
 using Pizza.MVVM.Model;
 using Pizza.MVVM.ViewModel;
 
@@ -14,28 +15,33 @@ namespace Pizza.MVVM.View
 	/// </summary>
 	public partial class ProductCardView : UserControl
 	{
+		CatalogManager _catalogManager;
 		public ProductCardView()
 		{
 			InitializeComponent();
 
+			_catalogManager = CatalogManager.Instance;
 		}
 
 		private void OnShowModalClick(object sender, MouseButtonEventArgs e)
 		{
 			ListViewItem clickedItem = (ListViewItem)sender;
 
-
-
 			ProductModelNew selectedItem = (ProductModelNew)clickedItem.DataContext;
 
+			Console.WriteLine("ShowBasketModal CLICK ---------------------");
+			_catalogManager.ModalProductId = selectedItem.Id;
+			Console.WriteLine(" selectedItem.Id: " + selectedItem.Id);
+
+			//_catalogManager
 			//int id = selectedItem.Id;
 			//string name = selectedItem.Name;
 			//string fullName = selectedItem.FullName;
 			//string description = selectedItem.Description;
 			//double price = selectedItem.Price;
 			//string imageName = selectedItem.Image;
-			//PizzaCategories category = selectedItem.Category;
-			//PizzaSizes size = selectedItem.Size;
+			//PizzaCategories category = selectedItem.ProductCategory;
+			//PizzaSizes size = selectedItem.ProductSize;
 			//Rating rating = selectedItem.Rating;
 			//int count = selectedItem.Count;
 
@@ -47,7 +53,7 @@ namespace Pizza.MVVM.View
 			//	MessageBox.Show(selectedProduct.Error);
 			//}
 
-			CatalogGrid.Children.Add(new ProductModalView() { DataContext = new ProductModalViewModel(selectedItem) });
+			//CatalogGrid.Children.Add(new ProductModalView() { DataContext = new ProductModalViewModel(selectedItem) });
 		}
 
 		// перехват прокрутки колесиком мышки

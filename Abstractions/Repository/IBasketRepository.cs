@@ -13,7 +13,7 @@ namespace Pizza.Abstractions
 {
 	public interface IBasketRepository
 	{
-		Result<ObservableCollection<ProductModel>> GetBasket();
-		void AddInBasket(Guid id);
+		//Result<ObservableCollection<ProductModel>> GetBasket();
+		//void AddInBasket(Guid id);
 	}
 }

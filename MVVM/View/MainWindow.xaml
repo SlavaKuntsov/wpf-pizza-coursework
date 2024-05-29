@@ -218,16 +218,34 @@
 							</RadioButton.Visibility>
 						</RadioButton>
 
+						<RadioButton
+							IsChecked="True"
+							Command="{Binding OrdersCommand}"
+							Content="Заказы"
+							Style="{StaticResource MenuButton}">
+							<RadioButton.Visibility>
+								<MultiBinding
+									Converter="{StaticResource RoleToVisibilityConverter}">
+									<Binding
+										Path="Role" />
+									<!-- Привязка к свойству текущей роли -->
+									<Binding
+										Source="Orders" />
+									<!-- Привязка к странице -->
+								</MultiBinding>
+							</RadioButton.Visibility>
+						</RadioButton>
+
 						<StackPanel
 							Orientation="Vertical"
 							Visibility="{Binding ButtonsVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
 							HorizontalAlignment="Right">
 
-							<ToggleButton
+							<!--<ToggleButton
 								Margin="5 0 5 10"
 								IsChecked="{Binding SearchVisibility}"
 								Content="{DynamicResource Search}"
-								Style="{StaticResource ToggleButton}" />
+								Style="{StaticResource ToggleButton}" />-->
 
 							<ToggleButton
 								Grid.Row="1"
@@ -259,6 +277,57 @@
 							Command="{Binding ProfileCommand}"
 							Content="Профиль"
 							Style="{StaticResource MenuButton}" />
+
+						<RadioButton
+							Command="{Binding AuthPermissionCommand}"
+							Content="Авторизация"
+							Style="{StaticResource MenuButton}">
+							<RadioButton.Visibility>
+								<MultiBinding
+									Converter="{StaticResource RoleToVisibilityConverter}">
+									<Binding
+										Path="Role" />
+									<!-- Привязка к свойству текущей роли -->
+									<Binding
+										Source="AuthPermission" />
+									<!-- Привязка к странице -->
+								</MultiBinding>
+							</RadioButton.Visibility>
+						</RadioButton>
+
+						<RadioButton
+							Command="{Binding EmployeesCommand}"
+							Content="Работники"
+							Style="{StaticResource MenuButton}">
+							<RadioButton.Visibility>
+								<MultiBinding
+									Converter="{StaticResource RoleToVisibilityConverter}">
+									<Binding
+										Path="Role" />
+									<!-- Привязка к свойству текущей роли -->
+									<Binding
+										Source="Employees" />
+									<!-- Привязка к странице -->
+								</MultiBinding>
+							</RadioButton.Visibility>
+						</RadioButton>
+
+						<RadioButton
+							Command="{Binding ReviewsCommand}"
+							Content="Отзывы"
+							Style="{StaticResource MenuButton}">
+							<RadioButton.Visibility>
+								<MultiBinding
+									Converter="{StaticResource RoleToVisibilityConverter}">
+									<Binding
+										Path="Role" />
+									<!-- Привязка к свойству текущей роли -->
+									<Binding
+										Source="Reviews" />
+									<!-- Привязка к странице -->
+								</MultiBinding>
+							</RadioButton.Visibility>
+						</RadioButton>
 
 						<!--<RadioButton
 							Command="{Binding SearchCommand}"

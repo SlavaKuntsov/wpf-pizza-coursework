@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,11 +12,11 @@ namespace Pizza.Abstractions
 	{
 		public enum PizzaCategories
 		{
-			[Description("Pizza")]
+			[Description("Пицца")]
 			Pizza,
-			[Description("Dessert")]
+			[Description("Десерт")]
 			Dessert,
-			[Description("Drink")]
+			[Description("Напиток")]
 			Drink
 		}
 
@@ -38,9 +39,13 @@ namespace Pizza.Abstractions
 
 		public enum PizzaSizes
 		{
+			[Description("Не продукт")]
 			NotAPizza,
+			[Description("Маленькая")]
 			Small,
+			[Description("Средняя")]
 			Medium,
+			[Description("Большая")]
 			Big
 		}
 
@@ -50,5 +55,48 @@ namespace Pizza.Abstractions
 			{ PizzaSizes.Medium, "Средняя" },
 			{ PizzaSizes.Big, "Большая" },
 		};
+
+		public enum PizzaTypes
+		{
+			[Description("Тонкое")]
+			Thin,
+			[Description("Обычное")]
+			Default
+		}
+
+		public enum PizzaProperties
+		{
+			[Description("Размер")]
+			Size,
+			[Description("Тесто")]
+			Type
+		}
+
+		public enum PizzaInStock
+		{
+			[Description("Да")]
+			Yes,
+			[Description("Нет")]
+			No
+		}
+
+		public enum PizzaIsDelivery
+		{
+			[Description("Да")]
+			Yes,
+			[Description("Нет")]
+			No
+		}
 	}
+
+	public static class EnumExtensions
+	{
+		public static string GetDescription(this Enum value)
+		{
+			FieldInfo field = value.GetType().GetField(value.ToString());
+			DescriptionAttribute attribute = (DescriptionAttribute)field.GetCustomAttribute(typeof(DescriptionAttribute));
+			return attribute == null ? value.ToString() : attribute.Description;
+		}
+	}
+
 }

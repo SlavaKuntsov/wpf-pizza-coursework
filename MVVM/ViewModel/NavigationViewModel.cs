@@ -5,7 +5,6 @@ using System.Windows.Input;
 
 using Pizza.Abstractions;
 using Pizza.DataAccess;
-using Pizza.Encrypt;
 using Pizza.Manager;
 using Pizza.Utilities;
 
@@ -32,23 +31,30 @@ namespace Pizza.MVVM.ViewModel
 		public ICommand HomeCommand { get; set; }
 		public ICommand CatalogCommand { get; set; }
 		public ICommand BasketCommand { get; set; }
+		public ICommand OrdersCommand { get; set; }
 		public ICommand ProfileCommand { get; set; }
+		public ICommand ReviewsCommand { get; set; }
+		public ICommand AuthPermissionCommand { get; set; }
+		public ICommand EmployeesCommand { get; set; }
 		public ICommand LogOutCommand { get; set; }
 
-
 		public Dictionary<ProgramLanguages, string> ProgramLanguagesDictionary;
+
 		public NavigationViewModel()
 		{
 			_authManager = AuthManager.Instance;
 			_unitOfWork = new UnitOfWork(_authManager.ConnectionString);
 
 			Role = _authManager.User.Role;
-			Console.WriteLine("NAV ROLE: " + Role);
 
 			HomeCommand = new RelayCommand(Home);
 			CatalogCommand = new RelayCommand(Catalog);
 			BasketCommand = new RelayCommand(Basket);
+			OrdersCommand = new RelayCommand(Orders);
 			ProfileCommand = new RelayCommand(Profile);
+			ReviewsCommand = new RelayCommand(Reviews);
+			AuthPermissionCommand = new RelayCommand(AuthPermission);
+			EmployeesCommand = new RelayCommand(Employees);
 			LogOutCommand = new RelayCommand(LogOut);
 
 			switch (Role)
@@ -60,9 +66,10 @@ namespace Pizza.MVVM.ViewModel
 					CurrentView = new HomeViewModel();
 					break;
 				case AppRoles.Seller:
-
+					CurrentView = new OrdersViewModel();
 					break;
 				case AppRoles.Courier:
+					CurrentView = new OrdersViewModel();
 					break;
 			}
 
@@ -77,28 +84,65 @@ namespace Pizza.MVVM.ViewModel
 			ButtonsVisibility = _catalogStateManager.ButtonsVisibility;
 		}
 
+		private void Employees(object obj)
+		{
+			CurrentView = new EmployeesViewModel();
+			ButtonsVisibility = false;
+			_authManager.BasketBoolVisibility = false;
+		}
+
+		private void Reviews(object obj)
+		{
+			Console.WriteLine("))))))*************************************** reviews");
+
+			CurrentView = new ReviewsViewModel();
+			ButtonsVisibility = false;
+			_authManager.BasketBoolVisibility = false;
+		}
+
+		private void Orders(object obj)
+		{
+			CurrentView = new OrdersViewModel();
+			ButtonsVisibility = false;
+			_authManager.BasketBoolVisibility = false;
+		}
+
 		private void Home(object obj)
 		{
 			CurrentView = new HomeViewModel();
 			ButtonsVisibility = false;
+			_authManager.BasketBoolVisibility = false;
 		}
 
 		private void Catalog(object obj)
 		{
 			CurrentView = new CatalogViewModel();
 			ButtonsVisibility = true;
+			_authManager.BasketBoolVisibility = false;
 		}
 
 		private void Basket(object obj)
 		{
+			Console.WriteLine("))))))*************************************** Basket");
 			CurrentView = new BasketViewModel();
 			ButtonsVisibility = false;
+			_authManager.BasketBoolVisibility = true;
 		}
 
 		private void Profile(object obj)
 		{
 			CurrentView = new ProfileViewModel();
 			ButtonsVisibility = false;
+			_authManager.BasketBoolVisibility = false;
+			Console.WriteLine(_authManager.BasketBoolVisibility);
+		}
+
+		private void AuthPermission(object obj)
+		{
+			CurrentView = new AuthPermissionViewModel();
+			ButtonsVisibility = false;
+			_authManager.BasketBoolVisibility = false;
+			Console.WriteLine(_authManager.BasketBoolVisibility);
 		}
 
 		private void LogOut(object obj)
@@ -107,8 +151,6 @@ namespace Pizza.MVVM.ViewModel
 			file.ClearUserData();
 
 			_authManager.CheckRoleAndConnection();
-
-			Console.WriteLine("CLEAR");
 		}
 
 		public ProgramLanguages _language { get; set; }

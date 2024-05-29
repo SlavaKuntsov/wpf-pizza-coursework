@@ -8,7 +8,7 @@ using Pizza.MVVM.Model;
 
 using static Pizza.Abstractions.ProgramAbstraction;
 
-namespace Pizza.Encrypt
+namespace Pizza.Utilities
 {
 	public class SaveUserDataHelper
 	{
@@ -20,7 +20,7 @@ namespace Pizza.Encrypt
 			//_authManager = AuthManager.Instance;
 		}
 
-		public void SaveUserAuthData(Guid id, string name, string surname, string email, string password)
+		public void SaveUserAuthData(Guid id, string name, string surname, string email, string password, string address)
 		{
 			AuthManager authManager = AuthManager.Instance;
 			authManager.Auth = true;
@@ -32,6 +32,7 @@ namespace Pizza.Encrypt
 				Surname = surname,
 				Email = email,
 				Password = password,
+				Address = address
 			};
 
 			//_authManager.User = userData;
@@ -53,19 +54,25 @@ namespace Pizza.Encrypt
 
 		public UserModel GetUserAuthData()
 		{
-			if (File.Exists(_filePath))
+			try
 			{
-				string json = File.ReadAllText(_filePath);
+				if (File.Exists(_filePath))
+				{
+					string json = File.ReadAllText(_filePath);
 
-				UserModel user = JsonConvert.DeserializeObject<UserModel>(json);
+					UserModel user = JsonConvert.DeserializeObject<UserModel>(json);
 
-				//AuthManager authManager = AuthManager.Instance;
-				//authManager.User = user;
+					//AuthManager authManager = AuthManager.Instance;
+					//authManager.User = user;
 
-				return user;
+					return user;
+				}
+				return null;
 			}
-
-			return null;
+			catch (Exception ex)
+			{
+				return null;
+			}
 		}
 
 		public void ClearUserData()

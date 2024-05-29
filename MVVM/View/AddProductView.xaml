@@ -19,6 +19,8 @@
 			x:Key="SizeToBooleanConverter" />
 		<c:BoolToVisibilityConverter
 			x:Key="BoolToVisibilityConverter" />
+		<c:TypeToBooleanConverter
+			x:Key="TypeToBooleanConverter" />
 	</UserControl.Resources>
 
 	<ScrollViewer
@@ -230,37 +232,37 @@
 					<TextBlock
 						Margin="0 0 20 0"
 						FontSize="16"
-						Text="{DynamicResource Category}"
+						Text="Категория:"
 						Style="{StaticResource Text}"
 						VerticalAlignment="Center" />
 
 					<RadioButton
 						x:Name="PizzaRadioButton"
-						IsChecked="{Binding Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Pizza}"
+						IsChecked="{Binding ProductCategory, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Pizza}"
 						Content="{DynamicResource Pizza}"
 						Style="{StaticResource ProductButton}" />
 					<RadioButton
 						x:Name="DessertRadioButton"
-						IsChecked="{Binding Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Dessert}"
+						IsChecked="{Binding ProductCategory, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Dessert}"
 						Content="{DynamicResource Dessert}"
 						Style="{StaticResource ProductButton}" />
 					<RadioButton
 						x:Name="DrinkRadioButton"
-						IsChecked="{Binding Category, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Drink}"
+						IsChecked="{Binding ProductCategory, Mode=TwoWay, Converter={StaticResource CategoryToBooleanConverter}, ConverterParameter=Drink}"
 						Content="{DynamicResource Drink}"
 						Style="{StaticResource ProductButton}" />
 
 				</StackPanel>
 
 
-				<StackPanel
-					Visibility="{Binding SizesVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+				<!--<StackPanel
+					Visibility="{Binding PizzaPropertyVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
 					Orientation="Horizontal">
 
 					<TextBlock
 						Margin="00 0 20 0"
 						FontSize="16"
-						Text="{DynamicResource Size}"
+						Text="Размер:"
 						Style="{StaticResource Text}"
 						VerticalAlignment="Center" />
 
@@ -279,8 +281,31 @@
 						Content="{DynamicResource Big}"
 						Style="{StaticResource ProductButton}" />
 
+				</StackPanel>-->
+				
+				<!--<StackPanel
+					Visibility="{Binding PizzaPropertyVisibility, Converter={StaticResource BoolToVisibilityConverter}}"
+					Orientation="Horizontal">
 
-				</StackPanel>
+					<TextBlock
+						Margin="00 0 20 0"
+						FontSize="16"
+						Text="Тесто:"
+						Style="{StaticResource Text}"
+						VerticalAlignment="Center" />
+
+					<RadioButton
+						IsChecked="{Binding Type, Mode=TwoWay, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter=Default}"
+						Content="Обычное"
+						Style="{StaticResource ProductButton}" />
+
+					<RadioButton
+						IsChecked="{Binding Type, Mode=TwoWay, Converter={StaticResource TypeToBooleanConverter}, ConverterParameter=Thin}"
+						Content="Тонкое"
+						Style="{StaticResource ProductButton}" />
+
+
+				</StackPanel>-->
 
 			</StackPanel>
 

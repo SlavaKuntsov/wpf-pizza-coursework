@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using Pizza.Manager;
 using Pizza.MVVM.Model;
 using Pizza.MVVM.ViewModel;
 
@@ -14,9 +15,12 @@ namespace Pizza.MVVM.View
 	/// </summary>
 	public partial class BasketProductCardView : UserControl
 	{
+		CatalogManager _catalogManager;
 		public BasketProductCardView()
 		{
 			InitializeComponent();
+
+			_catalogManager = CatalogManager.Instance;
 
 		}
 
@@ -26,15 +30,24 @@ namespace Pizza.MVVM.View
 
 			ProductModelNew selectedItem = (ProductModelNew)clickedItem.DataContext;
 
-			//Guid id = selectedItem.Id;
+			
+			foreach (var item in selectedItem.PropertyValue)
+			{
+				Console.WriteLine("$$$$$$$ value: " + item);
+			}
 
+			Console.WriteLine("ShowBasketModal CLICK ---------------------");
+			_catalogManager.ModalBasketProductId = selectedItem.Id;
+			Console.WriteLine(" selectedItem.Id: " + selectedItem.Id);
+
+			//Guid id = selectedItem.Id;
 			//string shortName = selectedItem.ShortName;
 			//string fullName = selectedItem.FullName;
 			//string description = selectedItem.Description;
 			//double price = selectedItem.Price;
 			//string imageName = selectedItem.Image;
-			//PizzaCategories category = selectedItem.Category;
-			//PizzaSizes size = selectedItem.Size;
+			//PizzaCategories category = selectedItem.ProductCategory;
+			//PizzaSizes size = selectedItem.ProductSize;
 			//Rating rating = selectedItem.Rating;
 			//int count = selectedItem.Count;
 
@@ -46,7 +59,23 @@ namespace Pizza.MVVM.View
 			//	MessageBox.Show(selectedProduct.Error);
 			//}
 
-			CatalogGrid.Children.Add(new ProductModalView() { DataContext = new ProductModalViewModel(selectedItem) });
+			//CatalogGrid.Children.Add(new ProductModalView() { DataContext = new ProductModalViewModel(selectedItem) });
+		}
+
+		// перехват прокрутки колесиком мышки
+		private void ListView_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+		{
+			if (!e.Handled)
+			{
+				e.Handled = true;
+				var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
+				{
+					RoutedEvent = UIElement.MouseWheelEvent,
+					Source = sender
+				};
+				var parent = ((Control)sender).Parent as UIElement;
+				parent?.RaiseEvent(eventArg);
+			}
 		}
 	}
 }

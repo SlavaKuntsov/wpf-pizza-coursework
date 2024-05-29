@@ -96,7 +96,7 @@
 			Grid.Row="1">
 			<Grid.RowDefinitions>
 				<RowDefinition
-					Height="*" />
+					Height="auto" />
 				<RowDefinition
 					Height="auto" />
 				<RowDefinition
@@ -164,7 +164,7 @@
 						FontWeight="SemiBold"
 						FontSize="32"
 						VerticalAlignment="Center"
-						Padding="0 0 0 30"
+						Padding="0 0 0 0"
 						HorizontalAlignment="Center" />
 
 					<TextBlock
@@ -221,7 +221,7 @@
 							Style="{StaticResource Text}" />
 						<TextBox
 							Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
-							Margin="0 0 0 20"
+							Margin="0 0 0 10"
 							Style="{StaticResource TextBox}" />
 
 						<TextBlock
@@ -231,7 +231,7 @@
 							Style="{StaticResource Text}" />
 						<TextBox
 							Text="{Binding Surname, UpdateSourceTrigger=PropertyChanged}"
-							Margin="0 0 0 20"
+							Margin="0 0 0 10"
 							Style="{StaticResource TextBox}" />
 
 						<TextBlock
@@ -241,7 +241,7 @@
 							Style="{StaticResource Text}" />
 						<TextBox
 							Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
-							Margin="0 0 0 20"
+							Margin="0 0 0 10"
 							Style="{StaticResource TextBox}" />
 
 						<TextBlock
@@ -251,6 +251,16 @@
 							Style="{StaticResource Text}" />
 						<TextBox
 							Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+							Margin="0 0 0 10"
+							Style="{StaticResource TextBox}" />
+
+						<TextBlock
+							Text="Address:"
+							FontSize="15"
+							Margin="0 0 0 8"
+							Style="{StaticResource Text}" />
+						<TextBox
+							Text="{Binding LoginPassword, UpdateSourceTrigger=PropertyChanged}"
 							Style="{StaticResource TextBox}" />
 
 					</StackPanel>
@@ -267,7 +277,7 @@
 					Command="{Binding LogInCommand}"
 					Visibility="{Binding AuthTypeLogin, Converter={StaticResource BoolToVisibilityConverter}}"
 					Content="Войти"
-					Margin="0 20 0 0"
+					Margin="0 18 0 0"
 					HorizontalAlignment="Center"
 					VerticalAlignment="Top"
 					Style="{StaticResource Button}" />
@@ -276,7 +286,7 @@
 					Command="{Binding SignUpCommand}"
 					Visibility="{Binding AuthTypeSignup, Converter={StaticResource BoolToVisibilityConverter}}"
 					Content="Зарегистрироваться"
-					Margin="0 20 0 0"
+					Margin="0 18 0 0"
 					HorizontalAlignment="Center"
 					VerticalAlignment="Top"
 					Style="{StaticResource Button}" />
@@ -292,7 +302,7 @@
 					Command="{Binding ChangeToSignUpCommand}"
 					Visibility="{Binding AuthTypeLogin, Converter={StaticResource BoolToVisibilityConverter}}"
 					Content="Нет аккаунта"
-					Margin="0 20 0 0"
+					Margin="0 18 0 0"
 					HorizontalAlignment="Center"
 					VerticalAlignment="Center"
 					Style="{StaticResource Button}" />
@@ -301,7 +311,7 @@
 					Command="{Binding ChangeToLogInCommand}"
 					Visibility="{Binding AuthTypeSignup, Converter={StaticResource BoolToVisibilityConverter}}"
 					Content="Уже есть аккаунт"
-					Margin="0 20 0 0"
+					Margin="0 15 0 0"
 					HorizontalAlignment="Center"
 					VerticalAlignment="Center"
 					Style="{StaticResource Button}" />

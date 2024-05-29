@@ -79,7 +79,7 @@ namespace Pizza.MVVM.ViewModel.Auth
 			}
 
 			SaveUserDataHelper file = new SaveUserDataHelper();
-			file.SaveUserAuthData(login.Value.Id, login.Value.Name, login.Value.Surname, login.Value.Email, login.Value.Password);
+			file.SaveUserAuthData(login.Value.Id, login.Value.Name, login.Value.Surname, login.Value.Email, login.Value.Password, login.Value.Address);
 
 			_authManager.CheckRoleAndConnection();
 
@@ -88,37 +88,82 @@ namespace Pizza.MVVM.ViewModel.Auth
 
 		private void SignUp(object obj)
 		{
-			if (
-				!string.IsNullOrWhiteSpace(Name) &&
-				!string.IsNullOrWhiteSpace(Surname) &&
-				!string.IsNullOrWhiteSpace(Email) &&
-				!string.IsNullOrWhiteSpace(Password))
+
+			Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 7&&&&&&&&&&&&&&&&&&");
+			if (Role == AppRoles.Customer)
 			{
-				var signup = _unitOfWork.User.SignUp(Role, Name, Surname, Email, Password);
-				if (signup.IsFailure)
+				if (
+						!string.IsNullOrWhiteSpace(Name) &&
+						!string.IsNullOrWhiteSpace(Surname) &&
+						!string.IsNullOrWhiteSpace(Email) &&
+						!string.IsNullOrWhiteSpace(Password) &&
+						!string.IsNullOrWhiteSpace(Address))
 				{
-					AuthError = signup.Error;
-					Console.WriteLine(signup.Error);
+					var signup = _unitOfWork.User.SignUp(Role, Name, Surname, Email, Password, Address);
+					if (signup.IsFailure)
+					{
+						AuthError = signup.Error;
+						Console.WriteLine(signup.Error);
+						return;
+					}
+
+					SaveUserDataHelper file = new SaveUserDataHelper();
+					file.SaveUserAuthData(signup.Value.Id, signup.Value.Name, signup.Value.Surname, signup.Value.Email, signup.Value.Password, "");
+
+					UserModel user = file.GetUserAuthData();
+
+					if (user != null)
+					{
+						Console.WriteLine("------" + user.Id.ToString() + user.Email);
+					}
+
+					Console.WriteLine("ADD");
+
+					_authManager.CheckRoleAndConnection();
+
 					return;
 				}
-
-				SaveUserDataHelper file = new SaveUserDataHelper();
-				file.SaveUserAuthData(signup.Value.Id, signup.Value.Name, signup.Value.Surname, signup.Value.Email, signup.Value.Password);
-
-				UserModel user = file.GetUserAuthData();
-
-				if (user != null)
-				{
-					Console.WriteLine("------" + user.Id.ToString() + user.Email);
-				}
-
-				Console.WriteLine("ADD");
-
-				_authManager.CheckRoleAndConnection();
-
-				return;
+				AuthError = "Введите данные для регистрации.";
 			}
-			AuthError = "Введите данные для регистрации.";
+			else
+			{
+				if (
+						!string.IsNullOrWhiteSpace(Name) &&
+						!string.IsNullOrWhiteSpace(Surname) &&
+						!string.IsNullOrWhiteSpace(Email) &&
+						!string.IsNullOrWhiteSpace(Password))
+				{
+					var signup = _unitOfWork.User.SignUp(Role, Name, Surname, Email, Password, "");
+
+					Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
+					AuthError = "auth_permission is false";
+
+					if (signup.IsFailure)
+					{
+						AuthError = signup.Error;
+						Console.WriteLine(signup.Error);
+						return;
+					}
+
+					//SaveUserDataHelper file = new SaveUserDataHelper();
+					//file.SaveUserAuthData(signup.Value.Id, signup.Value.Name, signup.Value.Surname, signup.Value.Email, signup.Value.Password, "");
+
+					//UserModel user = file.GetUserAuthData();
+
+					//if (user != null)
+					//{
+					//	Console.WriteLine("------" + user.Id.ToString() + user.Email);
+					//}
+
+					//Console.WriteLine("ADD");
+
+					//_authManager.CheckRoleAndConnection();
+
+					return;
+				}
+				AuthError = "Введите данные для регистрации.";
+			}
 		}
 
 		private bool _authTypeLogin { get; set; }
@@ -167,6 +212,13 @@ namespace Pizza.MVVM.ViewModel.Auth
 		{
 			get { return _password; }
 			set { _password = value; OnPropertyChanged(nameof(Password)); }
+		}
+
+		private string _address { get; set; }
+		public string Address
+		{
+			get { return _address; }
+			set { _address = value; OnPropertyChanged(nameof(Address)); }
 		}
 
 		private string _loginEmail { get; set; }

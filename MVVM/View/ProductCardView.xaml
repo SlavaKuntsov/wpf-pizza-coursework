@@ -18,23 +18,40 @@
 			x:Key="WidthConverter" />
 	</UserControl.Resources>
 
-	<Grid
-		x:Name="CatalogGrid">
+	<!--VerticalAlignment="Center"
+		HorizontalAlignment="Center"-->
+	<!--<Grid
+		x:Name="CatalogGrid">-->
 
-		<ListView
-			PreviewMouseWheel="ListView_PreviewMouseWheel"
-			Padding="10 0"
-			Grid.Row="1"
-			Background="Transparent"
-			BorderBrush="Transparent"
-			ItemsSource="{Binding Products}"
-			ScrollViewer.CanContentScroll="False"
-			ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-			ScrollViewer.VerticalScrollBarVisibility="Disabled"
-			HorizontalContentAlignment="Center"
-			d:ItemsSource="{d:SampleData ItemCount=5}">
+	<!--<Grid.RowDefinitions>
+			-->
+	<!-- Одна строка, которая будет занимать все доступное пространство -->
+	<!--
+			<RowDefinition
+				Height="*" />
+		</Grid.RowDefinitions>
 
-			<!--<i:Interaction.Triggers>
+		<Grid.ColumnDefinitions>
+			-->
+	<!-- Одна колонка, которая будет занимать все доступное пространство -->
+	<!--
+			<ColumnDefinition
+				Width="*" />
+		</Grid.ColumnDefinitions>-->
+
+	<ListView
+		PreviewMouseWheel="ListView_PreviewMouseWheel"
+		Padding="10 0"
+		Background="Transparent"
+		BorderBrush="Transparent"
+		ItemsSource="{Binding Products}"
+		ScrollViewer.CanContentScroll="False"
+		ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+		ScrollViewer.VerticalScrollBarVisibility="Disabled"
+		HorizontalContentAlignment="Center"
+		d:ItemsSource="{d:SampleData ItemCount=5}">
+
+		<!--<i:Interaction.Triggers>
 			<i:EventTrigger
 				EventName="ScrollChanged">
 				<i:InvokeCommandAction
@@ -42,16 +59,16 @@
 			</i:EventTrigger>
 		</i:Interaction.Triggers>-->
 
-			<ListView.ItemsPanel>
-				<ItemsPanelTemplate>
-					<WrapPanel
-						ItemWidth="{Binding ActualWidth, Converter={StaticResource WidthConverter}, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"
-						Orientation="Horizontal"
-						HorizontalAlignment="Center" />
-				</ItemsPanelTemplate>
-			</ListView.ItemsPanel>
+		<ListView.ItemsPanel>
+			<ItemsPanelTemplate>
+				<WrapPanel
+					ItemWidth="{Binding ActualWidth, Converter={StaticResource WidthConverter}, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"
+					Orientation="Horizontal"
+					HorizontalAlignment="Center" />
+			</ItemsPanelTemplate>
+		</ListView.ItemsPanel>
 
-			<!--<ListView.Resources>
+		<!--<ListView.Resources>
 				<Style
 					TargetType="ScrollBar">
 					<Setter
@@ -100,141 +117,141 @@
 				</Style>
 			</ListView.Resources>-->
 
-			<ListView.ItemContainerStyle>
-				<Style
-					TargetType="ListViewItem">
+		<ListView.ItemContainerStyle>
+			<Style
+				TargetType="ListViewItem">
 
-					<Setter
-						Property="Background"
-						Value="#D0FF8224" />
+				<Setter
+					Property="Background"
+					Value="#D0FF8224" />
 
-					<Setter
-						Property="BorderBrush"
-						Value="Transparent" />
+				<Setter
+					Property="BorderBrush"
+					Value="Transparent" />
 
-					<Setter
-						Property="BorderThickness"
-						Value="0" />
+				<Setter
+					Property="BorderThickness"
+					Value="0" />
 
-					<Setter
-						Property="Template">
-						<Setter.Value>
+				<Setter
+					Property="Template">
+					<Setter.Value>
 
-							<ControlTemplate
-								TargetType="ListBoxItem">
-								<!--MouseLeftButtonDown="OnShowModalClick"-->
-								<Border
-									Background="{TemplateBinding Background}"
-									BorderThickness="0"
-									Height="auto"
-									CornerRadius="15"
-									Margin="18 15"
-									Padding="15 10">
+						<ControlTemplate
+							TargetType="ListBoxItem">
+							<!--MouseLeftButtonDown="OnShowModalClick"-->
+							<Border
+								Background="{TemplateBinding Background}"
+								BorderThickness="0"
+								Height="auto"
+								CornerRadius="15"
+								Margin="18 15"
+								Padding="15 10">
+
+								<Grid
+									Margin="10 0 0 0">
+
+									<Grid.RowDefinitions>
+										<RowDefinition />
+										<RowDefinition />
+										<RowDefinition />
+										<RowDefinition />
+									</Grid.RowDefinitions>
+
+									<Image
+										Source="{Binding ImageSource}"
+										Width="auto"
+										Height="auto"
+										Margin="5" />
+
+									<TextBlock
+										Grid.Row="1"
+										Text="{Binding Name}"
+										FontSize="20"
+										FontWeight="SemiBold"
+										Style="{StaticResource Text}"
+										HorizontalAlignment="Left" />
+
+									<TextBlock
+										FontSize="16"
+										Grid.Row="2"
+										Text="{Binding Description}"
+										Style="{StaticResource Text}" />
 
 									<Grid
-										Margin="10 0 0 0">
+										Grid.Row="3"
+										HorizontalAlignment="Stretch"
+										Margin="5 10">
 
-										<Grid.RowDefinitions>
-											<RowDefinition />
-											<RowDefinition />
-											<RowDefinition />
-											<RowDefinition />
-										</Grid.RowDefinitions>
-
-										<Image
-											Source="{Binding ImageSource}"
-											Width="auto"
-											Height="auto"
-											Margin="5" />
-
-										<TextBlock
-											Grid.Row="1"
-											Text="{Binding Name}"
-											FontSize="20"
-											FontWeight="SemiBold"
-											Style="{StaticResource Text}"
-											HorizontalAlignment="Left" />
-
-										<TextBlock
-											FontSize="16"
-											Grid.Row="2"
-											Text="{Binding Description}"
-											Style="{StaticResource Text}" />
-
-										<Grid
-											Grid.Row="3"
-											HorizontalAlignment="Stretch"
-											Margin="5 10">
-
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition
-													Width="*" />
-												<ColumnDefinition
-													Width="Auto" />
-											</Grid.ColumnDefinitions>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition
+												Width="*" />
+											<ColumnDefinition
+												Width="Auto" />
+										</Grid.ColumnDefinitions>
 
 
-											<StackPanel
-												Orientation="Horizontal"
-												VerticalAlignment="Center"
-												HorizontalAlignment="Left">
-												<TextBlock
-													FontSize="18"
-													Foreground="White"
-													FontWeight="SemiBold"
-													Style="{StaticResource Text}">
+										<StackPanel
+											Orientation="Horizontal"
+											VerticalAlignment="Center"
+											HorizontalAlignment="Left">
+											<TextBlock
+												FontSize="18"
+												Foreground="White"
+												FontWeight="SemiBold"
+												Style="{StaticResource Text}">
 													<Run
-														Text="от" />
+													Text="от" />
 													<Run
-														Text="{Binding Price}" />
+													Text="{Binding Price}" />
 													<Run
-														Text="руб." />
-												</TextBlock>
-											</StackPanel>
+													Text="руб." />
+											</TextBlock>
+										</StackPanel>
 
-											<Button
-												Grid.Column="1"
-												Background="#D0FF6D00"
-												BorderThickness="0"
-												Padding="20 10"
-												HorizontalAlignment="Right">
-												<Button.Template>
-													<ControlTemplate
-														TargetType="Button">
-														<Border
-															Background="{TemplateBinding Background}"
-															BorderBrush="{TemplateBinding BorderBrush}"
-															BorderThickness="{TemplateBinding BorderThickness}"
-															CornerRadius="15">
-															<ContentPresenter
-																HorizontalAlignment="Center"
-																VerticalAlignment="Center" />
-														</Border>
-													</ControlTemplate>
-												</Button.Template>
-												<TextBlock
-													Text="Подробнее"
-													FontSize="14"
-													Padding="10 4"
-													Style="{StaticResource Text}" />
-											</Button>
-										</Grid>
-
+										<Button
+											Grid.Column="1"
+											Background="#D0FF6D00"
+											BorderThickness="0"
+											Padding="20 10"
+											HorizontalAlignment="Right">
+											<Button.Template>
+												<ControlTemplate
+													TargetType="Button">
+													<Border
+														Background="{TemplateBinding Background}"
+														BorderBrush="{TemplateBinding BorderBrush}"
+														BorderThickness="{TemplateBinding BorderThickness}"
+														CornerRadius="15">
+														<ContentPresenter
+															HorizontalAlignment="Center"
+															VerticalAlignment="Center" />
+													</Border>
+												</ControlTemplate>
+											</Button.Template>
+											<TextBlock
+												Text="Подробнее"
+												FontSize="14"
+												Padding="10 4"
+												Style="{StaticResource Text}" />
+										</Button>
 									</Grid>
 
-								</Border>
-							</ControlTemplate>
+								</Grid>
 
-						</Setter.Value>
-					</Setter>
+							</Border>
+						</ControlTemplate>
 
-					<EventSetter
-						Event="PreviewMouseLeftButtonDown"
-						Handler="OnShowModalClick" />
+					</Setter.Value>
+				</Setter>
 
-				</Style>
-			</ListView.ItemContainerStyle>
-		</ListView>
+				<EventSetter
+					Event="PreviewMouseLeftButtonDown"
+					Handler="OnShowModalClick" />
 
-	</Grid>
+			</Style>
+		</ListView.ItemContainerStyle>
+	</ListView>
+
+	<!--</Grid>-->
 </UserControl>

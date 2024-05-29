@@ -26,6 +26,26 @@
 		DataType="{x:Type vm:ProfileViewModel}">
 		<view:ProfileView />
 	</DataTemplate>
+
+	<DataTemplate
+		DataType="{x:Type vm:OrdersViewModel}">
+		<view:OrdersView />
+	</DataTemplate>
+
+	<DataTemplate
+		DataType="{x:Type vm:ReviewsViewModel}">
+		<view:ReviewsView />
+	</DataTemplate>
+
+	<DataTemplate
+		DataType="{x:Type vm:AuthPermissionViewModel}">
+		<view:AuthPermissionView />
+	</DataTemplate>
+
+	<DataTemplate
+		DataType="{x:Type vm:EmployeesViewModel}">
+		<view:EmployeesView />
+	</DataTemplate>
 	
 	
 	<!--Auth-->
